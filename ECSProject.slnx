@@ -1,0 +1,10 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="ECSEngine/ECSEngine.vcxproj" Id="700caf96-4883-436f-8074-62e6c3396572" />
+  <Project Path="ECSGame/ECSGame.vcxproj" Id="84f2b685-22ab-4be6-b993-a426e8d9bd60">
+    <BuildDependency Project="ECSEngine/ECSEngine.vcxproj" />
+  </Project>
+</Solution>
