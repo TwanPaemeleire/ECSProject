@@ -4,14 +4,22 @@
 #endif
 #endif
 
-#include "TestClass.h"
+#include "SpeedTracker.h"
+#include "EntityManager.h"
+#include "TransformComponent.h"
+#include "SpriteComponent.h"
 #include <iostream>
 
 int main(int, char* []) 
 {
-	std::unique_ptr<TestClass> testClass = std::make_unique<TestClass>();
-	testClass->TestFunction();
-	testClass->TestFunction();
-	testClass->TestFunction();
+	std::unique_ptr<SpeedTracker> speedTracker = std::make_unique<SpeedTracker>();
+	speedTracker->StartTracking();
+
+	std::unique_ptr<EntityManager> entityManager = std::make_unique<EntityManager>();
+	entityManager->CreateEntity<TransformComponent, SpriteComponent>();
+	entityManager->CreateEntity<TransformComponent, SpriteComponent>();
+
+	int timeInMs = speedTracker->StopTracking();
+	std::cout << "Time taken: " << timeInMs << " ms" << std::endl;
 	return 0;
 }
