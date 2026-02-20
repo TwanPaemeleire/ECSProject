@@ -35,10 +35,10 @@ template<typename ...Components>
 inline EntityChunk<Components...>::EntityChunk(size_t capacity)
 	: m_Capacity(capacity), m_Data(std::make_unique<int[]>(capacity),std::make_unique<Components[]>(capacity)...)
 {
-	std::cout << "EntityChunk created with capacity: " << capacity << std::endl;
-	std::cout << "With following component types: ";
-	((std::cout << typeid(Components).name() << " "), ...);
-	std::cout << std::endl;
+	 std::cout << "EntityChunk created with capacity: " << capacity << std::endl;
+	 std::cout << "With following component types: ";
+	 ((std::cout << typeid(Components).name() << " "), ...);
+	 std::cout << std::endl;
 }
 
 template<typename ...Components>
@@ -49,9 +49,9 @@ inline void EntityChunk<Components...>::AddEntity(int entityId)
 		throw std::runtime_error("Chunk is full. Cannot add more entities.");
 	}
 
-	std::cout << "Adding entity with ID: " << entityId << " to chunk with components:";
-	((std::cout << " " << typeid(Components).name()), ...);
-	std::cout << std::endl << "Chunk fill progress: " << m_EntityCount + 1 << "/" << m_Capacity << std::endl;
+	 std::cout << "Adding entity with ID: " << entityId << " to chunk with components:";
+	 ((std::cout << " " << typeid(Components).name()), ...);
+	 std::cout << std::endl << "Chunk fill progress: " << m_EntityCount + 1 << "/" << m_Capacity << std::endl;
 
 	std::get<0>(m_Data)[m_EntityCount] = entityId;
 	ConstructComponents(std::index_sequence_for<Components...>{});

@@ -9,6 +9,6 @@ void SpeedTracker::StartTracking()
 int SpeedTracker::StopTracking()
 {
     auto endTime = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - m_startTime);
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - m_startTime);
 	return duration.count();
 }
