@@ -4,8 +4,11 @@
 #include <typeindex>
 #include <unordered_map>
 #include "EntityChunk.h"
-#include <algorithm>
 #include <string>
+#include <algorithm>
+#include "Entity.h"
+
+class Entity;
 
 class EntityManager
 {
@@ -15,16 +18,23 @@ public:
 
 	template <typename... Components>
 	void CreateEntity(int newChunkCapacity = 20);
+	
+	void DestroyEntity(int entityId);
+	void DestroyEntity(const std::vector<int>& entityIds);
+	void DestroyEntity(Entity* entity);
+
+	Entity* GetEntity(int entityId) const { return m_Entities.at(entityId).get(); }
 
 private:
 
 	template <typename... Components>
-	IEntityChunk* CreateNewChunk(std::string id, int capacity);
+	IEntityChunk* CreateNewChunk(const std::string& id, int capacity);
 
 	template <typename T>
 	std::type_index ReturnComponentInfo();
 
 	std::unordered_map<std::string, std::vector<std::unique_ptr<IEntityChunk>>> m_EntityChunks;
+	std::unordered_map<int, std::unique_ptr<Entity>> m_Entities;
 	int m_CurrentEntityId = 0;
 };
 
@@ -67,16 +77,20 @@ inline void EntityManager::CreateEntity(int newChunkCapacity)
 			chunk = CreateNewChunk<Components...>(entitySignature, newChunkCapacity);
 		}
 	}
-	chunk->AddEntity(m_CurrentEntityId);
+	std::unique_ptr<Entity> newEntity = std::make_unique<Entity>(m_CurrentEntityId);
+	int chunkEntityIndex = chunk->AddEntity(m_CurrentEntityId);
+	newEntity->SetCurrentChunk(entitySignature, m_EntityChunks[entitySignature].size() - 1, chunkEntityIndex);
+	m_Entities[m_CurrentEntityId] = std::move(newEntity);
 	++m_CurrentEntityId;
 }
 
 template<typename ...Components>
-inline IEntityChunk* EntityManager::CreateNewChunk(std::string id, int capacity)
+inline IEntityChunk* EntityManager::CreateNewChunk(const std::string& id, int capacity)
 {
-	std::unique_ptr<IEntityChunk> newChunk = std::make_unique<EntityChunk<Components...>>(capacity);
-	IEntityChunk* chunkPtr = newChunk.get();
+	std::unique_ptr<EntityChunk<Components...>> newChunk = std::make_unique<EntityChunk<Components...>>(capacity);
+	EntityChunk<Components...>* chunkPtr = newChunk.get();
 	m_EntityChunks[id].push_back(std::move(newChunk));
+	chunkPtr->SetChunkIndex(m_EntityChunks[id].size() - 1);
 	std::cout << "Created new chunk for entity signature: " << id << std::endl;
 	return chunkPtr;
 }
