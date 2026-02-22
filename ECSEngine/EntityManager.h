@@ -17,7 +17,7 @@ public:
 	~EntityManager() = default;
 
 	template <typename... Components>
-	void CreateEntity(int newChunkCapacity = 20);
+	Entity* CreateEntity(int newChunkCapacity = 20);
 	
 	void DestroyEntity(int entityId);
 	void DestroyEntity(const std::vector<int>& entityIds);
@@ -39,9 +39,10 @@ private:
 };
 
 template<typename ...Components>
-inline void EntityManager::CreateEntity(int newChunkCapacity)
+inline Entity* EntityManager::CreateEntity(int newChunkCapacity)
 {
 	static_assert((std::is_base_of_v<Component, Components> && ...), "All types must be derived from Component");
+	std::cout << "---------- Creating Entity ----------" << std::endl;
 
 	// TODO: Find a better way to create the signature
 	// Create entity component combination signature
@@ -51,11 +52,14 @@ inline void EntityManager::CreateEntity(int newChunkCapacity)
 			return a.hash_code() < b.hash_code();
 		});
 	std::string entitySignature = "";
+
+	std::cout << "Creating entity with component types: ";
 	for(std::type_index var : types)
 	{
 		entitySignature += std::to_string(var.hash_code());
-		 std::cout << "Creating entity with component type: " << var.hash_code() << std::endl;
+		std::cout << var.name() << " ";
 	}
+	std::cout << std::endl;
 
 	IEntityChunk* chunk = nullptr;
 	if (m_EntityChunks.find(entitySignature) == m_EntityChunks.end()) // Check if any chunk exists
@@ -69,6 +73,7 @@ inline void EntityManager::CreateEntity(int newChunkCapacity)
 			if (!existingChunk.get()->IsFull())
 			{
 				chunk = existingChunk.get();
+				std::cout << "Existing chunk with space was found" << std::endl;
 				break;
 			}
 		}
@@ -78,10 +83,14 @@ inline void EntityManager::CreateEntity(int newChunkCapacity)
 		}
 	}
 	std::unique_ptr<Entity> newEntity = std::make_unique<Entity>(m_CurrentEntityId);
-	int chunkEntityIndex = chunk->AddEntity(m_CurrentEntityId);
-	newEntity->SetCurrentChunk(entitySignature, m_EntityChunks[entitySignature].size() - 1, chunkEntityIndex);
+	Entity* newEntityPtr = newEntity.get();
+	chunk->AddEntity(m_CurrentEntityId);
+	newEntity->SetCurrentChunk(entitySignature, m_EntityChunks[entitySignature].size() - 1);
 	m_Entities[m_CurrentEntityId] = std::move(newEntity);
 	++m_CurrentEntityId;
+
+	std::cout << "-------------------------------------" << std::endl;
+	return newEntityPtr;
 }
 
 template<typename ...Components>

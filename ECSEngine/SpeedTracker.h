@@ -8,7 +8,7 @@ public:
 	~SpeedTracker() = default;
 
 	void StartTracking();
-	int StopTracking();
+	float StopTracking();
 private:
 	std::chrono::high_resolution_clock::time_point m_startTime;
 };

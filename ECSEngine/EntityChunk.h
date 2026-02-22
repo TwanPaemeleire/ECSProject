@@ -14,7 +14,7 @@ struct IEntityChunk
 	virtual ~IEntityChunk() = default;
 	virtual bool IsFull() const = 0;
 	virtual int AddEntity(int entityId) = 0;
-	virtual void RemoveEntityAndComponents(int entityIndexInChunk) = 0;
+	virtual void RemoveEntityAndComponents(Entity* entity) = 0;
 };
 
 template <typename... Components> 
@@ -28,7 +28,7 @@ public:
 
 	// Returns the index of the newly added entity within the chunk
 	int AddEntity(int entityId) override;
-	void RemoveEntityAndComponents(int entityIndexInChunk) override;
+	void RemoveEntityAndComponents(Entity* entity) override;
 
 	void SetChunkIndex(int index) { m_ChunkIndex = index; }
 	int GetChunkIndex() const { return m_ChunkIndex; }
@@ -38,6 +38,7 @@ private:
 	void ConstructComponents(std::index_sequence<indexSequence...>); // std::index_sequence is just a compile-time sequence of integers {0, 1, 2, 3, etc.}
 
 	std::tuple<std::unique_ptr<int[]>,std::unique_ptr<Components[]>...> m_Data; // First array is for entity IDs, followed by arrays for each component type
+	std::unordered_map<int, int> m_EntityIdToChunkIndex; // Map to track entity IDs and their corresponding chunk indices
 	bool m_IsFull = false;
 	int m_EntityCount = 0;
 	size_t m_Capacity = 0;
@@ -72,6 +73,7 @@ inline int EntityChunk<Components...>::AddEntity(int entityId)
 
 	std::get<0>(m_Data)[entityIndexInChunk] = entityId;
 	ConstructComponents(std::index_sequence_for<Components...>{});
+	m_EntityIdToChunkIndex[entityId] = entityIndexInChunk;
 
 	++m_EntityCount;
 	++m_CurrentFreeIndex;
@@ -80,12 +82,24 @@ inline int EntityChunk<Components...>::AddEntity(int entityId)
 }
 
 template<typename ...Components>
-inline void EntityChunk<Components...>::RemoveEntityAndComponents(int entityIndexInChunk)
+inline void EntityChunk<Components...>::RemoveEntityAndComponents(Entity* entity)
 {
-	auto indexSequence = std::index_sequence_for<Components...>();
-	std::get<0>(m_Data)[entityIndexInChunk] = std::get<0>(m_Data)[m_CurrentFreeIndex - 1];
-	// ((std::get<indexSequence + 1>(m_Data)[entityIndexInChunk] = std::get<indexSequence + 1>(m_Data)[m_CurrentFreeIndex - 1]), ...);
-	//((std::get<indexSequence + 1>(m_Data)[m_CurrentFreeIndex] = nullptr), ...);
+	int entityIndexInChunk = m_EntityIdToChunkIndex[entity->GetId()];
+	if(entityIndexInChunk == m_Capacity - 1 || entityIndexInChunk == m_CurrentFreeIndex - 1) // If the entity to be removed is the last one, we can simply clear it without moving any data
+	{
+		std::cout << "Removed entity with ID: " << entity->GetId() << " from index: " << entityIndexInChunk << std::endl;
+		std::cout << "No data needed to be moved" << std::endl;
+	}
+	else 
+	{
+		auto indexSequence = std::index_sequence_for<Components...>();
+		std::get<0>(m_Data)[entityIndexInChunk] = std::get<0>(m_Data)[m_CurrentFreeIndex - 1];
+		// ((std::get<indexSequence + 1>(m_Data)[entityIndexInChunk] = std::get<indexSequence + 1>(m_Data)[m_CurrentFreeIndex - 1]), ...);
+		// ((std::get<indexSequence + 1>(m_Data)[m_CurrentFreeIndex] = nullptr), ...);
+		m_EntityIdToChunkIndex[std::get<0>(m_Data)[entityIndexInChunk]] = entityIndexInChunk; // Update the moved entity's index in the map
+		std::cout << "Moved entity with ID: " << std::get<0>(m_Data)[entityIndexInChunk] << " to index: " << entityIndexInChunk << " originally at: " << m_CurrentFreeIndex - 1 << std::endl;
+	}
+	m_EntityIdToChunkIndex.erase(entity->GetId());
 	--m_CurrentFreeIndex;
 	--m_EntityCount;
 	m_IsFull = false;

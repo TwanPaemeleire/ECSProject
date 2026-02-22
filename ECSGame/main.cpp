@@ -17,12 +17,13 @@ int main(int, char* [])
 
 	std::unique_ptr<EntityManager> entityManager = std::make_unique<EntityManager>();
 	entityManager->CreateEntity<TransformComponent, SpriteComponent>();
-	entityManager->CreateEntity<SpriteComponent, TransformComponent>();
+	Entity* entity = entityManager->CreateEntity<SpriteComponent, TransformComponent>();
+	entityManager->DestroyEntity(entity);
 	entityManager->CreateEntity<TransformComponent, SpriteComponent>();
 	entityManager->CreateEntity<TransformComponent, SpriteComponent>();
 	entityManager->CreateEntity<TransformComponent, SpriteComponent>();
 
-	int timeInMs = speedTracker->StopTracking();
-	std::cout << "Time taken: " << timeInMs << " micro seconds" << std::endl;
+	float timeInMs = speedTracker->StopTracking();
+	std::cout << "Time taken: " << timeInMs << " miliseconds" << std::endl;
 	return 0;
 }
