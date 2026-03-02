@@ -85,7 +85,7 @@ inline Entity* EntityManager::CreateEntity(int newChunkCapacity)
 	std::unique_ptr<Entity> newEntity = std::make_unique<Entity>(m_CurrentEntityId);
 	Entity* newEntityPtr = newEntity.get();
 	chunk->AddEntity(m_CurrentEntityId);
-	newEntity->SetCurrentChunk(entitySignature, m_EntityChunks[entitySignature].size() - 1);
+	newEntity->SetCurrentChunk(entitySignature, static_cast<int>(m_EntityChunks[entitySignature].size()) - 1);
 	m_Entities[m_CurrentEntityId] = std::move(newEntity);
 	++m_CurrentEntityId;
 
@@ -99,7 +99,7 @@ inline IEntityChunk* EntityManager::CreateNewChunk(const std::string& id, int ca
 	std::unique_ptr<EntityChunk<Components...>> newChunk = std::make_unique<EntityChunk<Components...>>(capacity);
 	EntityChunk<Components...>* chunkPtr = newChunk.get();
 	m_EntityChunks[id].push_back(std::move(newChunk));
-	chunkPtr->SetChunkIndex(m_EntityChunks[id].size() - 1);
+	chunkPtr->SetChunkIndex(static_cast<int>(m_EntityChunks[id].size()) - 1);
 	std::cout << "Created new chunk for entity signature: " << id << std::endl;
 	return chunkPtr;
 }
