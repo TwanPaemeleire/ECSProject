@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.h"
 
-struct TransformComponent : Component
+struct TransformComponent : Component<TransformComponent>
 {
 public:
 	TransformComponent() = default;

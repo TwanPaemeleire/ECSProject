@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.h"
 
-struct SpriteComponent : public Component
+struct SpriteComponent : public Component<SpriteComponent>
 {
 public:
 	SpriteComponent() = default;
