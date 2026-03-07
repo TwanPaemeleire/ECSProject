@@ -8,9 +8,6 @@
 #include <algorithm>
 #include "Entity.h"
 
-#include "TransformComponent.h"
-#include "SpriteComponent.h"
-
 class Entity;
 
 class EntityManager
@@ -59,7 +56,14 @@ inline Entity* EntityManager::CreateEntity(int newChunkCapacity)
 	{
 		((Component<Components>::Index == -1 ? Component<Components>::Index = m_ComponentIndexTracker++ : 0), ...);
 	}
-	((id += Component<Components>::Index), ...);
+	std::vector<int> indices = { Component<Components>::Index... };
+	std::sort(indices.begin(), indices.end());
+	id.reserve(indices.size() * 3);
+	for (size_t i = 0; i < indices.size(); ++i)
+	{
+		if (i > 0) id.push_back(',');
+		id += std::to_string(indices[i]);
+	}
 
 	// Chunk holds a map of component index to component array index, so we can easily query
 
