@@ -14,62 +14,34 @@
 int main(int, char* []) 
 {
 	std::vector<float> timings = std::vector<float>();
-	for (int testIdx = 0; testIdx < 1; ++testIdx)
+	for (int testIdx = 0; testIdx < 20; ++testIdx)
 	{
-		std::unique_ptr<SpeedTracker> speedTracker = std::make_unique<SpeedTracker>();
-		speedTracker->StartTracking();
 
 		std::unique_ptr<EntityManager> entityManager = std::make_unique<EntityManager>();
-		// for (int i = 0; i < 1000; ++i)
-		// {
-		// 	Entity* entity = entityManager->CreateEntity<TransformComponent, SpriteComponent>();
-		// 	entityManager->DestroyEntity(entity);
-		// }
-		entityManager->CreateEntity<TransformComponent, SpriteComponent>();
-		entityManager->CreateEntity<TransformComponent, SpriteComponent>();
-		entityManager->CreateEntity<TransformComponent, SpriteComponent>();
-		entityManager->CreateEntity<TransformComponent, SpriteComponent>();
-		entityManager->CreateEntity<TransformComponent, SpriteComponent>();
-		entityManager->CreateEntity<TransformComponent, SpriteComponent>();
-		entityManager->CreateEntity<TransformComponent, SpriteComponent>();
-		entityManager->CreateEntity<TransformComponent, SpriteComponent>();
-		entityManager->CreateEntity<TransformComponent, SpriteComponent>();
-		entityManager->CreateEntity<TransformComponent, SpriteComponent>();
+		for (int i = 0; i < 100000; ++i)
+		{
+			Entity* entity = entityManager->CreateEntity<SpriteComponent>();
+		}
+		for (int i = 0; i < 10; ++i)
+		{
+			Entity* entity = entityManager->CreateEntity<TransformComponent, SpriteComponent>();
+		}
 
-		entityManager->CreateEntity<TransformComponent>();
-		entityManager->CreateEntity<TransformComponent>();
-		entityManager->CreateEntity<TransformComponent>();
-		entityManager->CreateEntity<TransformComponent>();
+		std::unique_ptr<SpeedTracker> speedTracker = std::make_unique<SpeedTracker>();
+		speedTracker->StartTracking();
 
 		EntityQueryResult result = entityManager->QueryEntities<TransformComponent>();
 		for (ChunkView view : result.Chunks)
 		{
-			std::cout << "CHUNK" << std::endl;
+			//std::cout << "CHUNK" << std::endl;
 			for (auto entity : view.Entities)
 			{
-				std::cout << "Entity ID: " << entity << std::endl;
+				//std::cout << "Entity ID: " << entity << std::endl;
 			}
 
 			for (int i = 0; i < std::get<0>(view.ComponentArrays).size(); ++i)
 			{
 				std::get<0>(view.ComponentArrays)[i].TestVar = i;
-			}
-		}
-
-		EntityQueryResult result2 = entityManager->QueryEntities<TransformComponent>();
-		for (ChunkView view : result2.Chunks)
-		{
-			std::cout << "CHUNK" << std::endl;
-			for (auto entity : view.Entities)
-			{
-				std::cout << "Entity ID: " << entity << std::endl;
-			}
-
-			for (int i = 0; i < std::get<0>(view.ComponentArrays).size(); ++i)
-			{
-				std::cout << "Entity ID: " << view.Entities[i] << std::endl;
-				std::get<0>(view.ComponentArrays)[i].TestVar = i;
-				std::cout << "Test Var Value: " << std::get<0>(view.ComponentArrays)[i].TestVar << std::endl;
 			}
 		}
 

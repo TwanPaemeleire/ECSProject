@@ -15,6 +15,13 @@ struct IEntityChunk
 	virtual void RemoveEntityAndComponents(Entity* entity) = 0;
 	virtual bool ContainsComponent(int componentIndex) const = 0;
 	virtual std::span<int> GetEntityIndices() const = 0;
+	virtual void* GetComponentArray(int componentId) const = 0;
+};
+
+struct ComponentArray 
+{
+	void* Data;
+	size_t ElementSize;
 };
 
 template <typename... Components> 
@@ -38,17 +45,15 @@ public:
 	bool ContainsComponent(int componentIndex) const;
 	std::span<int> GetEntityIndices() const;
 
-	template <typename ComponentType>
-	std::span<ComponentType> GetComponentArray() const;
+	void* GetComponentArray(int componentId) const override;
 
 private:
-	template<std::size_t... indexSequence>
-	void ConstructComponents(std::index_sequence<indexSequence...>); // std::index_sequence is just a compile-time sequence of integers {0, 1, 2, 3, etc.}
-	template<std::size_t... indexSequence>
-	void MoveComponents(int target, int source, std::index_sequence<indexSequence...>);
+	void MoveComponents(int target, int source, const std::vector<int>& componentIndices);
+	template<typename ComponentType>
+	void ConstructComponentArray(size_t capacity);
 
 	std::unique_ptr<int[]> m_EntityIds;
-	std::tuple<std::unique_ptr<Components[]>...> m_Data; // First array is for entity IDs, followed by arrays for each component type
+	std::unordered_map<int, ComponentArray> m_ComponentArrays;
 	std::unordered_map<int, int> m_EntityIdToChunkIndex; // Map to track entity IDs and their corresponding chunk indices
 	std::unordered_map<int, int> m_ComponentIdToArrayIndex; // Map to track component IDs and their corresponding array indices
 	bool m_IsFull = false;
@@ -61,10 +66,11 @@ private:
 
 template<typename ...Components>
 inline EntityChunk<Components...>::EntityChunk(size_t capacity)
-	: m_Capacity{ capacity }, m_Data{ std::make_unique<Components[]>(capacity)... }, m_EntityIds{ std::make_unique<int[]>(capacity) }
+	: m_Capacity{ capacity }, m_EntityIds{ std::make_unique<int[]>(capacity) }
 {
 	int index = 0;
 	((m_ComponentIdToArrayIndex[Components::Index] = index++), ...);
+	((ConstructComponentArray<Components>(capacity)), ...);
 	// std::cout << "EntityChunk created with capacity: " << capacity << std::endl;
 	// std::cout << "With following component types: ";
 	// ((std::cout << typeid(Components).name() << " "), ...);
@@ -86,7 +92,6 @@ inline int EntityChunk<Components...>::AddEntity(int entityId)
 	 // std::cout << std::endl << "Chunk fill progress: " << m_EntityCount + 1 << "/" << m_Capacity << std::endl;
 
 	m_EntityIds[entityIndexInChunk] = entityId;
-	ConstructComponents(std::index_sequence_for<Components...>{});
 	m_EntityIdToChunkIndex[entityId] = entityIndexInChunk;
 
 	++m_EntityCount;
@@ -107,7 +112,8 @@ inline void EntityChunk<Components...>::RemoveEntityAndComponents(Entity* entity
 	else 
 	{
 		m_EntityIds[entityIndexInChunk] = m_EntityIds[m_CurrentFreeIndex - 1];
-		MoveComponents(entityIndexInChunk, m_CurrentFreeIndex - 1, std::index_sequence_for<Components...>());
+		std::vector<int> indices = { ((Components::Index), ...) };
+		MoveComponents(entityIndexInChunk, m_CurrentFreeIndex - 1, indices);
 		m_EntityIdToChunkIndex[m_EntityIds[entityIndexInChunk]] = entityIndexInChunk; // Update the moved entity's index in the map
 		// std::cout << "Moved entity with ID: " << m_EntityIds[entityIndexInChunk] << " to index: " << entityIndexInChunk << " originally at: " << m_CurrentFreeIndex - 1 << std::endl;
 	}
@@ -130,24 +136,32 @@ inline std::span<int> EntityChunk<Components...>::GetEntityIndices() const
 }
 
 template<typename ...Components>
+inline void* EntityChunk<Components...>::GetComponentArray(int componentId) const
+{
+	auto it = m_ComponentArrays.find(componentId);
+	if (it == m_ComponentArrays.end()) throw std::runtime_error("Component not found");
+	return it->second.Data;
+}
+
+template<typename ...Components>
 template<typename ComponentType>
-inline std::span<ComponentType> EntityChunk<Components...>::GetComponentArray() const
+inline void EntityChunk<Components...>::ConstructComponentArray(size_t capacity)
 {
-	static_assert((std::is_same_v<ComponentType, Components> || ...), "ComponentType is not stored in this EntityChunk");
-	auto& ptr = std::get<std::unique_ptr<ComponentType[]>>(m_Data);
-	return { ptr.get(), m_EntityCount };
+	ComponentType* array = new ComponentType[capacity];
+	m_ComponentArrays[ComponentType::Index] =
+	{
+		static_cast<void*>(array),
+		sizeof(ComponentType)
+	};
 }
 
 template<typename ...Components>
-template<std::size_t ...indexSequence>
-inline void EntityChunk<Components...>::ConstructComponents(std::index_sequence<indexSequence...>)
+inline void EntityChunk<Components...>::MoveComponents(int target, int source, const std::vector<int>& componentIndices)
 {
-	((std::get<indexSequence>(m_Data)[m_EntityCount] = Components{}),...);
-}
-
-template<typename ...Components>
-template<std::size_t ...indexSequence>
-inline void EntityChunk<Components...>::MoveComponents(int target, int source, std::index_sequence<indexSequence...>)
-{
-	((std::get<indexSequence>(m_Data)[target] = std::get<indexSequence>(m_Data)[source]), ...);
+	for(int id : componentIndices)
+	{
+		auto& array = m_ComponentArrays[id];
+		char* data = static_cast<char*>(array.Data);
+		std::memcpy(data + target * array.ElementSize,data + source * array.ElementSize,array.ElementSize);
+	}
 }

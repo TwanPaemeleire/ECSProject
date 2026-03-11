@@ -138,10 +138,9 @@ inline EntityQueryResult<Components...> EntityManager::QueryEntities()
 		{
 			for (const std::unique_ptr<IEntityChunk>& chunk : pair.second)
 			{
-				EntityChunk<Components...>* castedChunk = static_cast<EntityChunk<Components...>*>(chunk.get());
 				ChunkView<Components...> chunkView;
-				chunkView.Entities = castedChunk->GetEntityIndices();
-				chunkView.ComponentArrays = std::make_tuple(castedChunk->GetComponentArray<Components>()...);
+				chunkView.Entities = chunk->GetEntityIndices();
+				chunkView.ComponentArrays = std::make_tuple(std::span<Components>(static_cast<Components*>(chunk->GetComponentArray(Component<Components>::Index)),chunk->GetEntityIndices().size())...);
 				result.Chunks.push_back(chunkView);
 			}
 		}
