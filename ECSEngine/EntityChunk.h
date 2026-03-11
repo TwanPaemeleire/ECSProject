@@ -31,7 +31,7 @@ class EntityChunk : public IEntityChunk
 
 public:
 	EntityChunk(size_t capacity);
-	~EntityChunk() = default;
+	~EntityChunk();
 
 	bool IsFull() const override { return m_IsFull; }
 
@@ -75,6 +75,15 @@ inline EntityChunk<Components...>::EntityChunk(size_t capacity)
 	// std::cout << "With following component types: ";
 	// ((std::cout << typeid(Components).name() << " "), ...);
 	// std::cout << std::endl;
+}
+
+template<typename ...Components>
+inline EntityChunk<Components...>::~EntityChunk()
+{
+	for (auto& [id, array] : m_ComponentArrays)
+	{
+		delete[] array.Data;
+	}
 }
 
 template<typename ...Components>

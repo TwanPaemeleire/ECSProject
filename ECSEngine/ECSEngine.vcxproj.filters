@@ -81,4 +81,9 @@
       <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Entity.inl">
+      <Filter>Header Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

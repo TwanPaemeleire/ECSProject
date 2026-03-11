@@ -8,4 +8,3 @@ public:
 	~TransformComponent() = default;
 	int TestVar = 0;
 };
-

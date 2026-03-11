@@ -27,6 +27,9 @@ struct EntityQueryResult
 class EntityManager
 {
 public:
+
+	static EntityManager Instance;
+
 	EntityManager() = default;
 	~EntityManager() = default;
 
@@ -42,6 +45,8 @@ public:
 	template <typename... Components>
 	EntityQueryResult<Components...> QueryEntities();
 
+	template<typename ComponentType>
+	void AddComponent(Entity* entity);
 private:
 
 	template <typename... Components>
@@ -114,6 +119,12 @@ inline Entity* EntityManager::CreateEntity(int newChunkCapacity)
 
 	//std::cout << "-------------------------------------" << std::endl;
 	return newEntityPtr;
+}
+
+template<typename ComponentType>
+inline void EntityManager::AddComponent(Entity* entity)
+{
+
 }
 
 template<typename ...Components>
