@@ -7,8 +7,22 @@
 #include <string>
 #include <algorithm>
 #include "Entity.h"
+#include <span>
 
 class Entity;
+
+template <typename... Components>
+struct ChunkView
+{
+	std::span<int> Entities;
+	std::tuple<std::span<Components>...> ComponentArrays;
+};
+
+template <typename... Components>
+struct EntityQueryResult 
+{
+	std::vector<ChunkView<Components...>> Chunks;
+};
 
 class EntityManager
 {
@@ -24,6 +38,9 @@ public:
 	void DestroyEntity(Entity* entity);
 
 	Entity* GetEntity(int entityId) const { return m_Entities.at(entityId).get(); }
+
+	template <typename... Components>
+	EntityQueryResult<Components...> QueryEntities();
 
 private:
 
@@ -108,6 +125,28 @@ inline IEntityChunk* EntityManager::CreateNewChunk(const std::string& id, int ca
 	chunkPtr->SetChunkIndex(static_cast<int>(m_EntityChunks[id].size()) - 1);
 	//std::cout << "Created new chunk for entity signature: " << id << std::endl;
 	return chunkPtr;
+}
+
+template<typename ...Components>
+inline EntityQueryResult<Components...> EntityManager::QueryEntities()
+{
+	EntityQueryResult<Components...> result;
+
+	for (const auto& pair : m_EntityChunks)
+	{
+		if ((pair.second[0].get()->ContainsComponent(Component<Components>::Index) && ...))
+		{
+			for (const std::unique_ptr<IEntityChunk>& chunk : pair.second)
+			{
+				EntityChunk<Components...>* castedChunk = static_cast<EntityChunk<Components...>*>(chunk.get());
+				ChunkView<Components...> chunkView;
+				chunkView.Entities = castedChunk->GetEntityIndices();
+				chunkView.ComponentArrays = std::make_tuple(castedChunk->GetComponentArray<Components>()...);
+				result.Chunks.push_back(chunkView);
+			}
+		}
+	}
+	return result;
 }
 
 template<typename T>

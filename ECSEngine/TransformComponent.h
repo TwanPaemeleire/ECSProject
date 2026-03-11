@@ -6,5 +6,6 @@ struct TransformComponent : Component<TransformComponent>
 public:
 	TransformComponent() = default;
 	~TransformComponent() = default;
+	int TestVar = 0;
 };
 
