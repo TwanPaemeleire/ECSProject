@@ -6,8 +6,8 @@ Entity::Entity(int id)
 {
 }
 
-void Entity::SetCurrentChunk(const std::string& chunkId, int chunkIndex)
+void Entity::SetCurrentChunk(const ArchetypeIdentifier& chunkId, int chunkIndex)
 {
-	m_CurrentChunkId = chunkId;
+	m_CurrentArchetypeIds = chunkId;
 	m_CurrentChunkIndex = chunkIndex;
 }
