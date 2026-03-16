@@ -23,7 +23,7 @@ public:
 
 	// Returns the index of the newly added entity within the chunk
 	int AddEntity(int entityId);
-	void RemoveEntityAndComponents(Entity* entity);
+	void RemoveEntityAndComponents(Entity& entity);
 
 	void SetChunkIndex(int index) { m_ChunkIndex = index; }
 	int GetChunkIndex() const { return m_ChunkIndex; }

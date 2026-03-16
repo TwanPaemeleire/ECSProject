@@ -35,13 +35,13 @@ public:
 	~EntityManager() = default;
 
 	template <typename... Components>
-	Entity* CreateEntity(int newChunkCapacity = 20);
+	Entity& CreateEntity(int newChunkCapacity = 20);
 	
 	void DestroyEntity(int entityId);
 	void DestroyEntity(const std::vector<int>& entityIds);
 	void DestroyEntity(Entity* entity);
 
-	Entity* GetEntity(int entityId) const { return m_Entities.at(entityId).get(); }
+	Entity& GetEntity(int entityId) { return m_Entities.at(entityId); }
 	ComponentRegistry* GetComponentRegistry() const { return m_ComponentRegistry.get(); }
 
 	template <typename... Components>
@@ -63,7 +63,7 @@ private:
 	std::type_index ReturnComponentInfo();
 
 	std::unordered_map<ArchetypeIdentifier, std::vector<std::unique_ptr<EntityChunk>>, ArchetypeIdentifierHash> m_EntityChunks;
-	std::unordered_map<int, std::unique_ptr<Entity>> m_Entities;
+	std::unordered_map<int, Entity> m_Entities;
 	std::unique_ptr<ComponentRegistry> m_ComponentRegistry;
 	int m_CurrentEntityId = 0;
 
@@ -71,7 +71,7 @@ private:
 };
 
 template<typename ...Components>
-inline Entity* EntityManager::CreateEntity(int newChunkCapacity)
+inline Entity& EntityManager::CreateEntity(int newChunkCapacity)
 {
 	// static_assert((std::is_base_of_v<Component, Components> && ...), "All types must be derived from Component");
 	//std::cout << "---------- Creating Entity ----------" << std::endl;
@@ -79,15 +79,16 @@ inline Entity* EntityManager::CreateEntity(int newChunkCapacity)
 	ArchetypeIdentifier identifier = GetArchetypeIds<Components...>();
 	EntityChunk* chunk = GetFirstAvailableChunk(identifier, newChunkCapacity);
 
-	std::unique_ptr<Entity> newEntity = std::make_unique<Entity>(m_CurrentEntityId);
-	Entity* newEntityPtr = newEntity.get();
 	chunk->AddEntity(m_CurrentEntityId);
-	newEntity->SetCurrentChunk(identifier, static_cast<int>(m_EntityChunks[identifier].size()) - 1);
-	m_Entities[m_CurrentEntityId] = std::move(newEntity);
+
+	auto [it, inserted] = m_Entities.emplace(m_CurrentEntityId,Entity(m_CurrentEntityId));
+	Entity& newEntity = it->second;
+
+	newEntity.SetCurrentChunk(identifier, static_cast<int>(m_EntityChunks[identifier].size()) - 1);
 	++m_CurrentEntityId;
 
 	//std::cout << "-------------------------------------" << std::endl;
-	return newEntityPtr;
+	return newEntity;
 }
 
 template<typename ComponentType>

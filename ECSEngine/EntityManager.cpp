@@ -13,19 +13,12 @@ EntityManager::EntityManager()
 void EntityManager::DestroyEntity(int entityId)
 {
 	//std::cout << "--------- Destroying Entity ---------" << std::endl;
-	Entity* entity = m_Entities[entityId].get();
-	if (entity)
-	{
-		const ArchetypeIdentifier& chunkId = entity->GetCurrentArchetypeIds();
-		int chunkIndex = entity->GetCurrentChunkIndex();
-		EntityChunk* entityChunk = m_EntityChunks[chunkId][chunkIndex].get();
-		entityChunk->RemoveEntityAndComponents(entity);
-		m_Entities.erase(entityId);
-	}
-	else
-	{
-		//std::cout << "No entity found with ID: " << entityId << std::endl;
-	}
+	Entity& entity = m_Entities.at(entityId);
+	const ArchetypeIdentifier& chunkId = entity.GetCurrentArchetypeIds();
+	int chunkIndex = entity.GetCurrentChunkIndex();
+	EntityChunk* entityChunk = m_EntityChunks[chunkId][chunkIndex].get();
+	entityChunk->RemoveEntityAndComponents(entity);
+	m_Entities.erase(entityId);
 	//std::cout << "-------------------------------------" << std::endl;
 }
 

@@ -22,7 +22,7 @@ int main(int, char* [])
 
 		for (int i = 0; i < 1000; ++i)
 		{
-			Entity* entity = entityManager.CreateEntity<TransformComponent, SpriteComponent>();
+			Entity& entity = entityManager.CreateEntity<TransformComponent, SpriteComponent>();
 		}
 
 		// EntityQueryResult result = entityManager.QueryEntities<TransformComponent>();

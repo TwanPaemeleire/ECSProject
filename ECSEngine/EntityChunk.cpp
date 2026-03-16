@@ -50,9 +50,9 @@ int EntityChunk::AddEntity(int entityId)
 	return entityIndexInChunk; // Return the index of the newly added entity
 }
 
-void EntityChunk::RemoveEntityAndComponents(Entity* entity)
+void EntityChunk::RemoveEntityAndComponents(Entity& entity)
 {
-	int entityIndexInChunk = m_EntityIdToChunkIndex[entity->GetId()];
+	int entityIndexInChunk = m_EntityIdToChunkIndex[entity.GetId()];
 	if (entityIndexInChunk == m_CurrentFreeIndex - 1) // If the entity to be removed is the last one, we can simply clear it without moving any data
 	{
 		// std::cout << "Removed entity with ID: " << entity->GetId() << " from index: " << entityIndexInChunk << std::endl;
@@ -61,12 +61,12 @@ void EntityChunk::RemoveEntityAndComponents(Entity* entity)
 	else
 	{
 		m_EntityIds[entityIndexInChunk] = m_EntityIds[m_CurrentFreeIndex - 1];
-		MoveComponents(entityIndexInChunk, m_CurrentFreeIndex - 1, entity->GetCurrentArchetypeIds());
+		MoveComponents(entityIndexInChunk, m_CurrentFreeIndex - 1, entity.GetCurrentArchetypeIds());
 
 		m_EntityIdToChunkIndex[m_EntityIds[entityIndexInChunk]] = entityIndexInChunk; // Update the moved entity's index in the map
 		// std::cout << "Moved entity with ID: " << m_EntityIds[entityIndexInChunk] << " to index: " << entityIndexInChunk << " originally at: " << m_CurrentFreeIndex - 1 << std::endl;
 	}
-	m_EntityIdToChunkIndex.erase(entity->GetId());
+	m_EntityIdToChunkIndex.erase(entity.GetId());
 	--m_CurrentFreeIndex;
 	--m_EntityCount;
 	m_IsFull = false;
