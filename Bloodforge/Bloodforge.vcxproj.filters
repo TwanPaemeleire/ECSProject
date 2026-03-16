@@ -28,6 +28,9 @@
     <ClCompile Include="EntityManager.cpp">
       <Filter>Source Files\Architecture</Filter>
     </ClCompile>
+    <ClCompile Include="Bloodforge.cpp">
+      <Filter>Source Files\Architecture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -67,6 +70,12 @@
       <Filter>Header Files\Architecture</Filter>
     </ClInclude>
     <ClInclude Include="Singleton.h">
+      <Filter>Header Files\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="Bloodforge.h">
+      <Filter>Header Files\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="BloodTime.h">
       <Filter>Header Files\Architecture</Filter>
     </ClInclude>
   </ItemGroup>

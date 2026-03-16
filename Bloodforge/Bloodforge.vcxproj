@@ -141,6 +141,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ArchetypeIdentifierMask.h" />
+    <ClInclude Include="Bloodforge.h" />
+    <ClInclude Include="BloodTime.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentRegistry.h" />
     <ClInclude Include="Entity.h" />
@@ -155,6 +157,7 @@
     <ClInclude Include="TransformComponent.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Bloodforge.cpp" />
     <ClCompile Include="ComponentRegistry.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityChunk.cpp" />

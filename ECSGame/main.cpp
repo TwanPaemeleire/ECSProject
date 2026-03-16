@@ -10,9 +10,12 @@
 #include <EntityManager.h>
 #include <SpriteComponent.h>
 #include <TransformComponent.h>
+#include <Bloodforge.h>
 
 int main(int, char* []) 
 {
+	Bloodforge::Bloodforge& engine = Bloodforge::Bloodforge::GetInstance();
+
 	std::vector<float> timings = std::vector<float>();
 	Bloodforge::EntityManager& entityManager = Bloodforge::EntityManager::GetInstance();
 	std::unique_ptr<Bloodforge::SpeedTracker> speedTracker = std::make_unique<Bloodforge::SpeedTracker>();

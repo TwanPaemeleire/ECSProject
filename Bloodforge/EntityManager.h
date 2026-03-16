@@ -32,8 +32,6 @@ namespace Bloodforge
 	class EntityManager : public Singleton<EntityManager>
 	{
 	public:
-
-		EntityManager();
 		~EntityManager() = default;
 
 		template <typename... Components>
@@ -71,6 +69,9 @@ namespace Bloodforge
 		std::vector<int> m_FreeIndices;
 		std::unique_ptr<ComponentRegistry> m_ComponentRegistry;
 		int m_CurrentEntityId = 0;
+
+		friend class Singleton<EntityManager>;
+		EntityManager() = default;
 	};
 
 	template<typename ...Components>
