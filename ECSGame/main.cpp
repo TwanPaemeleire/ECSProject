@@ -4,29 +4,29 @@
 #endif
 #endif
 
-#include "SpeedTracker.h"
-#include "EntityManager.h"
-#include "TransformComponent.h"
-#include "SpriteComponent.h"
 #include <iostream>
 #include <numeric>
+#include <SpeedTracker.h>
+#include <EntityManager.h>
+#include <SpriteComponent.h>
+#include <TransformComponent.h>
 
 int main(int, char* []) 
 {
 	std::vector<float> timings = std::vector<float>();
-	EntityManager& entityManager = EntityManager::Instance;
-	std::unique_ptr<SpeedTracker> speedTracker = std::make_unique<SpeedTracker>();
+	Bloodforge::EntityManager& entityManager = Bloodforge::EntityManager::Instance;
+	std::unique_ptr<Bloodforge::SpeedTracker> speedTracker = std::make_unique<Bloodforge::SpeedTracker>();
 	for (int testIdx = 0; testIdx < 20; ++testIdx)
 	{
 		entityManager.DestroyAllEntities();
 		for (int i = 0; i < 1000; ++i)
 		{
-			Entity& entity = entityManager.CreateEntity<TransformComponent, SpriteComponent>();
+			Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent>();
 		}
 
 		speedTracker->StartTracking();
-		EntityQueryResult result = entityManager.QueryEntities<TransformComponent>();
-		for (ChunkView view : result.Chunks)
+		Bloodforge::EntityQueryResult result = entityManager.QueryEntities<Bloodforge::TransformComponent>();
+		for (Bloodforge::ChunkView view : result.Chunks)
 		{
 			//std::cout << "CHUNK" << std::endl;
 			for (auto entity : view.Entities)
@@ -49,7 +49,7 @@ int main(int, char* [])
 	std::cout << "Longest time taken: " << *std::max_element(timings.begin(), timings.end()) << " miliseconds" << std::endl;
 	std::cout << "Shortest time taken: " << *std::min_element(timings.begin(), timings.end()) << " miliseconds" << std::endl;
 
-	std::cout << "ID of TransformComponent: " << Component<TransformComponent>::Index << std::endl;
-	std::cout << "ID of SpriteComponent: " << Component<SpriteComponent>::Index << std::endl;
+	std::cout << "ID of TransformComponent: " << Bloodforge::Component<Bloodforge::TransformComponent>::Index << std::endl;
+	std::cout << "ID of SpriteComponent: " << Bloodforge::Component<Bloodforge::SpriteComponent>::Index << std::endl;
 	return 0;
 }
