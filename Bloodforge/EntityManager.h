@@ -10,6 +10,7 @@
 #include <span>
 #include "ComponentRegistry.h"
 #include "ArchetypeIdentifierMask.h"
+#include "Singleton.h"
 
 namespace Bloodforge
 {
@@ -28,11 +29,9 @@ namespace Bloodforge
 		std::vector<ChunkView<Components...>> Chunks;
 	};
 
-	class EntityManager
+	class EntityManager : public Singleton<EntityManager>
 	{
 	public:
-
-		static EntityManager Instance;
 
 		EntityManager();
 		~EntityManager() = default;

@@ -148,6 +148,7 @@
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="SpeedTracker.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="System.h" />

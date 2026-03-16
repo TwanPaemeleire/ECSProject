@@ -14,7 +14,7 @@
 int main(int, char* []) 
 {
 	std::vector<float> timings = std::vector<float>();
-	Bloodforge::EntityManager& entityManager = Bloodforge::EntityManager::Instance;
+	Bloodforge::EntityManager& entityManager = Bloodforge::EntityManager::GetInstance();
 	std::unique_ptr<Bloodforge::SpeedTracker> speedTracker = std::make_unique<Bloodforge::SpeedTracker>();
 	for (int testIdx = 0; testIdx < 20; ++testIdx)
 	{
