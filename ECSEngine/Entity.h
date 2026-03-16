@@ -17,23 +17,16 @@ struct ArchetypeIdentifierHash
 
 class EntityManager;
 
-class Entity
+struct Entity
 {
-public:
 	Entity(int id);
 	~Entity() = default;
 
 	void SetCurrentChunk(const ArchetypeIdentifier& archetypeIds, int chunkIndex);
-
-	int GetId() const { return m_Id; }
-	const ArchetypeIdentifier& GetCurrentArchetypeIds() const { return m_CurrentArchetypeIds; }
-	int GetCurrentChunkIndex() const { return m_CurrentChunkIndex; }
-
 	template <typename Component>
 	void AddComponent();
 
-private:
-	int m_Id = -1;
-	ArchetypeIdentifier m_CurrentArchetypeIds;
-	int m_CurrentChunkIndex = -1;
+	int Id = -1;
+	ArchetypeIdentifier CurrentArchetypeIds;
+	int CurrentChunkIndex = -1;
 };

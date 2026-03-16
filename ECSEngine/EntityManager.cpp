@@ -14,8 +14,8 @@ void EntityManager::DestroyEntity(int entityId)
 {
 	//std::cout << "--------- Destroying Entity ---------" << std::endl;
 	Entity& entity = m_Entities.at(entityId);
-	const ArchetypeIdentifier& chunkId = entity.GetCurrentArchetypeIds();
-	int chunkIndex = entity.GetCurrentChunkIndex();
+	const ArchetypeIdentifier& chunkId = entity.CurrentArchetypeIds;
+	int chunkIndex = entity.CurrentChunkIndex;
 	EntityChunk* entityChunk = m_EntityChunks[chunkId][chunkIndex].get();
 	entityChunk->RemoveEntityAndComponents(entity);
 	m_Entities.erase(entityId);
@@ -30,9 +30,9 @@ void EntityManager::DestroyEntity(const std::vector<int>& entityIds)
 	}
 }
 
-void EntityManager::DestroyEntity(Entity* entity)
+void EntityManager::DestroyEntity(Entity& entity)
 {
-	DestroyEntity(entity->GetId());
+	DestroyEntity(entity.Id);
 }
 
 EntityChunk* EntityManager::GetFirstAvailableChunk(const ArchetypeIdentifier& id, int capacity)

@@ -10,7 +10,7 @@
 #include <span>
 #include "ComponentRegistry.h"
 
-class Entity;
+struct Entity;
 
 template <typename... Components>
 struct ChunkView
@@ -39,7 +39,7 @@ public:
 	
 	void DestroyEntity(int entityId);
 	void DestroyEntity(const std::vector<int>& entityIds);
-	void DestroyEntity(Entity* entity);
+	void DestroyEntity(Entity& entity);
 
 	Entity& GetEntity(int entityId) { return m_Entities.at(entityId); }
 	ComponentRegistry* GetComponentRegistry() const { return m_ComponentRegistry.get(); }
@@ -48,13 +48,13 @@ public:
 	EntityQueryResult<Components...> QueryEntities();
 
 	template<typename ComponentType>
-	void AddComponent(Entity* entity);
+	void AddComponent(Entity& entity);
 private:
 
 	template <typename... ComponentTypes>
 	ArchetypeIdentifier GetArchetypeIds();
 	template <typename ComponentType>
-	void UpdateArchetypeId(Entity* entity, bool isAdd = true);
+	void UpdateArchetypeId(Entity& entity, bool isAdd = true);
 
 	EntityChunk* GetFirstAvailableChunk(const ArchetypeIdentifier& id, int capacity);
 	EntityChunk* CreateNewChunk(const ArchetypeIdentifier& id, int capacity);
@@ -66,8 +66,6 @@ private:
 	std::unordered_map<int, Entity> m_Entities;
 	std::unique_ptr<ComponentRegistry> m_ComponentRegistry;
 	int m_CurrentEntityId = 0;
-
-	// int m_ComponentIndexTracker = 0;
 };
 
 template<typename ...Components>
@@ -92,9 +90,9 @@ inline Entity& EntityManager::CreateEntity(int newChunkCapacity)
 }
 
 template<typename ComponentType>
-inline void EntityManager::AddComponent(Entity* entity)
+inline void EntityManager::AddComponent(Entity& entity)
 {
-	auto* oldChunk = m_EntityChunks[entity->GetCurrentArchetypeIds()][entity->GetCurrentChunkIndex()].get();
+	auto* oldChunk = m_EntityChunks[entity.CurrentArchetypeIds][entity.CurrentChunkIndex].get();
 	UpdateArchetypeId<ComponentType>(entity);
 	// auto* newChunk = GetFirstAvailableChunk<oldchunk.template..., ComponentType>();
 }
@@ -141,17 +139,17 @@ inline ArchetypeIdentifier EntityManager::GetArchetypeIds()
 }
 
 template<typename ComponentType>
-inline void EntityManager::UpdateArchetypeId(Entity* entity, bool isAdd)
+inline void EntityManager::UpdateArchetypeId(Entity& entity, bool isAdd)
 {
 	if (isAdd)
 	{
-		ArchetypeIdentifier& archetypeId = entity->GetCurrentArchetypeIds();
+		ArchetypeIdentifier& archetypeId = entity.CurrentArchetypeIds;
 		archetypeId.emplace_back(Component<ComponentType>::Index);
 		std::sort(archetypeId.begin(), archetypeId.end());
 	}
 	else
 	{
-		ArchetypeIdentifier& archetypeId = entity->GetCurrentArchetypeIds();
+		ArchetypeIdentifier& archetypeId = entity.CurrentArchetypeIds;
 		archetypeId.erase(Component<ComponentType>::Index);
 	}
 }
