@@ -9,6 +9,7 @@
 #include "Entity.h"
 #include <span>
 #include "ComponentRegistry.h"
+#include "ArchetypeIdentifierMask.h"
 
 struct Entity;
 
@@ -49,21 +50,24 @@ public:
 
 	template<typename ComponentType>
 	void AddComponent(Entity& entity);
+
+	void DestroyAllEntities();
 private:
 
 	template <typename... ComponentTypes>
-	ArchetypeIdentifier GetArchetypeIds();
+	ArchetypeIdentifierMask GetArchetypeIds();
 	template <typename ComponentType>
 	void UpdateArchetypeId(Entity& entity, bool isAdd = true);
 
-	EntityChunk* GetFirstAvailableChunk(const ArchetypeIdentifier& id, int capacity);
-	EntityChunk* CreateNewChunk(const ArchetypeIdentifier& id, int capacity);
+	EntityChunk* GetFirstAvailableChunk(ArchetypeIdentifierMask& id, int capacity);
+	EntityChunk* CreateNewChunk(ArchetypeIdentifierMask& id, int capacity);
 
 	template <typename T>
 	std::type_index ReturnComponentInfo();
 
-	std::unordered_map<ArchetypeIdentifier, std::vector<std::unique_ptr<EntityChunk>>, ArchetypeIdentifierHash> m_EntityChunks;
-	std::unordered_map<int, Entity> m_Entities;
+	std::unordered_map<ArchetypeIdentifierMask, std::vector<std::unique_ptr<EntityChunk>>, ArchetypeIdentifierMaskHash> m_EntityChunks;
+	std::vector<Entity> m_Entities;
+	std::vector<int> m_FreeIndices;
 	std::unique_ptr<ComponentRegistry> m_ComponentRegistry;
 	int m_CurrentEntityId = 0;
 };
@@ -74,27 +78,35 @@ inline Entity& EntityManager::CreateEntity(int newChunkCapacity)
 	// static_assert((std::is_base_of_v<Component, Components> && ...), "All types must be derived from Component");
 	//std::cout << "---------- Creating Entity ----------" << std::endl;
 
-	ArchetypeIdentifier identifier = GetArchetypeIds<Components...>();
+	ArchetypeIdentifierMask identifier = GetArchetypeIds<Components...>();
 	EntityChunk* chunk = GetFirstAvailableChunk(identifier, newChunkCapacity);
 
-	chunk->AddEntity(m_CurrentEntityId);
+	int id;
 
-	auto [it, inserted] = m_Entities.emplace(m_CurrentEntityId,Entity(m_CurrentEntityId));
-	Entity& newEntity = it->second;
+	if (!m_FreeIndices.empty())
+	{
+		id = m_FreeIndices.back();
+		m_FreeIndices.pop_back();
+		m_Entities[id] = Entity(id);
+	}
+	else
+	{
+		id = static_cast<int>(m_Entities.size());
+		m_Entities.emplace_back(id);
+	}
 
-	newEntity.SetCurrentChunk(identifier, static_cast<int>(m_EntityChunks[identifier].size()) - 1);
-	++m_CurrentEntityId;
+	m_Entities[id].SetCurrentChunk(identifier, static_cast<int>(m_EntityChunks[identifier].size()) - 1);
+	chunk->AddEntity(id);
 
 	//std::cout << "-------------------------------------" << std::endl;
-	return newEntity;
+	return m_Entities[id];
 }
 
 template<typename ComponentType>
 inline void EntityManager::AddComponent(Entity& entity)
 {
-	auto* oldChunk = m_EntityChunks[entity.CurrentArchetypeIds][entity.CurrentChunkIndex].get();
+	auto* oldChunk = m_EntityChunks[entity.CurrentArchetypeId][entity.CurrentChunkIndex].get();
 	UpdateArchetypeId<ComponentType>(entity);
-	// auto* newChunk = GetFirstAvailableChunk<oldchunk.template..., ComponentType>();
 }
 
 template<typename ...Components>
@@ -104,7 +116,7 @@ inline EntityQueryResult<Components...> EntityManager::QueryEntities()
 
 	for (const auto& pair : m_EntityChunks)
 	{
-		if ((pair.second[0].get()->ContainsComponent(Component<Components>::Index) && ...))
+		if ((pair.first.HasComponent(Component<Components>::Index) && ...))
 		{
 			for (const std::unique_ptr<EntityChunk>& chunk : pair.second)
 			{
@@ -125,17 +137,12 @@ inline std::type_index EntityManager::ReturnComponentInfo()
 }
 
 template<typename ...ComponentTypes>
-inline ArchetypeIdentifier EntityManager::GetArchetypeIds()
+inline ArchetypeIdentifierMask EntityManager::GetArchetypeIds()
 {
-	// if (((Component<ComponentTypes>::Index == -1) || ...))
-	// {
-	// 	((Component<ComponentTypes>::Index == -1 ? Component<ComponentTypes>::Index = m_ComponentIndexTracker++ : 0), ...);
-	// }
 	((m_ComponentRegistry->TryRegisterComponent<ComponentTypes>()), ...);
-
-	ArchetypeIdentifier ids = { Component<ComponentTypes>::Index... };
-	std::sort(ids.begin(), ids.end());
-	return ids;
+	ArchetypeIdentifierMask identifierMask;
+	((identifierMask.AddComponent(Component<ComponentTypes>::Index)), ...);
+	return identifierMask;
 }
 
 template<typename ComponentType>
@@ -143,13 +150,12 @@ inline void EntityManager::UpdateArchetypeId(Entity& entity, bool isAdd)
 {
 	if (isAdd)
 	{
-		ArchetypeIdentifier& archetypeId = entity.CurrentArchetypeIds;
-		archetypeId.emplace_back(Component<ComponentType>::Index);
-		std::sort(archetypeId.begin(), archetypeId.end());
+		ArchetypeIdentifierMask& archetypeId = entity.CurrentArchetypeId;
+		archetypeId.AddComponent(Component<ComponentType>::Index);
 	}
 	else
 	{
-		ArchetypeIdentifier& archetypeId = entity.CurrentArchetypeIds;
-		archetypeId.erase(Component<ComponentType>::Index);
+		ArchetypeIdentifierMask& archetypeId = entity.CurrentArchetypeId;
+		// TODO: Remove from mask here
 	}
 }

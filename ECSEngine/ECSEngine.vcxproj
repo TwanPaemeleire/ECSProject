@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ArchetypeIdentifierMask.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentRegistry.h" />
     <ClInclude Include="Entity.h" />

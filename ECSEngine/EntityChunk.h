@@ -16,7 +16,7 @@ struct ComponentArray
 class EntityChunk
 {
 public:
-	EntityChunk(const ArchetypeIdentifier& identifier, size_t capacity);
+	EntityChunk(ArchetypeIdentifierMask& identifier, size_t capacity);
 	~EntityChunk();
 
 	bool IsFull() const { return m_IsFull; }

@@ -6,8 +6,8 @@ Entity::Entity(int id)
 {
 }
 
-void Entity::SetCurrentChunk(const ArchetypeIdentifier& chunkId, int chunkIndex)
+void Entity::SetCurrentChunk(const ArchetypeIdentifierMask& chunkId, int chunkIndex)
 {
-	CurrentArchetypeIds = chunkId;
+	CurrentArchetypeId = chunkId;
 	CurrentChunkIndex = chunkIndex;
 }

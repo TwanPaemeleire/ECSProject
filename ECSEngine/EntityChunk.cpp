@@ -2,13 +2,13 @@
 #include "EntityChunk.h"
 #include "EntityManager.h"
 
-EntityChunk::EntityChunk(const ArchetypeIdentifier& identifier, size_t capacity)
+EntityChunk::EntityChunk(ArchetypeIdentifierMask& identifier, size_t capacity)
 	: m_Capacity{ capacity }, m_EntityIds{ std::make_unique<int[]>(capacity) }
 {
 	// ((m_ComponentIdToArrayIndex[Components::Index] = index++), ...);
 	// ((ConstructComponentArray<Components>(capacity)), ...);
 	int index = 0;
-	for (int id : identifier)
+	for (int id : identifier.GetComponentIndices())
 	{
 		m_ComponentIdToArrayIndex[id] = index++;
 		ConstructComponentArray(id);
@@ -61,7 +61,7 @@ void EntityChunk::RemoveEntityAndComponents(Entity& entity)
 	else
 	{
 		m_EntityIds[entityIndexInChunk] = m_EntityIds[m_CurrentFreeIndex - 1];
-		MoveComponents(entityIndexInChunk, m_CurrentFreeIndex - 1, entity.CurrentArchetypeIds);
+		MoveComponents(entityIndexInChunk, m_CurrentFreeIndex - 1, entity.CurrentArchetypeId.GetComponentIndices());
 
 		m_EntityIdToChunkIndex[m_EntityIds[entityIndexInChunk]] = entityIndexInChunk; // Update the moved entity's index in the map
 		// std::cout << "Moved entity with ID: " << m_EntityIds[entityIndexInChunk] << " to index: " << entityIndexInChunk << " originally at: " << m_CurrentFreeIndex - 1 << std::endl;

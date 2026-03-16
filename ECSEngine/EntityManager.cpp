@@ -14,11 +14,11 @@ void EntityManager::DestroyEntity(int entityId)
 {
 	//std::cout << "--------- Destroying Entity ---------" << std::endl;
 	Entity& entity = m_Entities.at(entityId);
-	const ArchetypeIdentifier& chunkId = entity.CurrentArchetypeIds;
+	const ArchetypeIdentifierMask& chunkId = entity.CurrentArchetypeId;
 	int chunkIndex = entity.CurrentChunkIndex;
 	EntityChunk* entityChunk = m_EntityChunks[chunkId][chunkIndex].get();
 	entityChunk->RemoveEntityAndComponents(entity);
-	m_Entities.erase(entityId);
+	m_FreeIndices.push_back(entityId);
 	//std::cout << "-------------------------------------" << std::endl;
 }
 
@@ -35,7 +35,14 @@ void EntityManager::DestroyEntity(Entity& entity)
 	DestroyEntity(entity.Id);
 }
 
-EntityChunk* EntityManager::GetFirstAvailableChunk(const ArchetypeIdentifier& id, int capacity)
+void EntityManager::DestroyAllEntities()
+{
+	m_Entities.clear();
+	m_EntityChunks.clear();
+	m_FreeIndices.clear();
+}
+
+EntityChunk* EntityManager::GetFirstAvailableChunk(ArchetypeIdentifierMask& id, int capacity)
 {
 	EntityChunk* chunk = nullptr;
 	if (m_EntityChunks.find(id) == m_EntityChunks.end()) // Check if any chunk exists
@@ -61,7 +68,7 @@ EntityChunk* EntityManager::GetFirstAvailableChunk(const ArchetypeIdentifier& id
 	return chunk;
 }
 
-EntityChunk* EntityManager::CreateNewChunk(const ArchetypeIdentifier& id, int capacity)
+EntityChunk* EntityManager::CreateNewChunk(ArchetypeIdentifierMask& id, int capacity)
 {
 	std::unique_ptr<EntityChunk> newChunk = std::make_unique<EntityChunk>(id, capacity);
 	EntityChunk* chunkPtr = newChunk.get();
