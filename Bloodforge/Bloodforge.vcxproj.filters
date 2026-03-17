@@ -31,6 +31,9 @@
     <ClCompile Include="Bloodforge.cpp">
       <Filter>Source Files\Architecture</Filter>
     </ClCompile>
+    <ClCompile Include="BloodRenderer.cpp">
+      <Filter>Source Files\Architecture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -76,6 +79,9 @@
       <Filter>Header Files\Architecture</Filter>
     </ClInclude>
     <ClInclude Include="BloodTime.h">
+      <Filter>Header Files\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="BloodRenderer.h">
       <Filter>Header Files\Architecture</Filter>
     </ClInclude>
   </ItemGroup>

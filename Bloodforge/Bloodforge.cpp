@@ -3,11 +3,14 @@
 #include <chrono>
 #include <thread>
 #include "BloodTime.h"
+#include "BloodRenderer.h"
 
 namespace Bloodforge
 {
 	void Bloodforge::Run()
 	{
+		BloodRenderer::GetInstance().Init();
+
 		auto lastTime = std::chrono::high_resolution_clock::now();
 		float lag = 0.f;
 

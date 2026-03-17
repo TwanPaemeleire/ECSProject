@@ -4,8 +4,6 @@
 #include "EntityChunk.h"
 namespace Bloodforge
 {
-	EntityManager EntityManager::Instance = EntityManager{};
-
 	EntityManager::EntityManager()
 		:m_ComponentRegistry{ std::make_unique<ComponentRegistry>() }
 	{

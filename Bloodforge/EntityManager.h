@@ -71,7 +71,7 @@ namespace Bloodforge
 		int m_CurrentEntityId = 0;
 
 		friend class Singleton<EntityManager>;
-		EntityManager() = default;
+		EntityManager();
 	};
 
 	template<typename ...Components>

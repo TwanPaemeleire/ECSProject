@@ -94,7 +94,7 @@ namespace Bloodforge
 
 	void EntityChunk::ConstructComponentArray(int componentIndex)
 	{
-		auto& info = EntityManager::Instance.GetComponentRegistry()->GetComponentInfo(componentIndex);
+		auto& info = EntityManager::GetInstance().GetComponentRegistry()->GetComponentInfo(componentIndex);
 		void* arrayMemory = std::malloc(info.Size * m_Capacity);
 
 		m_ComponentArrays[componentIndex] =

@@ -15,6 +15,7 @@
 int main(int, char* []) 
 {
 	Bloodforge::Bloodforge& engine = Bloodforge::Bloodforge::GetInstance();
+	engine.Run();
 
 	std::vector<float> timings = std::vector<float>();
 	Bloodforge::EntityManager& entityManager = Bloodforge::EntityManager::GetInstance();

@@ -6,17 +6,17 @@ class Singleton
 public:
 	static Type& GetInstance()
 	{
-		if (!m_Initialized)
+		static Type instance;
+		static bool initialized = false;
+
+		if (!initialized)
 		{
-			m_Initialized = true;
-			InitializeBeforeFirstUse();
+			initialized = true;
+			instance.InitializeBeforeFirstUse();
 		}
-		return m_Instance;
+
+		return instance;
 	}
 
 	virtual void InitializeBeforeFirstUse() {}
-
-private:
-	static Type m_Instance;
-	bool m_Initialized = false;
 };
