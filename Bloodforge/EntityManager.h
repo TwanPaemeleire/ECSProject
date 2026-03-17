@@ -77,7 +77,6 @@ namespace Bloodforge
 	template<typename ...Components>
 	inline Entity& EntityManager::CreateEntity(int newChunkCapacity)
 	{
-		// static_assert((std::is_base_of_v<Component, Components> && ...), "All types must be derived from Component");
 		//std::cout << "---------- Creating Entity ----------" << std::endl;
 
 		ArchetypeIdentifierMask identifier = GetArchetypeIds<Components...>();

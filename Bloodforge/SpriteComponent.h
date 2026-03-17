@@ -3,10 +3,13 @@
 
 namespace Bloodforge
 {
-	struct SpriteComponent : public Component<SpriteComponent>
+	class Texture2D;
+
+	struct SpriteComponent final : public Component<SpriteComponent>
 	{
-	public:
 		SpriteComponent() = default;
 		~SpriteComponent() = default;
+
+		Texture2D* Texture;
 	};
 }

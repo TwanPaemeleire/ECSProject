@@ -34,6 +34,9 @@
     <ClCompile Include="BloodRenderer.cpp">
       <Filter>Source Files\Architecture</Filter>
     </ClCompile>
+    <ClCompile Include="Texture2D.cpp">
+      <Filter>Source Files\Architecture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -82,6 +85,9 @@
       <Filter>Header Files\Architecture</Filter>
     </ClInclude>
     <ClInclude Include="BloodRenderer.h">
+      <Filter>Header Files\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2D.h">
       <Filter>Header Files\Architecture</Filter>
     </ClInclude>
   </ItemGroup>

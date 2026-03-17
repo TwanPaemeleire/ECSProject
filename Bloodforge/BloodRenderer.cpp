@@ -5,7 +5,6 @@
 
 namespace Bloodforge
 {
-
 	void Bloodforge::BloodRenderer::Init()
 	{
 		if (!SDL_Init(SDL_INIT_VIDEO))
@@ -36,5 +35,9 @@ namespace Bloodforge
 		SDL_DestroyRenderer(m_Renderer);
 		SDL_DestroyWindow(m_Window);
 		SDL_Quit();
+	}
+	SDL_Renderer* BloodRenderer::GetSDLRenderer() const
+	{
+		return m_Renderer;
 	}
 }
