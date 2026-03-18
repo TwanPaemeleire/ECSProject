@@ -93,7 +93,7 @@
  xcopy "$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget)\SDL3_image.dll" "$(OutputPath)" /R /Y</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL3.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL3.lib;SDL3_image.lib</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -123,7 +123,7 @@
  xcopy "$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget)\SDL3_image.dll" "$(OutputPath)" /R /Y</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL3.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL3.lib;SDL3_image.lib</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -151,7 +151,7 @@
  xcopy "$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget)\SDL3_image.dll" "$(OutputPath)" /R /Y</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL3.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL3.lib;SDL3_image.lib</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -181,7 +181,7 @@
  xcopy "$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget)\SDL3_image.dll" "$(OutputPath)" /R /Y</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL3.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL3.lib;SDL3_image.lib</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -199,9 +199,13 @@
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SpeedTracker.h" />
     <ClInclude Include="SpriteComponent.h" />
+    <ClInclude Include="SpriteSystem.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="TransformComponent.h" />
@@ -219,8 +223,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SpeedTracker.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
+    <ClCompile Include="SpriteSystem.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="TransformComponent.cpp" />

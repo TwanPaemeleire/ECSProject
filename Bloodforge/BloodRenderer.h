@@ -1,18 +1,19 @@
 #pragma once
 #include "Singleton.h"
-
-#define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
 
 namespace Bloodforge
 {
-
+	class Texture2D;
 	class BloodRenderer : public Singleton<BloodRenderer>
 	{
 	public:
-		void Init();
+		virtual void InitializeBeforeFirstUse() override;
 		void Render() const;
 		void Destroy();
+
+		void Render();
+		void RenderTexture(const Texture2D& texture, float x, float y) const;
 
 		SDL_Renderer* GetSDLRenderer() const;
 		const SDL_Color& GetBackgroundColor() const { return m_ClearColor; }

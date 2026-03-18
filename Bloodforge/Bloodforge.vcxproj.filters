@@ -4,9 +4,6 @@
     <ClCompile Include="pch.cpp">
       <Filter>Generated</Filter>
     </ClCompile>
-    <ClCompile Include="System.cpp">
-      <Filter>Generated</Filter>
-    </ClCompile>
     <ClCompile Include="SpeedTracker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -37,15 +34,27 @@
     <ClCompile Include="Texture2D.cpp">
       <Filter>Source Files\Architecture</Filter>
     </ClCompile>
+    <ClCompile Include="SpriteSystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="System.cpp">
+      <Filter>Source Files\Architecture</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Source Files\Architecture</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files\Architecture</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Source Files\Architecture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
       <Filter>Generated</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
-      <Filter>Generated</Filter>
-    </ClInclude>
-    <ClInclude Include="System.h">
       <Filter>Generated</Filter>
     </ClInclude>
     <ClInclude Include="SpeedTracker.h">
@@ -90,6 +99,21 @@
     <ClInclude Include="Texture2D.h">
       <Filter>Header Files\Architecture</Filter>
     </ClInclude>
+    <ClInclude Include="SpriteSystem.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>Header Files\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Header Files\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Header Files\Architecture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Generated">
@@ -115,6 +139,12 @@
     </Filter>
     <Filter Include="Source Files\Architecture">
       <UniqueIdentifier>{c7c78784-a603-44db-86d0-9abadcf703dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Systems">
+      <UniqueIdentifier>{07913b3a-268a-472e-a075-886b209f851a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Systems">
+      <UniqueIdentifier>{84dc2bf8-94b7-449d-a15f-9f89bae60516}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

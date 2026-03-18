@@ -49,6 +49,8 @@ namespace Bloodforge
 
 		template<typename ComponentType>
 		void AddComponent(Entity& entity);
+		template <typename ComponentType>
+		ComponentType* GetComponent(Entity& entity);
 
 		void DestroyAllEntities();
 	private:
@@ -108,6 +110,16 @@ namespace Bloodforge
 	{
 		auto* oldChunk = m_EntityChunks[entity.CurrentArchetypeId][entity.CurrentChunkIndex].get();
 		UpdateArchetypeId<ComponentType>(entity);
+	}
+
+	template<typename ComponentType>
+	inline ComponentType* EntityManager::GetComponent(Entity& entity)
+	{
+		auto* chunk = m_EntityChunks[entity.CurrentArchetypeId][entity.CurrentChunkIndex].get();
+		void* array = chunk->GetComponentArray(Component<ComponentType>::Index);
+		if (!array) return nullptr;
+		int index = chunk->GetEntityInChunkIndex(entity.Id);
+		return &static_cast<ComponentType*>(array)[index];
 	}
 
 	template<typename ...Components>

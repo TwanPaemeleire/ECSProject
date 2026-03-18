@@ -26,4 +26,16 @@ namespace Bloodforge
 	{
 		return m_Texture;
 	}
+	float Texture2D::GetSizeX() const
+	{
+		float width;
+		SDL_GetTextureSize(GetSDLTexture(), &width, nullptr);
+		return width;
+	}
+	float Texture2D::GetSizeY() const
+	{
+		float height;
+		SDL_GetTextureSize(GetSDLTexture(), nullptr, &height);
+		return height;
+	}
 }

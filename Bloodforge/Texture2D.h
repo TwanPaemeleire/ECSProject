@@ -16,6 +16,9 @@ namespace Bloodforge
 		Texture2D& operator= (const Texture2D&&) = delete;
 
 		SDL_Texture* GetSDLTexture() const;
+
+		float GetSizeX() const;
+		float GetSizeY() const;
 	private:
 		SDL_Texture* m_Texture;
 	};

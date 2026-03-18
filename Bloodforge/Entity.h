@@ -13,11 +13,10 @@ namespace Bloodforge
 		~Entity() = default;
 
 		void SetCurrentChunk(const ArchetypeIdentifierMask& archetypeIds, int chunkIndex);
-		template <typename Component>
-		void AddComponent();
 
 		int Id = -1;
 		ArchetypeIdentifierMask CurrentArchetypeId;
 		int CurrentChunkIndex = -1;
 	};
 }
+#include "Entity.inl"

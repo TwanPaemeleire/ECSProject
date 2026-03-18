@@ -34,6 +34,7 @@ namespace Bloodforge
 		std::span<int> GetEntityIndices() const;
 
 		void* GetComponentArray(int componentId) const;
+		int GetEntityInChunkIndex(int entityId) const { return m_EntityIdToChunkIndex.at(entityId); }
 
 	private:
 		void MoveComponents(int target, int source, const std::vector<int>& componentIndices);
