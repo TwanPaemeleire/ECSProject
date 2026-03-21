@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "Vector2.h"
 struct SDL_Texture;
 
 namespace Bloodforge
@@ -19,7 +20,9 @@ namespace Bloodforge
 
 		float GetSizeX() const;
 		float GetSizeY() const;
+		const Vector2& GetSize() const;
 	private:
 		SDL_Texture* m_Texture;
+		Vector2 m_Size;
 	};
 }
