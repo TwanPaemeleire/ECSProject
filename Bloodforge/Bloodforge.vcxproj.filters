@@ -49,6 +49,9 @@
     <ClCompile Include="SceneManager.cpp">
       <Filter>Source Files\Architecture</Filter>
     </ClCompile>
+    <ClCompile Include="InputHandler.cpp">
+      <Filter>Source Files\Architecture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -112,6 +115,12 @@
       <Filter>Header Files\Architecture</Filter>
     </ClInclude>
     <ClInclude Include="SceneManager.h">
+      <Filter>Header Files\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="SdbmHash.h">
+      <Filter>Header Files\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="InputHandler.h">
       <Filter>Header Files\Architecture</Filter>
     </ClInclude>
   </ItemGroup>

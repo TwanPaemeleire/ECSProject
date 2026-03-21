@@ -5,6 +5,7 @@
 #include "BloodTime.h"
 #include "BloodRenderer.h"
 #include "SceneManager.h"
+#include "InputHandler.h"
 #include <iostream>
 
 namespace Bloodforge
@@ -14,11 +15,11 @@ namespace Bloodforge
 		auto& sceneManager = SceneManager::GetInstance();
 		auto& renderer = BloodRenderer::GetInstance();
 		auto& bloodTime = BloodTime::GetInstance();
+		auto& inputHandler = InputHandler::GetInstance();
 		
 		auto lastTime = std::chrono::high_resolution_clock::now();
 		float lag = 0.f;
 		
-		sceneManager.Start();
 		while (m_ShouldContinue)
 		{
 			const auto currentTime = std::chrono::high_resolution_clock::now();
@@ -27,6 +28,8 @@ namespace Bloodforge
 			lastTime = currentTime;
 			lag += bloodTime.DeltaTime;
 		
+			inputHandler.ProcessInput();
+
 			while (lag >= m_FixedTimeStep)
 			{
 				sceneManager.FixedUpdate();
