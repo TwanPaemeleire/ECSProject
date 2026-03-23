@@ -46,6 +46,16 @@ namespace Bloodforge
 		m_EntityIds[entityIndexInChunk] = entityId;
 		m_EntityIdToChunkIndex[entityId] = entityIndexInChunk;
 
+		auto* registry = EntityManager::GetInstance().GetComponentRegistry();
+
+		for (auto& [componentId, array] : m_ComponentArrays)
+		{
+			const ComponentInfo& info = registry->GetComponentInfo(componentId);
+			char* data = static_cast<char*>(array.Data);
+			void* elementPtr = data + entityIndexInChunk * array.ElementSize;
+			info.Construct(elementPtr, entityId);
+		}
+
 		++m_EntityCount;
 		++m_CurrentFreeIndex;
 		m_IsFull = (m_EntityCount) >= m_Capacity;

@@ -7,6 +7,10 @@ namespace Bloodforge
 	struct ComponentInfo
 	{
 		size_t Size;
+		size_t Alignment;
+		void (*Construct)(void*, int);
+		void (*Destruct)(void*);
+		void (*MoveConstruct)(void*, void*);
 	};
 
 	class ComponentRegistry
@@ -32,7 +36,24 @@ namespace Bloodforge
 		if (Component<ComponentType>::Index != -1) return false;
 		Component<ComponentType>::Index = m_ComponentIndexTracker++;
 
-		m_ComponentRegistry[Component<ComponentType>::Index] = { sizeof(ComponentType) };
+		ComponentInfo info{};
+		info.Size = sizeof(ComponentType);
+		info.Alignment = alignof(ComponentType);
+		info.Construct = [](void* ptr, int entityId)
+			{
+				new (ptr) ComponentType{};
+				static_cast<ComponentType*>(ptr)->OwnerEntityId = entityId;
+			};
+		info.Destruct = [](void* ptr)
+			{
+				static_cast<ComponentType*>(ptr)->~ComponentType();
+			};
+		info.MoveConstruct = [](void* dst, void* src)
+			{
+				new (dst) ComponentType(std::move(*static_cast<ComponentType*>(src)));
+			};
+
+		m_ComponentRegistry[Component<ComponentType>::Index] = info;
 		return true;
 	}
 

@@ -20,6 +20,8 @@
 #include <ResourceManager.h>
 #include <filesystem>
 #include <string>
+#include "TestSystem.h"
+#include "RotationComponent.h"
 
 
 void LoadFunction()
@@ -27,16 +29,41 @@ void LoadFunction()
 	auto& scene = Bloodforge::SceneManager::GetInstance().GetActiveScene();
 	auto& entityManager = Bloodforge::EntityManager::GetInstance();
 
-	Bloodforge::Texture2D* texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Resources/Hades.png");		
-	for (int i = 0; i < 1000; ++i)
-	{
-		Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent>();
-		Bloodforge::SpriteComponent* spriteComp = entityManager.GetComponent<Bloodforge::SpriteComponent>(entity);
-		spriteComp->Texture = texture;
-	}
+	Bloodforge::Texture2D* texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Resources/Heart.png");		
+
+	Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, RotationComponent>();
+	int entityId = entity.Id;
+	Bloodforge::SpriteComponent* spriteComp = entityManager.GetComponent<Bloodforge::SpriteComponent>(entity);
+	spriteComp->Texture = texture;
+	Bloodforge::TransformComponent* transformComp = entityManager.GetComponent<Bloodforge::TransformComponent>(entity);
+	transformComp->SetLocalPosition(300.0f, 300.0f);
+	RotationComponent* rotationComp = entityManager.GetComponent<RotationComponent>(entity);
+	rotationComp->CenterPosition = { 400.0f, 400.0f };
+	rotationComp->Speed = 5.0f;
+	rotationComp->Radius = 200.0f;
+
+	Bloodforge::Entity& entity2 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, RotationComponent>();
+	Bloodforge::SpriteComponent* spriteComp2 = entityManager.GetComponent<Bloodforge::SpriteComponent>(entity2);
+	spriteComp2->Texture = texture;
+	Bloodforge::TransformComponent* transformComp2 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity2);
+	transformComp2->SetParent(entityId, false);
+	transformComp2->SetLocalPosition(80.0f, 80.0f);
+	RotationComponent* rotationComp2 = entityManager.GetComponent<RotationComponent>(entity2);
+	rotationComp2->Speed = 10.0f;
+	rotationComp2->Radius = 100.0f;
+
+	// for (int i = 0; i < 1000; ++i)
+	// {
+	// 	Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent>();
+	// 	Bloodforge::SpriteComponent* spriteComp = entityManager.GetComponent<Bloodforge::SpriteComponent>(entity);
+	// 	spriteComp->Texture = texture;
+	// }
+
 
 	std::unique_ptr<Bloodforge::SpriteSystem> spriteSystem = std::make_unique<Bloodforge::SpriteSystem>();
 	scene.RegisterSystem(std::move(spriteSystem));
+	std::unique_ptr<TestSystem> testSystem = std::make_unique<TestSystem>();
+	scene.RegisterSystem(std::move(testSystem));
 }
 
 int main(int, char* []) 

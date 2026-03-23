@@ -95,7 +95,7 @@ namespace Bloodforge
 		else
 		{
 			id = static_cast<int>(m_Entities.size());
-			m_Entities.emplace_back(id);
+			m_Entities.emplace_back(Entity(id));
 		}
 
 		m_Entities[id].SetCurrentChunk(identifier, static_cast<int>(m_EntityChunks[identifier].size()) - 1);

@@ -10,6 +10,6 @@ namespace Bloodforge
 		SpriteComponent() = default;
 		~SpriteComponent() = default;
 
-		Texture2D* Texture;
+		Texture2D* Texture = nullptr;
 	};
 }
