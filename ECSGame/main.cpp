@@ -42,15 +42,15 @@ void LoadFunction()
 	rotationComp->Speed = 5.0f;
 	rotationComp->Radius = 200.0f;
 
-	Bloodforge::Entity& entity2 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, RotationComponent>();
+	Bloodforge::Entity& entity2 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent/*, RotationComponent*/>();
 	Bloodforge::SpriteComponent* spriteComp2 = entityManager.GetComponent<Bloodforge::SpriteComponent>(entity2);
 	spriteComp2->Texture = texture;
 	Bloodforge::TransformComponent* transformComp2 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity2);
 	transformComp2->SetParent(entityId, false);
 	transformComp2->SetLocalPosition(80.0f, 80.0f);
-	RotationComponent* rotationComp2 = entityManager.GetComponent<RotationComponent>(entity2);
-	rotationComp2->Speed = 10.0f;
-	rotationComp2->Radius = 100.0f;
+	// RotationComponent* rotationComp2 = entityManager.GetComponent<RotationComponent>(entity2);
+	// rotationComp2->Speed = 10.0f;
+	// rotationComp2->Radius = 100.0f;
 
 	// for (int i = 0; i < 1000; ++i)
 	// {

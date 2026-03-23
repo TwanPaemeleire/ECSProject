@@ -129,6 +129,12 @@
     <ClInclude Include="Vector2.h">
       <Filter>Header Files\Architecture</Filter>
     </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Header Files\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalEventHandler.h">
+      <Filter>Header Files\Architecture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Generated">

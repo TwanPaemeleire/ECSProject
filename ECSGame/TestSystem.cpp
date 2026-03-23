@@ -4,6 +4,37 @@
 #include <SpriteComponent.h>
 #include "RotationComponent.h"
 #include <BloodTime.h>
+#include <GlobalEventHandler.h>
+#include <iostream>
+#include <numbers>
+
+void TestSystem::OnStart()
+{
+	// Global event
+	auto& globalEventHandler = Bloodforge::GlobalEventHandler::GetInstance();
+	int globalId = globalEventHandler.AddListener<TestGlobalEventData>([this](const TestGlobalEventData& eventData)
+		{
+			GlobalEventTest(eventData);
+		});
+
+	globalEventHandler.RemoveListener<TestGlobalEventData>(globalId);
+	globalEventHandler.AddListener<TestGlobalEventData>([this](const TestGlobalEventData& eventData)
+		{
+			GlobalEventTest(eventData);
+		});
+
+	// Local event
+	m_TestEvent = std::make_unique<Bloodforge::Event<float, int>>();
+	int id = m_TestEvent->AddListener([this](float x, int y)
+		{
+			LocalEventTest(x, y);
+		});
+	m_TestEvent->RemoveListener(id);
+	m_TestEvent->AddListener([this](float x, int y)
+		{
+			LocalEventTest(x, y);
+		});
+}
 
 void TestSystem::OnUpdate()
 {
@@ -21,6 +52,26 @@ void TestSystem::OnUpdate()
 			float x = rotationComp.CenterPosition.X + deltaX;
 			float y = rotationComp.CenterPosition.Y + deltaY;
 			std::get<0>(view.ComponentArrays)[i].SetLocalPosition(x, y);
+
+
+			if (rotationComp.Angle >= std::numbers::pi * 2)
+			{
+				rotationComp.Angle -= static_cast<float>(std::numbers::pi) * 2.0f;
+				TestGlobalEventData data;
+				data.Test = 20;
+				Bloodforge::GlobalEventHandler::GetInstance().InvokeEvent<TestGlobalEventData>(data);
+				m_TestEvent->Invoke(0.2f, 2);
+			}
 		}
 	}
+}
+
+void TestSystem::GlobalEventTest(const TestGlobalEventData& eventData)
+{
+	std::cout << "Global event triggered" << std::endl;
+}
+
+void TestSystem::LocalEventTest(float x, int y)
+{
+	std::cout << "Local event triggered" << std::endl;
 }

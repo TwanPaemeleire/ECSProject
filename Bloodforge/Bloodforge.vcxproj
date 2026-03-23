@@ -197,7 +197,9 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityChunk.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="Event.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="GlobalEventHandler.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ResourceManager.h" />
