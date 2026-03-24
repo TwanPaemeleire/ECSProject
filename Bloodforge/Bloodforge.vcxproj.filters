@@ -58,6 +58,7 @@
     <ClCompile Include="TextSystem.cpp">
       <Filter>Source Files\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Font.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -145,6 +146,7 @@
       <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="Color.h" />
+    <ClInclude Include="Font.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Generated">
@@ -155,9 +157,6 @@
     </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{f3e222d3-7c8a-4178-920a-d23327056359}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Inline Files">
-      <UniqueIdentifier>{a05acb9c-2e37-402e-a564-3f2f6ecae25c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Components">
       <UniqueIdentifier>{94136306-7b4f-4811-8e4c-53b48ae1c999}</UniqueIdentifier>
@@ -177,10 +176,5 @@
     <Filter Include="Source Files\Systems">
       <UniqueIdentifier>{84dc2bf8-94b7-449d-a15f-9f89bae60516}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Entity.inl">
-      <Filter>Inline Files</Filter>
-    </None>
   </ItemGroup>
 </Project>

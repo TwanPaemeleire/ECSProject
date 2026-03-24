@@ -5,12 +5,25 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <stdexcept>
 #include <iostream>
+#include <filesystem>
 
 namespace Bloodforge
 {
 	void ResourceManager::InitializeBeforeFirstUse()
 	{
 		TTF_Init();
+	}
+
+	void ResourceManager::SetResourcesDirectory(const std::string& path) const
+	{
+		if (std::filesystem::exists(path))
+		{
+			std::filesystem::current_path(path);
+		}
+		else
+		{
+			throw std::runtime_error("Tried setting resources directory to a folder which doesn't exist.");
+		}
 	}
 
 	Texture2D* Bloodforge::ResourceManager::LoadTexture(const std::string& file)
@@ -20,18 +33,13 @@ namespace Bloodforge
 		return m_LoadedTextures.at(file).get();
 	}
 
-	TTF_Font* ResourceManager::LoadFont(const std::string& file, uint8_t size)
+	Font* ResourceManager::LoadFont(const std::string& file, float size)
 	{
-		const auto key = std::pair<std::string, uint8_t>(file, size);
+		const auto key = std::pair<std::string, float>(file, size);
 		if (m_LoadedFonts.find(key) == m_LoadedFonts.end())
 		{
-			TTF_Font* font = TTF_OpenFont(file.c_str(), size);
-			if (font == nullptr)
-			{
-				throw std::runtime_error(std::string("Loading font failed: ") + SDL_GetError());
-			}
-			m_LoadedFonts.insert(std::pair(key, font));
+			m_LoadedFonts.insert(std::pair(key, std::make_unique<Font>(file, size)));
 		}
-		return m_LoadedFonts.at(key);
+		return m_LoadedFonts.at(key).get();
 	}
 }

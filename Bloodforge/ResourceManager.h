@@ -3,16 +3,17 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
+#include "Font.h"
 
 namespace std
 {
 	template<>
-	struct hash<std::pair<std::string, uint8_t>>
+	struct hash<std::pair<std::string, float>>
 	{
-		size_t operator()(const std::pair<std::string, uint8_t>& p) const noexcept
+		size_t operator()(const std::pair<std::string, float>& p) const noexcept
 		{
 			size_t h1 = hash<std::string>{}(p.first);
-			size_t h2 = hash<uint8_t>{}(p.second);
+			size_t h2 = hash<float>{}(p.second);
 			return h1 ^ (h2 << 1);
 		}
 	};
@@ -26,8 +27,9 @@ namespace Bloodforge
 	{
 	public:
 		virtual void InitializeBeforeFirstUse() override;
+		void SetResourcesDirectory(const std::string& path) const;
 		Texture2D* LoadTexture(const std::string& file);
-		TTF_Font* LoadFont(const std::string& file, uint8_t size);
+		Font* LoadFont(const std::string& file, float size);
 
 	protected:
 		friend class Singleton<ResourceManager>;
@@ -35,6 +37,6 @@ namespace Bloodforge
 
 	private:
 		std::unordered_map<std::string, std::unique_ptr<Texture2D>> m_LoadedTextures;
-		std::unordered_map<std::pair<std::string, uint8_t>, TTF_Font*> m_LoadedFonts;
+		std::unordered_map<std::pair<std::string, float>, std::unique_ptr<Font>> m_LoadedFonts;
 	};
 }					

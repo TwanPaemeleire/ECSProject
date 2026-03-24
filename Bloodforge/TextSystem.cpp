@@ -5,6 +5,7 @@
 #include "TransformComponent.h"
 #include "BloodRenderer.h"
 #include <SDL3_ttf/SDL_ttf.h>
+#include "ResourceManager.h"
 
 namespace Bloodforge
 {
@@ -17,11 +18,17 @@ namespace Bloodforge
 			for (int i = 0; i < std::get<0>(view.ComponentArrays).size(); ++i)
 			{
 				TextComponent& textComp = std::get<0>(view.ComponentArrays)[i];
-				if (textComp.DoesNeedUpdate())
+				if (textComp.TextDoesNeedUpdate())
 				{
 					const Color& color = textComp.GetColor();
 					SDL_Color sdlColor = {color.r, color.g, color.b, color.a};
-					const auto surf = TTF_RenderText_Blended(textComp.GetFont(), textComp.GetText().c_str(), 0, sdlColor);
+
+					if (textComp.FontDoesNeedUpdate())
+					{
+						textComp.SetFont(ResourceManager::GetInstance().LoadFont(textComp.GetFont()->GetFontPath(), textComp.GetFontSize()));
+					}
+
+					const auto surf = TTF_RenderText_Blended(textComp.GetFont()->GetFontPointer(), textComp.GetText().c_str(), 0, sdlColor);
 					if (surf == nullptr)
 					{
 						throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());

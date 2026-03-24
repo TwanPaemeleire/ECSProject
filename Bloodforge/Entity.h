@@ -5,8 +5,6 @@
 
 namespace Bloodforge
 {
-	class EntityManager;
-
 	struct Entity
 	{
 		Entity(int id);
@@ -19,4 +17,3 @@ namespace Bloodforge
 		int CurrentChunkIndex = -1;
 	};
 }
-#include "Entity.inl"

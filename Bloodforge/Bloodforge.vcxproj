@@ -203,6 +203,7 @@
     <ClInclude Include="EntityChunk.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="Font.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GlobalEventHandler.h" />
     <ClInclude Include="InputHandler.h" />
@@ -229,6 +230,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityChunk.cpp" />
     <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="Font.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -247,9 +249,6 @@
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="Vector2.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Entity.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

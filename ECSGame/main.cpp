@@ -30,7 +30,7 @@ void LoadFunction()
 	auto& scene = Bloodforge::SceneManager::GetInstance().GetActiveScene();
 	auto& entityManager = Bloodforge::EntityManager::GetInstance();
 
-	Bloodforge::Texture2D* texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Resources/Heart.png");		
+	Bloodforge::Texture2D* texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Heart.png");		
 
 	Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, RotationComponent>();
 	int entityId = entity.Id;
@@ -56,16 +56,10 @@ void LoadFunction()
 	Bloodforge::Entity& entity3 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::TextComponent>();
 	Bloodforge::TextComponent* textComp = entityManager.GetComponent<Bloodforge::TextComponent>(entity3);
 	textComp->SetText("Testing");
-	textComp->SetFontSize(200);
-	textComp->SetFont(Bloodforge::ResourceManager::GetInstance().LoadFont("Resources/Font.otf", 60));
+	textComp->SetFontSize(60.0f);
+	textComp->SetColor(Bloodforge::Color(255, 0, 0, 255));
+	textComp->SetFont(Bloodforge::ResourceManager::GetInstance().LoadFont("Font.otf", 60));
 	entityManager.GetComponent<Bloodforge::TransformComponent>(entity3)->SetLocalPosition(400, 400);
-
-	// for (int i = 0; i < 1000; ++i)
-	// {
-	// 	Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent>();
-	// 	Bloodforge::SpriteComponent* spriteComp = entityManager.GetComponent<Bloodforge::SpriteComponent>(entity);
-	// 	spriteComp->Texture = texture;
-	// }
 
 	std::unique_ptr<Bloodforge::SpriteSystem> spriteSystem = std::make_unique<Bloodforge::SpriteSystem>();
 	scene.RegisterSystem(std::move(spriteSystem));
@@ -77,17 +71,8 @@ void LoadFunction()
 
 int main(int, char* []) 
 {
-	// constexpr int MAX_STEPS_UP{ 5 };
-	// std::filesystem::path resourcesFolderName{ "Resources" };
-	// int counter{ 0 };
-	// while (not std::filesystem::exists(dataFolderName) and counter < MAX_STEPS_UP)
-	// {
-	// 	std::filesystem::current_path(".."); // If "Resources" doesn't exist in this current folder, navigate one up in the hierarchy
-	// 	counter++;
-	// }
-	// std::filesystem::current_path(resourcesFolderName); // Set the current path, this way the file system paths will be relative to this one and thus to "Resources" (if it found a "Resources" folder)
-
 	Bloodforge::Bloodforge& engine = Bloodforge::Bloodforge::GetInstance();
+	Bloodforge::ResourceManager::GetInstance().SetResourcesDirectory("Resources");
 	auto& sceneManager = Bloodforge::SceneManager::GetInstance();
 	sceneManager.RegisterScene("TestScene", LoadFunction);
 	sceneManager.RequestSetCurrentScene("TestScene");

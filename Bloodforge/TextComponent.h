@@ -5,60 +5,62 @@
 #include <memory>
 #include "Texture2D.h"
 
-struct TTF_Font;
-struct SDL_Color;
 namespace Bloodforge
 {
+	class Font;
 	struct TextComponent final : public Component<TextComponent>
 	{
 		void SetText(const std::string& text)
 		{
 			Text = text;
-			NeedsUpdate = true;
+			TextNeedsUpdate = true;
 		}
 
-		void SetFontSize(int size)
+		void SetFontSize(float size)
 		{
 			FontSize = size;
-			NeedsUpdate = true;
+			FontNeedsUpdate = true;
 		}
 
 		void SetColor(const Color& color)
 		{
 			Color = color;
-			NeedsUpdate = true;
+			TextNeedsUpdate = true;
 		}
 
-		void SetFont(TTF_Font* font)
+		void SetFont(Font* font)
 		{
 			Font = font;
-			NeedsUpdate = true;
+			TextNeedsUpdate = true;
 		}
 
 		void SetTexture(std::unique_ptr<Texture2D> texture)
 		{
 			Texture = std::move(texture);
-			NeedsUpdate = false;
+			TextNeedsUpdate = false;
 		}
 
 		void CompleteUpdate()
 		{
-			NeedsUpdate = false;
+			TextNeedsUpdate = false;
+			FontNeedsUpdate = false;
 		}
 
-		bool DoesNeedUpdate() const { return NeedsUpdate; }
+		bool TextDoesNeedUpdate() const { return TextNeedsUpdate; }
+		bool FontDoesNeedUpdate() const { return FontNeedsUpdate; }
 		Texture2D* GetTexture() const { return Texture.get(); }
-		TTF_Font* GetFont() const { return Font; }
-		int GetFontSize() const { return FontSize; }
+		Font* GetFont() const { return Font; }
+		float GetFontSize() const { return FontSize; }
 		const std::string& GetText() const { return Text; }
 		const Color& GetColor() const { return Color; }
 
 	private:
-		std::string Text;
-		int FontSize;
-		Color Color;
-		TTF_Font* Font;
+		std::string Text = "";
+		float FontSize = 0.0f;
+		Color Color = {};
+		Font* Font = nullptr;
 		std::unique_ptr<Texture2D> Texture;
-		bool NeedsUpdate = true;
+		bool TextNeedsUpdate = true;
+		bool FontNeedsUpdate = true;
 	};
 }
