@@ -58,7 +58,9 @@
     <ClCompile Include="TextSystem.cpp">
       <Filter>Source Files\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Font.cpp" />
+    <ClCompile Include="Font.cpp">
+      <Filter>Source Files\Architecture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -145,8 +147,15 @@
     <ClInclude Include="TextComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Color.h" />
-    <ClInclude Include="Font.h" />
+    <ClInclude Include="Font.h">
+      <Filter>Header Files\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Header Files\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSaveLoadUtils.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Generated">
@@ -175,6 +184,9 @@
     </Filter>
     <Filter Include="Source Files\Systems">
       <UniqueIdentifier>{84dc2bf8-94b7-449d-a15f-9f89bae60516}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{c6ccee56-d185-47db-8734-5a17c8a2ccdb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

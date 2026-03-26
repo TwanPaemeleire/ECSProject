@@ -1,5 +1,6 @@
 #pragma once
 #include "Singleton.h"
+#include <string>
 
 namespace Bloodforge
 {
@@ -15,6 +16,7 @@ namespace Bloodforge
 		Bloodforge& operator=(Bloodforge&& other) = delete;
 
 		void RequestStop();
+		void SetResourcesDirectory(const std::string& path) const;
 
 	private:
 		const float m_FixedTimeStep{ 1.f / 60.f };

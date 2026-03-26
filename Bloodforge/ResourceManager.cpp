@@ -14,18 +14,6 @@ namespace Bloodforge
 		TTF_Init();
 	}
 
-	void ResourceManager::SetResourcesDirectory(const std::string& path) const
-	{
-		if (std::filesystem::exists(path))
-		{
-			std::filesystem::current_path(path);
-		}
-		else
-		{
-			throw std::runtime_error("Tried setting resources directory to a folder which doesn't exist.");
-		}
-	}
-
 	Texture2D* Bloodforge::ResourceManager::LoadTexture(const std::string& file)
 	{
 		if (m_LoadedTextures.find(file) == m_LoadedTextures.end())

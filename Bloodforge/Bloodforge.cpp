@@ -7,6 +7,7 @@
 #include "SceneManager.h"
 #include "InputHandler.h"
 #include <iostream>
+#include <filesystem>
 
 namespace Bloodforge
 {
@@ -46,5 +47,17 @@ namespace Bloodforge
 	void Bloodforge::RequestStop()
 	{
 		m_ShouldContinue = false;
+	}
+
+	void Bloodforge::SetResourcesDirectory(const std::string& path) const
+	{
+		if (std::filesystem::exists(path))
+		{
+			std::filesystem::current_path(path);
+		}
+		else
+		{
+			throw std::runtime_error("Tried setting resources directory to a folder which doesn't exist.");
+		}
 	}
 }

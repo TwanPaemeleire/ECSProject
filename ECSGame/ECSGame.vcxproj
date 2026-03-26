@@ -144,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RotationComponent.h" />
+    <ClInclude Include="TestSaveFile.h" />
     <ClInclude Include="TestSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

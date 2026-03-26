@@ -27,7 +27,6 @@ namespace Bloodforge
 	{
 	public:
 		virtual void InitializeBeforeFirstUse() override;
-		void SetResourcesDirectory(const std::string& path) const;
 		Texture2D* LoadTexture(const std::string& file);
 		Font* LoadFont(const std::string& file, float size);
 

@@ -203,6 +203,7 @@
     <ClInclude Include="EntityChunk.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="FileSaveLoadUtils.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GlobalEventHandler.h" />

@@ -5,8 +5,6 @@
 #endif
 
 #include <iostream>
-#include <numeric>
-#include <SpeedTracker.h>
 #include <EntityManager.h>
 #include <SpriteComponent.h>
 #include <TransformComponent.h>
@@ -14,16 +12,15 @@
 #include <SceneManager.h>
 #include <SpriteSystem.h>
 #include <Scene.h>
-#include <SpriteSystem.h>
 #include <memory>
 #include <Texture2D.h>
 #include <ResourceManager.h>
-#include <filesystem>
-#include <string>
 #include "TestSystem.h"
 #include "RotationComponent.h"
 #include <TextComponent.h>
 #include <TextSystem.h>
+#include <FileSaveLoadUtils.h>
+#include "TestSaveFile.h"
 
 void LoadFunction()
 {
@@ -58,7 +55,7 @@ void LoadFunction()
 	textComp->SetText("Testing");
 	textComp->SetFontSize(60.0f);
 	textComp->SetColor(Bloodforge::Color(255, 0, 0, 255));
-	textComp->SetFont(Bloodforge::ResourceManager::GetInstance().LoadFont("Font.otf", 60));
+	textComp->SetFont(Bloodforge::ResourceManager::GetInstance().LoadFont("Font.otf", 60.0f));
 	entityManager.GetComponent<Bloodforge::TransformComponent>(entity3)->SetLocalPosition(400, 400);
 
 	std::unique_ptr<Bloodforge::SpriteSystem> spriteSystem = std::make_unique<Bloodforge::SpriteSystem>();
@@ -72,7 +69,14 @@ void LoadFunction()
 int main(int, char* []) 
 {
 	Bloodforge::Bloodforge& engine = Bloodforge::Bloodforge::GetInstance();
-	Bloodforge::ResourceManager::GetInstance().SetResourcesDirectory("Resources");
+	engine.SetResourcesDirectory("Resources");
+
+	TestSaveFile testSaveFile;
+	testSaveFile.Coins = 200;
+	testSaveFile.Health = 50.0f;
+	Bloodforge::FileSaveLoadUtils::SaveFile<TestSaveFile>(testSaveFile, "TestSaveFile.json");
+	testSaveFile = Bloodforge::FileSaveLoadUtils::LoadFile<TestSaveFile>("TestSaveFile.json");
+
 	auto& sceneManager = Bloodforge::SceneManager::GetInstance();
 	sceneManager.RegisterScene("TestScene", LoadFunction);
 	sceneManager.RequestSetCurrentScene("TestScene");
