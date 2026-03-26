@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <filesystem>
+#include <SDL3_image/SDL_image.h>
 
 namespace Bloodforge
 {
@@ -29,5 +30,26 @@ namespace Bloodforge
 			m_LoadedFonts.insert(std::pair(key, std::make_unique<Font>(file, size)));
 		}
 		return m_LoadedFonts.at(key).get();
+	}
+	CustomCursor* ResourceManager::LoadCustomCursor(CursorId id, const std::string& file, int xOffset, int yOffset)
+	{
+		auto it = m_LoadedCustomCursors.find(id);
+		if (it != m_LoadedCustomCursors.end())
+		{
+			return it->second.get();
+		}
+
+		SDL_Surface* surface = IMG_Load(file.c_str());
+		if (!surface)
+		{
+			throw std::runtime_error(SDL_GetError());
+		}
+
+		auto cursor = std::make_unique<CustomCursor>(surface, xOffset, yOffset);
+		SDL_DestroySurface(surface);
+		CustomCursor* customCursor = cursor.get();
+		m_LoadedCustomCursors[id] = std::move(cursor);
+
+		return customCursor;
 	}
 }

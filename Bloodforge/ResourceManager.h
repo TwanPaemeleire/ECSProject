@@ -4,6 +4,9 @@
 #include <string>
 #include <memory>
 #include "Font.h"
+#include "CustomCursor.h"
+
+using CursorId = unsigned int;
 
 namespace std
 {
@@ -29,6 +32,7 @@ namespace Bloodforge
 		virtual void InitializeBeforeFirstUse() override;
 		Texture2D* LoadTexture(const std::string& file);
 		Font* LoadFont(const std::string& file, float size);
+		CustomCursor* LoadCustomCursor(CursorId id, const std::string& file, int xOffset, int yOffset);
 
 	protected:
 		friend class Singleton<ResourceManager>;
@@ -37,5 +41,6 @@ namespace Bloodforge
 	private:
 		std::unordered_map<std::string, std::unique_ptr<Texture2D>> m_LoadedTextures;
 		std::unordered_map<std::pair<std::string, float>, std::unique_ptr<Font>> m_LoadedFonts;
+		std::unordered_map<CursorId, std::unique_ptr<CustomCursor>> m_LoadedCustomCursors;
 	};
 }					

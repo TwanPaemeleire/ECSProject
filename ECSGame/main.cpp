@@ -21,6 +21,8 @@
 #include <TextSystem.h>
 #include <FileSaveLoadUtils.h>
 #include "TestSaveFile.h"
+#include <WindowUtils.h>
+#include <SdbmHash.h>
 
 void LoadFunction()
 {
@@ -30,7 +32,7 @@ void LoadFunction()
 	Bloodforge::Texture2D* texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Heart.png");		
 
 	Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, RotationComponent>();
-	int entityId = entity.Id;
+	// int entityId = entity.Id;
 	Bloodforge::SpriteComponent* spriteComp = entityManager.GetComponent<Bloodforge::SpriteComponent>(entity);
 	spriteComp->Texture = texture;
 	Bloodforge::TransformComponent* transformComp = entityManager.GetComponent<Bloodforge::TransformComponent>(entity);
@@ -40,15 +42,15 @@ void LoadFunction()
 	rotationComp->Speed = 5.0f;
 	rotationComp->Radius = 200.0f;
 
-	Bloodforge::Entity& entity2 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, RotationComponent>();
-	Bloodforge::SpriteComponent* spriteComp2 = entityManager.GetComponent<Bloodforge::SpriteComponent>(entity2);
-	spriteComp2->Texture = texture;
-	Bloodforge::TransformComponent* transformComp2 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity2);
-	transformComp2->SetParent(entityId, false);
-	transformComp2->SetLocalPosition(80.0f, 80.0f);
-	RotationComponent* rotationComp2 = entityManager.GetComponent<RotationComponent>(entity2);
-	rotationComp2->Speed = 10.0f;
-	rotationComp2->Radius = 100.0f;
+	// Bloodforge::Entity& entity2 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, RotationComponent>();
+	// Bloodforge::SpriteComponent* spriteComp2 = entityManager.GetComponent<Bloodforge::SpriteComponent>(entity2);
+	// spriteComp2->Texture = texture;
+	// Bloodforge::TransformComponent* transformComp2 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity2);
+	// transformComp2->SetParent(entityId, false);
+	// transformComp2->SetLocalPosition(80.0f, 80.0f);
+	// RotationComponent* rotationComp2 = entityManager.GetComponent<RotationComponent>(entity2);
+	// rotationComp2->Speed = 10.0f;
+	// rotationComp2->Radius = 100.0f;
 
 	Bloodforge::Entity& entity3 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::TextComponent>();
 	Bloodforge::TextComponent* textComp = entityManager.GetComponent<Bloodforge::TextComponent>(entity3);
@@ -76,6 +78,12 @@ int main(int, char* [])
 	testSaveFile.Health = 50.0f;
 	Bloodforge::FileSaveLoadUtils::SaveFile<TestSaveFile>(testSaveFile, "TestSaveFile.json");
 	testSaveFile = Bloodforge::FileSaveLoadUtils::LoadFile<TestSaveFile>("TestSaveFile.json");
+
+	Bloodforge::WindowUtils::SetWindowAlwaysOnTop(true);
+	Bloodforge::WindowUtils::SetWindowBordered(true);
+	Bloodforge::WindowUtils::SetWindowFullScreen(false);
+	Bloodforge::WindowUtils::SetWindowIcon("Heart.png");
+	Bloodforge::WindowUtils::SetCustomCursor(Bloodforge::ResourceManager::GetInstance().LoadCustomCursor(make_sdbm_hash("TestCursor"), "Cursor.png", 0, 0));
 
 	auto& sceneManager = Bloodforge::SceneManager::GetInstance();
 	sceneManager.RegisterScene("TestScene", LoadFunction);

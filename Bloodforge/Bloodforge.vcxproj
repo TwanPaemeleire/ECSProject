@@ -199,6 +199,7 @@
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentRegistry.h" />
+    <ClInclude Include="CustomCursor.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityChunk.h" />
     <ClInclude Include="EntityManager.h" />
@@ -223,11 +224,13 @@
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="Vector2.h" />
+    <ClInclude Include="WindowUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bloodforge.cpp" />
     <ClCompile Include="BloodRenderer.cpp" />
     <ClCompile Include="ComponentRegistry.cpp" />
+    <ClCompile Include="CustomCursor.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityChunk.cpp" />
     <ClCompile Include="EntityManager.cpp" />
@@ -250,6 +253,7 @@
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="Vector2.cpp" />
+    <ClCompile Include="WindowUtils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

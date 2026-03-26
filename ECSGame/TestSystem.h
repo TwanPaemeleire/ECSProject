@@ -18,4 +18,6 @@ private:
 	std::unique_ptr<Bloodforge::Event<float, int>> m_TestEvent;
 	void GlobalEventTest(const TestGlobalEventData& eventData);
 	void LocalEventTest(float x, int y);
+
+	bool m_TestFlag = false;
 };

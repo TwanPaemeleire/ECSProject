@@ -61,6 +61,10 @@
     <ClCompile Include="Font.cpp">
       <Filter>Source Files\Architecture</Filter>
     </ClCompile>
+    <ClCompile Include="WindowUtils.cpp">
+      <Filter>Header Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomCursor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -156,6 +160,10 @@
     <ClInclude Include="FileSaveLoadUtils.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="WindowUtils.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomCursor.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Generated">

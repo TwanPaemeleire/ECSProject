@@ -7,6 +7,7 @@
 #include <GlobalEventHandler.h>
 #include <iostream>
 #include <numbers>
+#include <WindowUtils.h>
 
 void TestSystem::OnStart()
 {
@@ -61,17 +62,27 @@ void TestSystem::OnUpdate()
 				data.Test = 20;
 				Bloodforge::GlobalEventHandler::GetInstance().InvokeEvent<TestGlobalEventData>(data);
 				m_TestEvent->Invoke(0.2f, 2);
+
+				if (m_TestFlag)
+				{
+					// Bloodforge::WindowUtils::SetWindowSize(400, 400);
+				}
+				else 
+				{
+					// Bloodforge::WindowUtils::SetWindowSize(800, 800);
+				}
+				m_TestFlag = !m_TestFlag;
 			}
 		}
 	}
 }
 
-void TestSystem::GlobalEventTest(const TestGlobalEventData& eventData)
+void TestSystem::GlobalEventTest(const TestGlobalEventData&)
 {
 	std::cout << "Global event triggered" << std::endl;
 }
 
-void TestSystem::LocalEventTest(float x, int y)
+void TestSystem::LocalEventTest(float, int)
 {
 	std::cout << "Local event triggered" << std::endl;
 }

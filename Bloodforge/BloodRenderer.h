@@ -17,6 +17,7 @@ namespace Bloodforge
 
 		SDL_Renderer* GetSDLRenderer() const;
 		const SDL_Color& GetBackgroundColor() const { return m_ClearColor; }
+		SDL_Window* GetSDLWindow() const { return m_Window; }
 		void SetBackgroundColor(const SDL_Color& color) { m_ClearColor = color; }
 
 		int GetWindowWidth() const { return m_WindowWidth; }
