@@ -51,6 +51,19 @@ namespace Bloodforge
 		SDL_RenderPresent(m_Renderer);
 	}
 
+	void BloodRenderer::DrawRectangle(float x, float y, float width, float height, const SDL_Color& color) const
+	{
+		SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
+
+		SDL_FRect rect{};
+		rect.x = x;
+		rect.y = y;
+		rect.w = width;
+		rect.h = height;
+
+		SDL_RenderRect(m_Renderer, &rect);
+	}
+
 	void BloodRenderer::RenderTexture(const Texture2D& texture, float x, float y) const
 	{
 		SDL_FRect dstRect{};

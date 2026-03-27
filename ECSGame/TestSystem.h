@@ -18,6 +18,9 @@ private:
 	std::unique_ptr<Bloodforge::Event<float, int>> m_TestEvent;
 	void GlobalEventTest(const TestGlobalEventData& eventData);
 	void LocalEventTest(float x, int y);
+	void OnCollisionEnterEvent(int otherEntityId);
+	void OnCollisionEvent(int otherEntityId);
+	void OnCollisionExitEvent(int otherEntityId);
 
 	bool m_TestFlag = false;
 };

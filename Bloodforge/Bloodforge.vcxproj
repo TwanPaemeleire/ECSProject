@@ -196,6 +196,7 @@
     <ClInclude Include="Bloodforge.h" />
     <ClInclude Include="BloodRenderer.h" />
     <ClInclude Include="BloodTime.h" />
+    <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentRegistry.h" />
@@ -210,6 +211,7 @@
     <ClInclude Include="GlobalEventHandler.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="RectColliderComponent.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
@@ -229,6 +231,7 @@
   <ItemGroup>
     <ClCompile Include="Bloodforge.cpp" />
     <ClCompile Include="BloodRenderer.cpp" />
+    <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="ComponentRegistry.cpp" />
     <ClCompile Include="CustomCursor.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -242,11 +245,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="RectColliderComponent.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SpeedTracker.cpp" />
-    <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="SpriteSystem.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="TextSystem.cpp" />

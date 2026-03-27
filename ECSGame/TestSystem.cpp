@@ -8,6 +8,7 @@
 #include <iostream>
 #include <numbers>
 #include <WindowUtils.h>
+#include <RectColliderComponent.h>
 
 void TestSystem::OnStart()
 {
@@ -35,6 +36,31 @@ void TestSystem::OnStart()
 		{
 			LocalEventTest(x, y);
 		});
+
+
+	auto& entityManager = Bloodforge::EntityManager::GetInstance();
+	Bloodforge::EntityQueryResult<Bloodforge::RectColliderComponent> result = entityManager.QueryEntities<Bloodforge::RectColliderComponent>();
+
+	for (Bloodforge::ChunkView<Bloodforge::RectColliderComponent> view : result.Chunks)
+	{
+		for (int i = 0; i < view.GetComponentArray<Bloodforge::RectColliderComponent>().size(); ++i)
+		{
+			Bloodforge::RectColliderComponent& rectCollider = view.GetComponentArray<Bloodforge::RectColliderComponent>()[i];
+			rectCollider.OnCollisionEnterEvent->AddListener([this](int entityId)
+				{
+					OnCollisionEnterEvent(entityId);
+				});
+			rectCollider.OnCollisionEvent->AddListener([this](int entityId)
+				{
+					OnCollisionEvent(entityId);
+				});
+			rectCollider.OnCollisionExitEvent->AddListener([this](int entityId)
+				{
+					OnCollisionExitEvent(entityId);
+				});
+		}
+	}
+
 }
 
 void TestSystem::OnUpdate()
@@ -59,8 +85,8 @@ void TestSystem::OnUpdate()
 				rotationComp.Angle -= static_cast<float>(std::numbers::pi) * 2.0f;
 				TestGlobalEventData data;
 				data.Test = 20;
-				Bloodforge::GlobalEventHandler::GetInstance().InvokeEvent<TestGlobalEventData>(data);
-				m_TestEvent->Invoke(0.2f, 2);
+				// Bloodforge::GlobalEventHandler::GetInstance().InvokeEvent<TestGlobalEventData>(data);
+				// m_TestEvent->Invoke(0.2f, 2);
 
 				if (m_TestFlag)
 				{
@@ -84,4 +110,19 @@ void TestSystem::GlobalEventTest(const TestGlobalEventData&)
 void TestSystem::LocalEventTest(float, int)
 {
 	std::cout << "Local event triggered" << std::endl;
+}
+
+void TestSystem::OnCollisionEnterEvent(int otherEntityId)
+{
+	std::cout << "Collision enter event with entity id: " << otherEntityId << std::endl;
+}
+
+void TestSystem::OnCollisionEvent(int otherEntityId)
+{
+	std::cout << "Collision event with entity id: " << otherEntityId << std::endl;
+}
+
+void TestSystem::OnCollisionExitEvent(int otherEntityId)
+{
+	std::cout << "Collision exit event with entity id: " << otherEntityId << std::endl;
 }

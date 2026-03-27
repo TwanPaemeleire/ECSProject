@@ -5,6 +5,7 @@
 
 #include "SpriteSystem.h"
 #include "TextSystem.h"
+#include "CollisionSystem.h"
 
 namespace Bloodforge
 {
@@ -19,6 +20,7 @@ namespace Bloodforge
 	{
 		RegisterSystem<SpriteSystem>();
 		RegisterSystem<TextSystem>();
+		RegisterSystem<CollisionSystem>();
 
 		m_LoadFunction();
 	}

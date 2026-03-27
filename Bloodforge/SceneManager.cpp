@@ -60,7 +60,7 @@ namespace Bloodforge
 
 	void SceneManager::FixedUpdate()
 	{
-		m_CurrentActiveScene->LateUpdate();
+		m_CurrentActiveScene->FixedUpdate();
 	}
 
 	void SceneManager::LateUpdate()
