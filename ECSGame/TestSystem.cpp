@@ -44,16 +44,15 @@ void TestSystem::OnUpdate()
 
 	for (Bloodforge::ChunkView view : result.Chunks)
 	{
-		for (int i = 0; i < std::get<0>(view.ComponentArrays).size(); ++i)
+		for (int i = 0; i < view.GetComponentArray<Bloodforge::TransformComponent>().size(); ++i)
 		{
-			RotationComponent& rotationComp = std::get<2>(view.ComponentArrays)[i];
+			RotationComponent& rotationComp = view.GetComponentArray<RotationComponent>()[i];
 			rotationComp.Angle += rotationComp.Speed * Bloodforge::BloodTime::GetInstance().DeltaTime;
 			float deltaX = rotationComp.Radius * std::cos(rotationComp.Angle);
 			float deltaY = rotationComp.Radius * std::sin(rotationComp.Angle);
 			float x = rotationComp.CenterPosition.X + deltaX;
 			float y = rotationComp.CenterPosition.Y + deltaY;
-			std::get<0>(view.ComponentArrays)[i].SetLocalPosition(x, y);
-
+			view.GetComponentArray<Bloodforge::TransformComponent>()[i].SetLocalPosition(x, y);
 
 			if (rotationComp.Angle >= std::numbers::pi * 2)
 			{

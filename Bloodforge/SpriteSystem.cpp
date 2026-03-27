@@ -16,10 +16,10 @@ namespace Bloodforge
 		EntityQueryResult result =  EntityManager::GetInstance().QueryEntities<TransformComponent, SpriteComponent>();
 		for (Bloodforge::ChunkView view : result.Chunks)
 		{
-			for (int i = 0; i < std::get<0>(view.ComponentArrays).size(); ++i)
+			for (int i = 0; i < view.GetComponentArray<TransformComponent>().size(); ++i)
 			{
-				Vector2 worldPos = std::get<0>(view.ComponentArrays)[i].GetWorldPosition();
-				BloodRenderer::GetInstance().RenderTexture(*std::get<1>(view.ComponentArrays)[i].Texture, worldPos.X, worldPos.Y);
+				Vector2 worldPos = view.GetComponentArray<TransformComponent>()[i].GetWorldPosition();
+				BloodRenderer::GetInstance().RenderTexture(*view.GetComponentArray<SpriteComponent>()[i].Texture, worldPos.X, worldPos.Y);
 			}
 		}
 	}

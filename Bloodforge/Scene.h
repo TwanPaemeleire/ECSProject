@@ -2,16 +2,18 @@
 #include <memory>
 #include <vector>
 #include <functional>
+#include <typeindex>
+#include <stdexcept>
+#include <algorithm>
 
 namespace Bloodforge
 {
 	class System;
+	class EntityManager;
 
 	template <typename SystemType>
 	concept RegisterableSystem = std::is_base_of<System, SystemType>::value;
 
-	class EntityManager;
-	class System;
 
 	class Scene
 	{
@@ -34,12 +36,23 @@ namespace Bloodforge
 
 	private:
 		std::vector<std::unique_ptr<System>> m_RegisteredSystems;
+		std::vector<std::type_index> m_RegisteredSystemTypes;
 		std::function<void()> m_LoadFunction;
 	};
 
 	template<RegisterableSystem SystemType>
 	inline void Scene::RegisterSystem()
 	{
-		m_RegisteredSystems.emplace_back(std::make_unique<SystemType>());
+		std::type_index typeIndex = std::type_index(typeid(SystemType));
+		auto it = std::find(m_RegisteredSystemTypes.begin(), m_RegisteredSystemTypes.end(), typeIndex);
+		if (it == m_RegisteredSystemTypes.end())
+		{
+			m_RegisteredSystems.emplace_back(std::make_unique<SystemType>());
+			m_RegisteredSystemTypes.emplace_back(typeIndex);
+		}
+		else
+		{
+			throw std::runtime_error("Trying to registered a system that has already been registered.");
+		}
 	}
 }

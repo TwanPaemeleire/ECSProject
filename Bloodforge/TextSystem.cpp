@@ -15,9 +15,9 @@ namespace Bloodforge
 
 		for (Bloodforge::ChunkView view : result.Chunks)
 		{
-			for (int i = 0; i < std::get<0>(view.ComponentArrays).size(); ++i)
+			for (int i = 0; i < view.GetComponentArray<TextComponent>().size(); ++i)
 			{
-				TextComponent& textComp = std::get<0>(view.ComponentArrays)[i];
+				TextComponent& textComp = view.GetComponentArray<TextComponent>()[i];
 				if (textComp.TextDoesNeedUpdate())
 				{
 					const Color& color = textComp.GetColor();
@@ -51,10 +51,10 @@ namespace Bloodforge
 
 		for (Bloodforge::ChunkView view : result.Chunks)
 		{
-			for (int i = 0; i < std::get<0>(view.ComponentArrays).size(); ++i)
+			for (int i = 0; i < view.GetComponentArray<TransformComponent>().size(); ++i)
 			{
-				Vector2 worldPos = std::get<1>(view.ComponentArrays)[i].GetWorldPosition();
-				BloodRenderer::GetInstance().RenderTexture(*std::get<0>(view.ComponentArrays)[i].GetTexture(), worldPos.X, worldPos.Y);
+				Vector2 worldPos = view.GetComponentArray<TransformComponent>()[i].GetWorldPosition();
+				BloodRenderer::GetInstance().RenderTexture(*view.GetComponentArray<TextComponent>()[i].GetTexture(), worldPos.X, worldPos.Y);
 			}
 		}
 	}

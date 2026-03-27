@@ -21,6 +21,12 @@ namespace Bloodforge
 	{
 		std::span<int> Entities;
 		std::tuple<std::span<Components>...> ComponentArrays;
+
+		template <typename ComponentType>
+		std::span<ComponentType> GetComponentArray()
+		{
+			return std::get<std::span<ComponentType>>(ComponentArrays);
+		}
 	};
 
 	template <typename... Components>
