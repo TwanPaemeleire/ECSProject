@@ -3,6 +3,9 @@
 #include "EntityManager.h"
 #include "System.h"
 
+#include "SpriteSystem.h"
+#include "TextSystem.h"
+
 namespace Bloodforge
 {
 	Scene::Scene(std::function<void()> loadFunction)
@@ -14,6 +17,9 @@ namespace Bloodforge
 
 	void Scene::Load()
 	{
+		RegisterSystem<SpriteSystem>();
+		RegisterSystem<TextSystem>();
+
 		m_LoadFunction();
 	}
 
@@ -69,10 +75,5 @@ namespace Bloodforge
 		{
 			system->OnRenderUI();
 		}
-	}
-
-	void Bloodforge::Scene::RegisterSystem(std::unique_ptr<System> systemToRegister)
-	{
-		m_RegisteredSystems.emplace_back(std::move(systemToRegister));
 	}
 }

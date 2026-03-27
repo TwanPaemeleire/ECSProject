@@ -5,6 +5,11 @@
 
 namespace Bloodforge
 {
+	class System;
+
+	template <typename SystemType>
+	concept RegisterableSystem = std::is_base_of<System, SystemType>::value;
+
 	class EntityManager;
 	class System;
 
@@ -24,9 +29,17 @@ namespace Bloodforge
 		void Render() const;
 		void RenderUI();
 
-		void RegisterSystem(std::unique_ptr<System> systemToRegister);
+		template <RegisterableSystem SystemType>
+		void RegisterSystem();
+
 	private:
 		std::vector<std::unique_ptr<System>> m_RegisteredSystems;
 		std::function<void()> m_LoadFunction;
 	};
+
+	template<RegisterableSystem SystemType>
+	inline void Scene::RegisterSystem()
+	{
+		m_RegisteredSystems.emplace_back(std::make_unique<SystemType>());
+	}
 }

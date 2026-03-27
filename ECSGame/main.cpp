@@ -60,12 +60,7 @@ void LoadFunction()
 	textComp->SetFont(Bloodforge::ResourceManager::GetInstance().LoadFont("Font.otf", 60.0f));
 	entityManager.GetComponent<Bloodforge::TransformComponent>(entity3)->SetLocalPosition(400, 400);
 
-	std::unique_ptr<Bloodforge::SpriteSystem> spriteSystem = std::make_unique<Bloodforge::SpriteSystem>();
-	scene.RegisterSystem(std::move(spriteSystem));
-	std::unique_ptr<Bloodforge::TextSystem> textSystem = std::make_unique<Bloodforge::TextSystem>();
-	scene.RegisterSystem(std::move(textSystem));
-	std::unique_ptr<TestSystem> testSystem = std::make_unique<TestSystem>();
-	scene.RegisterSystem(std::move(testSystem));
+	scene.RegisterSystem<TestSystem>();
 }
 
 int main(int, char* []) 

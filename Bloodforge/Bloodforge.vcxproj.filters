@@ -64,7 +64,9 @@
     <ClCompile Include="WindowUtils.cpp">
       <Filter>Header Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="CustomCursor.cpp" />
+    <ClCompile Include="CustomCursor.cpp">
+      <Filter>Source Files\Architecture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -163,7 +165,9 @@
     <ClInclude Include="WindowUtils.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="CustomCursor.h" />
+    <ClInclude Include="CustomCursor.h">
+      <Filter>Header Files\Architecture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Generated">
