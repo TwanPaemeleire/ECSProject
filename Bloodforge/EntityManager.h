@@ -10,6 +10,7 @@
 #include <span>
 #include "ComponentRegistry.h"
 #include "ArchetypeIdentifierMask.h"
+#include "TransformComponent.h"
 #include "Singleton.h"
 
 namespace Bloodforge
@@ -55,8 +56,20 @@ namespace Bloodforge
 
 		template<typename ComponentType>
 		void AddComponent(Entity& entity);
+		template<typename ComponentType>
+		void AddComponent(int entityId);
 		template <typename ComponentType>
 		ComponentType* GetComponent(Entity& entity);
+		template <typename ComponentType>
+		ComponentType* GetComponent(int entityId);
+		template <typename ComponentType>
+		ComponentType* GetComponentInChildren(Entity& entity);
+		template <typename ComponentType>
+		ComponentType* GetComponentInChildren(int entityId);
+		template <typename ComponentType>
+		ComponentType* GetComponentInParent(Entity& entity);
+		template <typename ComponentType>
+		ComponentType* GetComponentInParent(int entityId);
 
 		void DestroyAllEntities();
 	private:
@@ -119,6 +132,12 @@ namespace Bloodforge
 	}
 
 	template<typename ComponentType>
+	inline void EntityManager::AddComponent(int entityId)
+	{
+		AddComponent<ComponentType>(GetEntity(entityId));
+	}
+
+	template<typename ComponentType>
 	inline ComponentType* EntityManager::GetComponent(Entity& entity)
 	{
 		auto* chunk = m_EntityChunks[entity.CurrentArchetypeId][entity.CurrentChunkIndex].get();
@@ -126,6 +145,45 @@ namespace Bloodforge
 		if (!array) return nullptr;
 		int index = chunk->GetEntityInChunkIndex(entity.Id);
 		return &static_cast<ComponentType*>(array)[index];
+	}
+
+	template<typename ComponentType>
+	inline ComponentType* EntityManager::GetComponent(int entityId)
+	{
+		return GetComponent<ComponentType>(GetEntity(entityId));
+	}
+
+	template<typename ComponentType>
+	inline ComponentType* EntityManager::GetComponentInChildren(Entity& entity)
+	{
+		for (int childId : GetComponent<TransformComponent>(entity)->GetChildEntityIds())
+		{
+			ComponentType* component = GetComponent<ComponentType>(childId);
+			if (component) return component;
+			component = GetComponentInChildren<ComponentType>(childId);
+			if (component) return component;
+		}
+		return nullptr;
+	}
+
+	template<typename ComponentType>
+	inline ComponentType* EntityManager::GetComponentInChildren(int entityId)
+	{
+		return GetComponentInChildren<ComponentType>(GetEntity(entityId));
+	}
+
+	template<typename ComponentType>
+	inline ComponentType* EntityManager::GetComponentInParent(Entity& entity)
+	{
+		TransformComponent* transform = GetComponent<TransformComponent>(entity);
+		GetComponent<ComponentType>(transform->GetParentEntityId());
+		return nullptr;
+	}
+
+	template<typename ComponentType>
+	inline ComponentType* EntityManager::GetComponentInParent(int entityId)
+	{
+		return GetComponentInParent(GetEntity(entityId));
 	}
 
 	template<typename ...Components>

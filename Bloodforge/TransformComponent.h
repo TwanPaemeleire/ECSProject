@@ -15,6 +15,8 @@ namespace Bloodforge
 		void SetPositionDirty();
 
 		void SetParent(int parentEntityId, bool keepWorldPosition = true);
+		const std::vector<int>& GetChildEntityIds() const { return m_ChildEntityIds; }
+		int GetParentEntityId() const { return m_ParentEntityId; }
 
 	private:
 		void UpdateWorldPosition();
