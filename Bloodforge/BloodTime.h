@@ -7,6 +7,15 @@ namespace Bloodforge
 	{
 	public:
 		float DeltaTime{};
+		float UnscaledDeltaTime{};
+		float TimeScale{ 1.0f };
+
+		void SetDeltaTime(float deltaTime)
+		{
+			DeltaTime = deltaTime * TimeScale;
+			UnscaledDeltaTime = deltaTime;
+		}
+
 	private:
 		friend class Singleton<BloodTime>;
 		BloodTime() = default;

@@ -6,6 +6,11 @@
 
 namespace Bloodforge
 {
+	SceneManager::SceneManager()
+	{
+		m_OnActiveSceneSwitchedEvent = std::make_unique<Event<Scene&, Scene&>>();
+	}
+
 	void SceneManager::RequestSetCurrentScene(const std::string& name)
 	{
 		if (!m_SceneList.contains(name))
@@ -29,18 +34,6 @@ namespace Bloodforge
 		else
 		{
 			m_SceneList.emplace(sceneName, std::make_unique<Scene>(loadFunction));
-		}
-	}
-
-	void SceneManager::ChangeActiveScene(const std::string& sceneName)
-	{
-		if (!m_SceneList.contains(sceneName))
-		{
-			throw std::runtime_error("Scene with this name is not in the scene list");
-		}
-		else 
-		{
-			m_CurrentActiveScene = m_SceneList[sceneName].get();
 		}
 	}
 
@@ -77,6 +70,7 @@ namespace Bloodforge
 	{
 		m_CurrentActiveScene->RenderUI();
 	}
+
 	void SceneManager::SetCurrentScene()
 	{
 		Scene* newScene = m_SceneToSet;
@@ -87,6 +81,7 @@ namespace Bloodforge
 		{
 			prevScene->RemoveAndResetAll();
 		}
+		m_OnActiveSceneSwitchedEvent->Invoke(*prevScene, *newScene);
 		m_CurrentActiveScene->Start();
 		m_ShouldSetScene = false;
 		return;

@@ -24,7 +24,7 @@ namespace Bloodforge
 		while (m_ShouldContinue)
 		{
 			const auto currentTime = std::chrono::high_resolution_clock::now();
-			bloodTime.DeltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
+			bloodTime.SetDeltaTime(std::chrono::duration<float>(currentTime - lastTime).count());
 
 			lastTime = currentTime;
 			lag += bloodTime.DeltaTime;

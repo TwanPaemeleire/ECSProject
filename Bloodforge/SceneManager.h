@@ -5,19 +5,21 @@
 #include "Singleton.h"
 #include <functional>
 #include "Scene.h"
+#include "Event.h"
 
 namespace Bloodforge
 {
 	class SceneManager final : public Singleton<SceneManager>
 	{
 	public:
-		SceneManager() = default;
+		SceneManager();
 		~SceneManager() = default;
 
 		void RequestSetCurrentScene(const std::string& name);
 		void RegisterScene(const std::string& sceneName, std::function<void()> loadFunction);
-		void ChangeActiveScene(const std::string& sceneName);
 		Scene& GetActiveScene() const { return *m_CurrentActiveScene; }
+
+		Event<Scene&, Scene&>& GetOnActiveSceneSwitchedEvent() { return *m_OnActiveSceneSwitchedEvent; }
 
 		void Start();
 		void Update();
@@ -30,6 +32,7 @@ namespace Bloodforge
 		void SetCurrentScene();
 
 		std::unordered_map<std::string, std::unique_ptr<Scene>> m_SceneList;
+		std::unique_ptr<Event<Scene&, Scene&>> m_OnActiveSceneSwitchedEvent;
 		Scene* m_CurrentActiveScene = nullptr;
 		Scene* m_SceneToSet = nullptr;
 		bool m_ShouldSetScene = false;
