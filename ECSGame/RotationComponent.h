@@ -4,8 +4,9 @@
 
 struct RotationComponent final : public Bloodforge::Component<RotationComponent>
 {
-	float Angle = 0.0f;
-	Bloodforge::Vector2 CenterPosition = {};
-	float Speed = 20.0f;
-	float Radius = 80.0f;
+	Bloodforge::Vector2 StartPosition = {};
+	Bloodforge::Vector2 EndPosition = {};
+	float TimeToReach = 20.0f;
+	float Progress = 0.0f;
+	bool SmoothLerp = true;
 };

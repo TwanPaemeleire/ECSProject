@@ -34,9 +34,9 @@ void LoadFunction()
 	Bloodforge::TransformComponent* transformComp = entityManager.GetComponent<Bloodforge::TransformComponent>(entity);
 	transformComp->SetLocalPosition(300.0f, 300.0f);
 	RotationComponent* rotationComp = entityManager.GetComponent<RotationComponent>(entity);
-	rotationComp->CenterPosition = { 400.0f, 400.0f };
-	rotationComp->Speed = 5.0f;
-	rotationComp->Radius = 200.0f;
+	rotationComp->StartPosition = { 200.0f, 400.0f };
+	rotationComp->EndPosition = { 600.0f, 400.0f };
+	rotationComp->TimeToReach = 2.0f;
 	Bloodforge::RectColliderComponent* rectComponent = entityManager.GetComponent<Bloodforge::RectColliderComponent>(entity);
 	rectComponent->SetSize(Bloodforge::Vector2(50, 50));
 	rectComponent->SetCenterToSprite(true);
@@ -48,9 +48,10 @@ void LoadFunction()
 	Bloodforge::TransformComponent* transformComp2 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity2);
 	transformComp2->SetLocalPosition(300.0f, 300.0f);
 	RotationComponent* rotationComp2 = entityManager.GetComponent<RotationComponent>(entity2);
-	rotationComp2->CenterPosition = { 400.0f, 400.0f };
-	rotationComp2->Speed = -1.0f;
-	rotationComp2->Radius = 200.0f;
+	rotationComp2->StartPosition = { 200.0f, 200.0f };
+	rotationComp2->EndPosition = { 600.0f, 200.0f };
+	rotationComp2->TimeToReach = 2.0f;
+	rotationComp2->SmoothLerp = false;
 	Bloodforge::RectColliderComponent* rectComponent2 = entityManager.GetComponent<Bloodforge::RectColliderComponent>(entity2);
 	rectComponent2->SetSize(Bloodforge::Vector2(50, 50));
 	rectComponent2->SetCenterToSprite(true);
@@ -62,7 +63,7 @@ void LoadFunction()
 	textComp->SetFontSize(60.0f);
 	textComp->SetColor(Bloodforge::Color(255, 0, 0, 255));
 	textComp->SetFont(Bloodforge::ResourceManager::GetInstance().LoadFont("Font.otf", 60.0f));
-	entityManager.GetComponent<Bloodforge::TransformComponent>(entity3)->SetLocalPosition(400, 400);
+	entityManager.GetComponent<Bloodforge::TransformComponent>(entity3)->SetLocalPosition(400, 600);
 
 	scene.RegisterSystem<TestSystem>();
 }
@@ -78,7 +79,7 @@ int main(int, char* [])
 	Bloodforge::FileSaveLoadUtils::SaveFile<TestSaveFile>(testSaveFile, "TestSaveFile.json");
 	testSaveFile = Bloodforge::FileSaveLoadUtils::LoadFile<TestSaveFile>("TestSaveFile.json");
 
-	Bloodforge::WindowUtils::SetWindowAlwaysOnTop(true);
+	Bloodforge::WindowUtils::SetWindowAlwaysOnTop(false);
 	Bloodforge::WindowUtils::SetWindowBordered(true);
 	Bloodforge::WindowUtils::SetWindowFullScreen(false);
 	Bloodforge::WindowUtils::SetWindowIcon("Heart.png");

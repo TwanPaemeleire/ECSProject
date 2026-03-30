@@ -1,4 +1,6 @@
 #pragma once
+#include <numbers>
+
 namespace Bloodforge
 {
 	struct Vector2
@@ -6,9 +8,30 @@ namespace Bloodforge
 		float X = 0.0f;
 		float Y = 0.0f;
 
+		float Magnitude() const;
+		float SqrMagnitude() const;
+		void Normalize();
+		Vector2 Normalized() const;
+
 		Vector2 operator+ (const Vector2 & obj) const;
 		Vector2 operator- (const Vector2 & obj) const;
 		Vector2 operator* (float scalar) const;
 		Vector2 operator/ (float scalar) const;
+
+		static float Cross(const Vector2& vec1, const Vector2& vec2);
+		static float Dot(const Vector2& vec1, const Vector2& vec2);
+
+		// Returns degrees between 0 and 180
+		static float Angle(const Vector2& vec1, const Vector2& vec2);
+		// Returns degrees between -180 and 180
+		static float SignedAngle(const Vector2& vec1, const Vector2& vec2);
+
+		// Interpolates between start and end by t
+		static Vector2 Lerp(const Vector2& start, const Vector2& end, float t);
+		// Interpolates between start and end by t, using smoothing at the start and end of the interpolation
+		static Vector2 SmoothLerp(const Vector2& start, const Vector2& end, float t);
+
+		static constexpr float RadiansToDegrees = 180.0f / std::numbers::pi_v<float>;
+		static constexpr float DegreesToRadians = std::numbers::pi_v<float> / 180.0f;
 	};
 }
