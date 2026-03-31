@@ -37,12 +37,6 @@ namespace Bloodforge
 			WorldPosNeedsUpdate = true;
 		}
 
-		void SetCenterToSprite(bool centerToSprite)
-		{
-			CenterToSprite = centerToSprite;
-			WorldPosNeedsUpdate = true;
-		}
-
 		void UpdateWorldSpaceRect();
 
 		std::unique_ptr<Event<int>> OnCollisionEnterEvent;
@@ -52,7 +46,6 @@ namespace Bloodforge
 	private:
 		Vector2 Size;
 		Vector2 Offset;
-		bool CenterToSprite = false;
 
 		Rectf WorldSpaceRect = {};
 		bool WorldPosNeedsUpdate = false;

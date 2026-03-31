@@ -53,8 +53,9 @@ namespace Bloodforge
 		{
 			for (int i = 0; i < view.GetComponentArray<TransformComponent>().size(); ++i)
 			{
+				TextComponent& textComp = view.GetComponentArray<TextComponent>()[i];
 				Vector2 worldPos = view.GetComponentArray<TransformComponent>()[i].GetWorldPosition();
-				BloodRenderer::GetInstance().RenderTexture(*view.GetComponentArray<TextComponent>()[i].GetTexture(), worldPos.X, worldPos.Y);
+				BloodRenderer::GetInstance().RenderTexture(*textComp.GetTexture(), worldPos, textComp.GetColor());
 			}
 		}
 	}

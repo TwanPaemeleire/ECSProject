@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include "Color.h"
 
 namespace Bloodforge
 {
@@ -11,5 +12,6 @@ namespace Bloodforge
 		~SpriteComponent() = default;
 
 		Texture2D* Texture = nullptr;
+		Color Color{};
 	};
 }

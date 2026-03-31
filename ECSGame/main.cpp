@@ -4,15 +4,12 @@
 #endif
 #endif
 
-#include <iostream>
 #include <EntityManager.h>
 #include <SpriteComponent.h>
 #include <TransformComponent.h>
 #include <Bloodforge.h>
 #include <SceneManager.h>
 #include <Scene.h>
-#include <memory>
-#include <Texture2D.h>
 #include <ResourceManager.h>
 #include "TestSystem.h"
 #include "RotationComponent.h"
@@ -22,25 +19,26 @@
 #include <WindowUtils.h>
 #include <SdbmHash.h>
 #include <RectColliderComponent.h>
+#include <BloodRenderer.h>
 
 void LoadFunction()
 {
 	auto& scene = Bloodforge::SceneManager::GetInstance().GetActiveScene();
 	auto& entityManager = Bloodforge::EntityManager::GetInstance();
+	auto& renderer = Bloodforge::BloodRenderer::GetInstance();
 
-	Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, RotationComponent, Bloodforge::RectColliderComponent>();
+	Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent/*, RotationComponent*/, Bloodforge::RectColliderComponent>();
 	Bloodforge::SpriteComponent* spriteComp = entityManager.GetComponent<Bloodforge::SpriteComponent>(entity);
 	spriteComp->Texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Heart.png");
+	spriteComp->Color = Bloodforge::Color(255, 255, 255, 127);
 	Bloodforge::TransformComponent* transformComp = entityManager.GetComponent<Bloodforge::TransformComponent>(entity);
-	transformComp->SetLocalPosition(300.0f, 300.0f);
-	RotationComponent* rotationComp = entityManager.GetComponent<RotationComponent>(entity);
-	rotationComp->StartPosition = { 200.0f, 400.0f };
-	rotationComp->EndPosition = { 600.0f, 400.0f };
-	rotationComp->TimeToReach = 2.0f;
+	transformComp->SetLocalPosition(renderer.GetWindowWidth() / 2.0f, renderer.GetWindowHeight() / 2.0f);
+	// RotationComponent* rotationComp = entityManager.GetComponent<RotationComponent>(entity);
+	// rotationComp->StartPosition = { -300.0f, 0.0f };
+	// rotationComp->EndPosition = { 300.0f, 0.0f };
+	// rotationComp->TimeToReach = 2.0f;
 	Bloodforge::RectColliderComponent* rectComponent = entityManager.GetComponent<Bloodforge::RectColliderComponent>(entity);
 	rectComponent->SetSize(Bloodforge::Vector2(50, 50));
-	rectComponent->SetCenterToSprite(true);
-
 
 	Bloodforge::Entity& entity2 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, RotationComponent, Bloodforge::RectColliderComponent>();
 	Bloodforge::SpriteComponent* spriteComp2 = entityManager.GetComponent<Bloodforge::SpriteComponent>(entity2);
@@ -54,8 +52,6 @@ void LoadFunction()
 	rotationComp2->SmoothLerp = false;
 	Bloodforge::RectColliderComponent* rectComponent2 = entityManager.GetComponent<Bloodforge::RectColliderComponent>(entity2);
 	rectComponent2->SetSize(Bloodforge::Vector2(50, 50));
-	rectComponent2->SetCenterToSprite(true);
-
 
 	Bloodforge::Entity& entity3 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::TextComponent>();
 	Bloodforge::TextComponent* textComp = entityManager.GetComponent<Bloodforge::TextComponent>(entity3);
@@ -63,7 +59,7 @@ void LoadFunction()
 	textComp->SetFontSize(60.0f);
 	textComp->SetColor(Bloodforge::Color(255, 0, 0, 255));
 	textComp->SetFont(Bloodforge::ResourceManager::GetInstance().LoadFont("Font.otf", 60.0f));
-	entityManager.GetComponent<Bloodforge::TransformComponent>(entity3)->SetLocalPosition(400, 600);
+	entityManager.GetComponent<Bloodforge::TransformComponent>(entity3)->SetLocalPosition(0, 0);
 
 	scene.RegisterSystem<TestSystem>();
 }

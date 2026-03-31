@@ -4,10 +4,7 @@
 #include "SpriteComponent.h"
 #include "TransformComponent.h"
 #include "BloodRenderer.h"
-#include "BloodTime.h"
-#include "InputHandler.h"
-#include "SdbmHash.h"
-#include <SDL3/SDL.h>
+#include "Texture2D.h"
 
 namespace Bloodforge
 {
@@ -18,8 +15,12 @@ namespace Bloodforge
 		{
 			for (int i = 0; i < view.GetComponentArray<TransformComponent>().size(); ++i)
 			{
+				SpriteComponent& spriteComp = view.GetComponentArray<SpriteComponent>()[i];
 				Vector2 worldPos = view.GetComponentArray<TransformComponent>()[i].GetWorldPosition();
-				BloodRenderer::GetInstance().RenderTexture(*view.GetComponentArray<SpriteComponent>()[i].Texture, worldPos.X, worldPos.Y);
+				const Vector2& size = spriteComp.Texture->GetSize();
+				worldPos.X -= size.X / 2.0f;
+				worldPos.Y -= size.Y / 2.0f;
+				BloodRenderer::GetInstance().RenderTexture(*spriteComp.Texture, worldPos, spriteComp.Color);
 			}
 		}
 	}

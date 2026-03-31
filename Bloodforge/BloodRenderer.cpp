@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include "Texture2D.h"
 #include "SceneManager.h"
+#include "Vector2.h"
+#include <SDL3/SDL.h>
 
 namespace Bloodforge
 {
@@ -41,7 +43,7 @@ namespace Bloodforge
 
 	void BloodRenderer::Render()
 	{
-		const auto& color = GetBackgroundColor();
+		const Color& color = GetBackgroundColor();
 		SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
 		SDL_RenderClear(m_Renderer);
 
@@ -51,26 +53,29 @@ namespace Bloodforge
 		SDL_RenderPresent(m_Renderer);
 	}
 
-	void BloodRenderer::DrawRectangle(float x, float y, float width, float height, const SDL_Color& color) const
+	void BloodRenderer::DrawRectangle(const Vector2& pos, float width, float height, const Color& color) const
 	{
 		SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
-
+		Vector2 screenPos = pos;
 		SDL_FRect rect{};
-		rect.x = x;
-		rect.y = y;
+		rect.x = screenPos.X;
+		rect.y = screenPos.Y;
 		rect.w = width;
 		rect.h = height;
 
 		SDL_RenderRect(m_Renderer, &rect);
 	}
 
-	void BloodRenderer::RenderTexture(const Texture2D& texture, float x, float y) const
+	void BloodRenderer::RenderTexture(const Texture2D& texture, const Vector2& pos, const Color& color) const
 	{
+		Vector2 screenPos = pos;
 		SDL_FRect dstRect{};
-		dstRect.x = x;
-		dstRect.y = y;
+		dstRect.x = screenPos.X;
+		dstRect.y = screenPos.Y;
 		dstRect.w = texture.GetSizeX();
 		dstRect.h = texture.GetSizeY();
+		SDL_SetTextureColorMod(texture.GetSDLTexture(), color.r, color.g, color.b);
+		SDL_SetTextureAlphaMod(texture.GetSDLTexture(), color.a);
 		SDL_RenderTexture(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dstRect);
 	}
 
@@ -78,5 +83,14 @@ namespace Bloodforge
 	{
 		if (!m_Renderer) throw std::runtime_error("Renderer not initialized yet!");
 		return m_Renderer;
+	}
+
+	Vector2 BloodRenderer::WorldToScreen(const Vector2& worldPos) const
+	{
+		return
+		{
+			worldPos.X + m_WindowWidth / 2.0f,
+			m_WindowHeight / 2.0f - worldPos.Y
+		};
 	}
 }
