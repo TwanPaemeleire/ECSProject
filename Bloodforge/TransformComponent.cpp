@@ -2,13 +2,16 @@
 #include "TransformComponent.h"
 #include "EntityManager.h"
 #include <memory>
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtx/quaternion.hpp"
+#include "glm/gtx/matrix_decompose.hpp"
 
 namespace Bloodforge
 {
 	void Bloodforge::TransformComponent::SetLocalPosition(const Vector2& localPos)
 	{
 		m_LocalPosition = localPos;
-		SetPositionDirty();
+		SetTransformDirty();
 	}
 
 	void Bloodforge::TransformComponent::SetLocalPosition(float x, float y)
@@ -16,76 +19,148 @@ namespace Bloodforge
 		SetLocalPosition({x, y});
 	}
 
-	const Vector2& Bloodforge::TransformComponent::GetWorldPosition()
+	void TransformComponent::SetLocalRotation(float degrees)
 	{
-		if (m_PositionIsDirty)
-		{
-			UpdateWorldPosition();
-			m_PositionIsDirty = false;
-		}
-		return m_WorldPosition;
+		m_LocalRotationDeg = degrees;
+		SetTransformDirty();
 	}
 
-	void TransformComponent::SetParent(int parentEntityId, bool keepWorldPosition)
+	void TransformComponent::Rotate(float deltaDegrees)
+	{
+		m_LocalRotationDeg += deltaDegrees;
+		SetTransformDirty();
+	}
+
+	void TransformComponent::SetLocalScale(const Vector2& scale)
+	{
+		m_LocalScale = scale;
+		SetTransformDirty();
+	}
+
+	const glm::mat4& TransformComponent::GetWorldMatrix()
+	{
+		if (m_IsDirty) RecalculateMatrix();
+		return m_WorldMatrix;
+	}
+
+	const glm::mat4& TransformComponent::GetLocalMatrix()
+	{
+		if (m_IsDirty) RecalculateMatrix();
+		return m_LocalMatrix;
+	}
+
+	Vector2 Bloodforge::TransformComponent::GetWorldPosition()
+	{
+		const glm::mat4& world = GetWorldMatrix();
+		return { world[3][0], world[3][1] };
+	}
+
+	float TransformComponent::GetWorldRotation()
+	{
+		glm::vec3 scale;
+		glm::quat orientation;
+		glm::vec3 translation;
+		glm::vec3 skew;
+		glm::vec4 perspective;
+
+		glm::decompose(GetWorldMatrix(), scale, orientation, translation, skew, perspective);
+		float radians = glm::eulerAngles(orientation).z;
+		return glm::degrees(radians);
+	}
+
+	Vector2 TransformComponent::GetWorldScale()
+	{
+		glm::vec3 scale;
+		glm::quat orientation;
+		glm::vec3 translation;
+		glm::vec3 skew;
+		glm::vec4 perspective;
+
+		glm::decompose(GetWorldMatrix(), scale, orientation, translation, skew, perspective);
+		return { scale.x, scale.y };
+	}
+
+	void TransformComponent::SetParent(int parentEntityId, bool keepWorldTransform)
 	{
 		if (IsChild(parentEntityId) || parentEntityId == OwnerEntityId || m_ParentEntityId == parentEntityId) return;
-		if (parentEntityId == -1)
+
+		glm::mat4 oldWorld = GetWorldMatrix();
+
+		if (m_ParentEntityId != -1) // Remove self from current parent
 		{
-			SetLocalPosition(GetWorldPosition());
-		}
-		else
-		{
-			if (keepWorldPosition)
+			Entity& oldParent = EntityManager::GetInstance().GetEntity(m_ParentEntityId);
+			if (auto* oldParentTransform =
+				EntityManager::GetInstance().GetComponent<TransformComponent>(oldParent))
 			{
-				Entity& parent = EntityManager::GetInstance().GetEntity(parentEntityId);
-				TransformComponent* parentTransform = EntityManager::GetInstance().GetComponent<TransformComponent>(parent);
-				SetLocalPosition(GetWorldPosition() - parentTransform->GetWorldPosition());
+				oldParentTransform->RemoveChild(OwnerEntityId);
 			}
-			SetPositionDirty();
 		}
-		if (m_ParentEntityId != -1)
+
+		m_ParentEntityId = parentEntityId; // Assign new parent
+		glm::mat4 parentWorld{ 1.0f };
+
+		if (m_ParentEntityId != -1) // If there is a new parent add ourself to it and get its world matrix
 		{
-			Entity& parent = EntityManager::GetInstance().GetEntity(m_ParentEntityId);
-			TransformComponent* parentTransform = EntityManager::GetInstance().GetComponent<TransformComponent>(parent);
-			parentTransform->RemoveChild(OwnerEntityId);
+			Entity& newParent = EntityManager::GetInstance().GetEntity(m_ParentEntityId);
+			TransformComponent* newParentTransform = EntityManager::GetInstance().GetComponent<TransformComponent>(newParent);
+			newParentTransform->AddChild(OwnerEntityId);
+			parentWorld = newParentTransform->GetWorldMatrix();
 		}
-		m_ParentEntityId = parentEntityId;
-		if (m_ParentEntityId != -1)
+		if (keepWorldTransform) // Go back from previous world matrix to local matrix so that the world transform remains the same after changing parent
 		{
-			Entity& parent = EntityManager::GetInstance().GetEntity(m_ParentEntityId);
-			TransformComponent* parentTransform = EntityManager::GetInstance().GetComponent<TransformComponent>(parent);
-			parentTransform->AddChild(OwnerEntityId);
+			glm::mat4 newLocal = glm::inverse(parentWorld) * oldWorld;
+
+			glm::vec3 scale;
+			glm::quat orientation;
+			glm::vec3 translation;
+			glm::vec3 skew;
+			glm::vec4 perspective;
+
+			glm::decompose(newLocal, scale, orientation, translation, skew, perspective);
+
+			m_LocalPosition = { translation.x, translation.y };
+			m_LocalScale = { scale.x, scale.y };
+			m_LocalRotationDeg = glm::degrees(glm::eulerAngles(orientation).z);
 		}
+
+		SetTransformDirty();
 	}
 
-	void Bloodforge::TransformComponent::SetPositionDirty()
+	void Bloodforge::TransformComponent::SetTransformDirty()
 	{
-		m_PositionIsDirty = true;
+		m_IsDirty = true;
 		for (int id : m_ChildEntityIds)
 		{
 			Entity& child = EntityManager::GetInstance().GetEntity(id);
 			TransformComponent* childTransform = EntityManager::GetInstance().GetComponent<TransformComponent>(child);
-			childTransform->SetPositionDirty();
+			childTransform->SetTransformDirty();
 		}
 	}
 
-	void Bloodforge::TransformComponent::UpdateWorldPosition()
+	void Bloodforge::TransformComponent::RecalculateMatrix()
 	{
-		m_WorldPosition = m_LocalPosition;
-		if (m_PositionIsDirty)
+		m_LocalMatrix = BuildLocalMatrix();
+
+		if (m_ParentEntityId == -1)
 		{
-			if (m_ParentEntityId == -1)
-			{
-				m_WorldPosition = m_LocalPosition;
-			}
-			else
-			{
-				Entity& parent = EntityManager::GetInstance().GetEntity(m_ParentEntityId);
-				TransformComponent* parentTransform = EntityManager::GetInstance().GetComponent<TransformComponent>(parent);
-				m_WorldPosition = Vector2(parentTransform->GetWorldPosition()) + m_LocalPosition;
-			}
+			m_WorldMatrix = m_LocalMatrix;
 		}
-		m_PositionIsDirty = false;
+		else
+		{
+			Entity& parent = EntityManager::GetInstance().GetEntity(m_ParentEntityId);
+			TransformComponent* parentTransform = EntityManager::GetInstance().GetComponent<TransformComponent>(parent);
+			m_WorldMatrix = parentTransform->GetWorldMatrix() * m_LocalMatrix;
+		}
+		m_IsDirty = false;
+	}
+
+	glm::mat4 TransformComponent::BuildLocalMatrix() const
+	{
+		const glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3(m_LocalPosition.X, m_LocalPosition.Y, 0.0f));
+		const glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_LocalRotationDeg), glm::vec3(0.f, 0.f, 1.f));
+		const glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(m_LocalScale.X, m_LocalScale.Y, 1.0f));
+
+		return translation * rotation * scale;
 	}
 
 	void TransformComponent::AddChild(int childEntityId)

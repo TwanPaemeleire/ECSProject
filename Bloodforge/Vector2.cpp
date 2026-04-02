@@ -31,6 +31,19 @@ namespace Bloodforge
         };
     }
 
+    Vector2 Vector2::Rotate(float angle) const
+    {
+		float radians = angle * DegreesToRadians;
+		float cos = std::cos(radians);
+		float sin = std::sin(radians);
+
+        return
+        {
+            X * cos - Y * sin,
+            X * sin + Y * cos,
+		};
+    }
+
     Vector2 Vector2::operator+(const Vector2& obj) const
     {
         return
@@ -75,6 +88,24 @@ namespace Bloodforge
     float Vector2::Dot(const Vector2& vec1, const Vector2& vec2)
     {
         return vec1.X * vec2.X + vec1.Y * vec2.Y;
+    }
+
+    Vector2 Vector2::Multiply(const Vector2& vec1, const Vector2& vec2)
+    {
+        return
+        {
+            vec1.X * vec2.X,
+            vec1.Y * vec2.Y,
+        };
+    }
+
+    Vector2 Vector2::Divide(const Vector2& vec1, const Vector2& vec2)
+    {
+        return
+        {
+            vec1.X / vec2.X,
+            vec1.Y / vec2.Y,
+        };
     }
 
     float Vector2::Angle(const Vector2& vec1, const Vector2& vec2)

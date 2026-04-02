@@ -19,20 +19,10 @@ void TestSystem::OnUpdate()
 	{
 		for (int i = 0; i < view.GetComponentArray<Bloodforge::TransformComponent>().size(); ++i)
 		{
-			RotationComponent& rotationComp = view.GetComponentArray<RotationComponent>()[i];
+			// RotationComponent& rotationComp = view.GetComponentArray<RotationComponent>()[i];
 			Bloodforge::TransformComponent& transformComp = view.GetComponentArray<Bloodforge::TransformComponent>()[i];
-			if (rotationComp.Progress >= 1.0f)
-			{
-				rotationComp.Progress = 0.0f;
-				std::swap(rotationComp.StartPosition, rotationComp.EndPosition);
-			}
-
-			rotationComp.Progress += Bloodforge::BloodTime::GetInstance().DeltaTime / rotationComp.TimeToReach;
-			rotationComp.Progress = std::clamp(rotationComp.Progress, 0.0f, 1.0f);
-			Bloodforge::Vector2 newPos;
-			if(rotationComp.SmoothLerp) newPos = Bloodforge::Vector2::SmoothLerp(rotationComp.StartPosition, rotationComp.EndPosition, rotationComp.Progress);
-			else newPos = Bloodforge::Vector2::Lerp(rotationComp.StartPosition, rotationComp.EndPosition, rotationComp.Progress);
-			transformComp.SetLocalPosition(newPos);
+			transformComp.Rotate(90.0f * Bloodforge::BloodTime::GetInstance().DeltaTime);
+			transformComp.SetLocalScale(transformComp.GetLocalScale() * 0.9999f);
 		}
 	}
 }

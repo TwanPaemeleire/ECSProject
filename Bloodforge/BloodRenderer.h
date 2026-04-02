@@ -30,11 +30,10 @@ namespace Bloodforge
 		int GetWindowWidth() const { return m_WindowWidth; }
 		int GetWindowHeight() const { return m_WindowHeight; }
 	private:
-		Vector2 WorldToScreen(const Vector2& worldPos) const;
 
 		SDL_Renderer* m_Renderer{};
 		SDL_Window* m_Window{};
-		Color m_ClearColor{255,0,0,255};
+		Color m_ClearColor{0,0,0,255};
 
 		int m_WindowWidth{};
 		int m_WindowHeight{};

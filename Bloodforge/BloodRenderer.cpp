@@ -84,13 +84,4 @@ namespace Bloodforge
 		if (!m_Renderer) throw std::runtime_error("Renderer not initialized yet!");
 		return m_Renderer;
 	}
-
-	Vector2 BloodRenderer::WorldToScreen(const Vector2& worldPos) const
-	{
-		return
-		{
-			worldPos.X + m_WindowWidth / 2.0f,
-			m_WindowHeight / 2.0f - worldPos.Y
-		};
-	}
 }

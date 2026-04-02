@@ -25,41 +25,31 @@ void LoadFunction()
 {
 	auto& scene = Bloodforge::SceneManager::GetInstance().GetActiveScene();
 	auto& entityManager = Bloodforge::EntityManager::GetInstance();
-	auto& renderer = Bloodforge::BloodRenderer::GetInstance();
+	// auto& renderer = Bloodforge::BloodRenderer::GetInstance();
 
-	Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent/*, RotationComponent*/, Bloodforge::RectColliderComponent>();
-	Bloodforge::SpriteComponent* spriteComp = entityManager.GetComponent<Bloodforge::SpriteComponent>(entity);
-	spriteComp->Texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Heart.png");
-	spriteComp->Color = Bloodforge::Color(255, 255, 255, 127);
-	Bloodforge::TransformComponent* transformComp = entityManager.GetComponent<Bloodforge::TransformComponent>(entity);
-	transformComp->SetLocalPosition(renderer.GetWindowWidth() / 2.0f, renderer.GetWindowHeight() / 2.0f);
-	// RotationComponent* rotationComp = entityManager.GetComponent<RotationComponent>(entity);
-	// rotationComp->StartPosition = { -300.0f, 0.0f };
-	// rotationComp->EndPosition = { 300.0f, 0.0f };
-	// rotationComp->TimeToReach = 2.0f;
-	Bloodforge::RectColliderComponent* rectComponent = entityManager.GetComponent<Bloodforge::RectColliderComponent>(entity);
-	rectComponent->SetSize(Bloodforge::Vector2(50, 50));
+	Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent>();
+	int entityId = entity.Id;
+	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity)->Texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Heart.png");
+	Bloodforge::TransformComponent* transformComp1 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity);
+	transformComp1->SetLocalPosition(100.0f, 100.0f);
+	transformComp1->SetLocalScale({ 2.0f, 2.0f });
 
-	Bloodforge::Entity& entity2 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, RotationComponent, Bloodforge::RectColliderComponent>();
-	Bloodforge::SpriteComponent* spriteComp2 = entityManager.GetComponent<Bloodforge::SpriteComponent>(entity2);
-	spriteComp2->Texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Heart.png");
+	Bloodforge::Entity& entity2 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent>();
+	int entity2Id = entity2.Id;
+	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity2)->Texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Heart.png");
 	Bloodforge::TransformComponent* transformComp2 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity2);
-	transformComp2->SetLocalPosition(300.0f, 300.0f);
-	RotationComponent* rotationComp2 = entityManager.GetComponent<RotationComponent>(entity2);
-	rotationComp2->StartPosition = { 200.0f, 200.0f };
-	rotationComp2->EndPosition = { 600.0f, 200.0f };
-	rotationComp2->TimeToReach = 2.0f;
-	rotationComp2->SmoothLerp = false;
-	Bloodforge::RectColliderComponent* rectComponent2 = entityManager.GetComponent<Bloodforge::RectColliderComponent>(entity2);
-	rectComponent2->SetSize(Bloodforge::Vector2(50, 50));
+	transformComp2->SetParent(entityId);
+	transformComp2->SetLocalPosition(100.0f, 100.0f);
+	transformComp2->SetLocalScale({2.0f, 1.0f});
+	transformComp2->SetLocalRotation(10.0f);
 
-	Bloodforge::Entity& entity3 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::TextComponent>();
-	Bloodforge::TextComponent* textComp = entityManager.GetComponent<Bloodforge::TextComponent>(entity3);
-	textComp->SetText("Testing");
-	textComp->SetFontSize(60.0f);
-	textComp->SetColor(Bloodforge::Color(255, 0, 0, 255));
-	textComp->SetFont(Bloodforge::ResourceManager::GetInstance().LoadFont("Font.otf", 60.0f));
-	entityManager.GetComponent<Bloodforge::TransformComponent>(entity3)->SetLocalPosition(0, 0);
+	Bloodforge::Entity& entity3 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent>();
+	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity3)->Texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Heart.png");
+	Bloodforge::TransformComponent* transformComp3 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity3);
+	transformComp3->SetParent(entity2Id);
+	transformComp3->SetLocalPosition(50.0f, 50.0f);
+	transformComp3->SetLocalRotation(45.0f);
+
 
 	scene.RegisterSystem<TestSystem>();
 }
@@ -85,44 +75,5 @@ int main(int, char* [])
 	sceneManager.RegisterScene("TestScene", LoadFunction);
 	sceneManager.RequestSetCurrentScene("TestScene");
 	engine.Run();
-
-	// std::vector<float> timings = std::vector<float>();
-	// Bloodforge::EntityManager& entityManager = Bloodforge::EntityManager::GetInstance();
-	// std::unique_ptr<Bloodforge::SpeedTracker> speedTracker = std::make_unique<Bloodforge::SpeedTracker>();
-	// for (int testIdx = 0; testIdx < 20; ++testIdx)
-	// {
-	// 	entityManager.DestroyAllEntities();
-	// 	for (int i = 0; i < 1000; ++i)
-	// 	{
-	// 		Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent>();
-	// 	}
-	// 
-	// 	speedTracker->StartTracking();
-	// 	Bloodforge::EntityQueryResult result = entityManager.QueryEntities<Bloodforge::TransformComponent>();
-	// 	for (Bloodforge::ChunkView view : result.Chunks)
-	// 	{
-	// 		//std::cout << "CHUNK" << std::endl;
-	// 		for (auto entity : view.Entities)
-	// 		{
-	// 			//std::cout << "Entity ID: " << entity << std::endl;
-	// 		}
-	// 	
-	// 		for (int i = 0; i < std::get<0>(view.ComponentArrays).size(); ++i)
-	// 		{
-	// 			std::get<0>(view.ComponentArrays)[i].TestVar = i;
-	// 		}
-	// 	}
-	// 	float timeInMs = speedTracker->StopTracking();
-	// 
-	// 	std::cout << "Time taken: " << std::to_string(timeInMs) << " miliseconds" << std::endl;
-	// 	timings.push_back(timeInMs);
-	// }
-	// 
-	// std::cout << "Average time taken: " << std::accumulate(timings.begin(), timings.end(), 0.0f) / timings.size() << " miliseconds" << std::endl;
-	// std::cout << "Longest time taken: " << *std::max_element(timings.begin(), timings.end()) << " miliseconds" << std::endl;
-	// std::cout << "Shortest time taken: " << *std::min_element(timings.begin(), timings.end()) << " miliseconds" << std::endl;
-	// 
-	// std::cout << "ID of TransformComponent: " << Bloodforge::Component<Bloodforge::TransformComponent>::Index << std::endl;
-	// std::cout << "ID of SpriteComponent: " << Bloodforge::Component<Bloodforge::SpriteComponent>::Index << std::endl;
 	return 0;
 }

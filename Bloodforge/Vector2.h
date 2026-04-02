@@ -12,6 +12,8 @@ namespace Bloodforge
 		float SqrMagnitude() const;
 		void Normalize();
 		Vector2 Normalized() const;
+		// Pass the angle in degrees
+		Vector2 Rotate(float angle) const;
 
 		Vector2 operator+ (const Vector2 & obj) const;
 		Vector2 operator- (const Vector2 & obj) const;
@@ -20,6 +22,8 @@ namespace Bloodforge
 
 		static float Cross(const Vector2& vec1, const Vector2& vec2);
 		static float Dot(const Vector2& vec1, const Vector2& vec2);
+		static Vector2 Multiply(const Vector2& vec1, const Vector2& vec2);
+		static Vector2 Divide(const Vector2& vec1, const Vector2& vec2);
 
 		// Returns degrees between 0 and 180
 		static float Angle(const Vector2& vec1, const Vector2& vec2);
