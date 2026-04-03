@@ -6,6 +6,8 @@
 #include "SceneManager.h"
 #include "Vector2.h"
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_pixels.h>
+#include "glm/glm.hpp"
 
 namespace Bloodforge
 {
@@ -79,9 +81,52 @@ namespace Bloodforge
 		SDL_RenderTexture(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dstRect);
 	}
 
+	void BloodRenderer::RenderTexture(const Texture2D& texture, const glm::mat4& worldMatrix, const Color& color) const
+	{
+		const float width = texture.GetSizeX();
+		const float height = texture.GetSizeY();
+		const float halfWidth = width * 0.5f;
+		const float halfHeight = height * 0.5f;
+
+		SDL_Vertex vertices[4]{};
+		SDL_FColor sdlColor = 
+		{ 
+			color.r / 255.f, 
+			color.g / 255.f, 
+			color.b / 255.f, 
+			color.a / 255.f 
+		};
+
+		vertices[0].position = TransformPoint(worldMatrix, -halfWidth, -halfHeight);
+		vertices[0].tex_coord = SDL_FPoint{ 0.0f, 0.0f };
+		vertices[0].color = sdlColor;
+
+		vertices[1].position = TransformPoint(worldMatrix, halfWidth, -halfHeight);
+		vertices[1].tex_coord = SDL_FPoint{ 1.0f, 0.0f };
+		vertices[1].color = sdlColor;
+
+		vertices[2].position = TransformPoint(worldMatrix, halfWidth, halfHeight);
+		vertices[2].tex_coord = SDL_FPoint{ 1.0f, 1.0f };
+		vertices[2].color = sdlColor;
+
+		vertices[3].position = TransformPoint(worldMatrix, -halfWidth, halfHeight);
+		vertices[3].tex_coord = SDL_FPoint{ 0.0f, 1.0f };
+		vertices[3].color = sdlColor;
+
+		int indices[6] = { 0, 1, 2, 0, 2, 3 };
+
+		SDL_RenderGeometry(GetSDLRenderer(), texture.GetSDLTexture(), vertices, 4, indices, 6);
+	}
+
 	SDL_Renderer* BloodRenderer::GetSDLRenderer() const
 	{
 		if (!m_Renderer) throw std::runtime_error("Renderer not initialized yet!");
 		return m_Renderer;
+	}
+
+	SDL_FPoint BloodRenderer::TransformPoint(const glm::mat4& worldMatrix, float x, float y) const
+	{
+		glm::vec4 point = worldMatrix * glm::vec4(x, y, 0.0f, 1.0f);
+		return SDL_FPoint{ point.x, point.y };
 	}
 }

@@ -2,8 +2,8 @@
 #include "Component.h"
 #include "Vector2.h"
 #include <vector>
-#include "glm/glm.hpp"
 #define GLM_ENABLE_EXPERIMENTAL
+#include "glm/glm.hpp"
 
 namespace Bloodforge
 {

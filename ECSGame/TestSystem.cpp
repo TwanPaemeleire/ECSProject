@@ -4,11 +4,6 @@
 #include <SpriteComponent.h>
 #include "RotationComponent.h"
 #include <BloodTime.h>
-#include <GlobalEventHandler.h>
-#include <iostream>
-#include <numbers>
-#include <WindowUtils.h>
-#include <RectColliderComponent.h>
 
 void TestSystem::OnUpdate()
 {
@@ -19,10 +14,9 @@ void TestSystem::OnUpdate()
 	{
 		for (int i = 0; i < view.GetComponentArray<Bloodforge::TransformComponent>().size(); ++i)
 		{
-			// RotationComponent& rotationComp = view.GetComponentArray<RotationComponent>()[i];
+			RotationComponent& rotationComp = view.GetComponentArray<RotationComponent>()[i];
 			Bloodforge::TransformComponent& transformComp = view.GetComponentArray<Bloodforge::TransformComponent>()[i];
-			transformComp.Rotate(90.0f * Bloodforge::BloodTime::GetInstance().DeltaTime);
-			transformComp.SetLocalScale(transformComp.GetLocalScale() * 0.9999f);
+			transformComp.Rotate(rotationComp.SpeedDegPerSec * Bloodforge::BloodTime::GetInstance().DeltaTime);
 		}
 	}
 }

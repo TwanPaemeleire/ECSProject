@@ -1,9 +1,11 @@
 #pragma once
 #include "Singleton.h"
 #include "Color.h"
+#include "glm/glm.hpp"
 
 struct SDL_Renderer;
 struct SDL_Window;
+struct SDL_FPoint;
 
 namespace Bloodforge
 {
@@ -21,6 +23,7 @@ namespace Bloodforge
 
 		void DrawRectangle(const Vector2& pos, float width, float height, const Color& color) const;
 		void RenderTexture(const Texture2D& texture, const Vector2& pos, const Color& color) const;
+		void RenderTexture(const Texture2D& texture, const glm::mat4& worldMatrix, const Color& color) const;
 
 		SDL_Renderer* GetSDLRenderer() const;
 		const Color& GetBackgroundColor() const { return m_ClearColor; }
@@ -30,6 +33,8 @@ namespace Bloodforge
 		int GetWindowWidth() const { return m_WindowWidth; }
 		int GetWindowHeight() const { return m_WindowHeight; }
 	private:
+
+		SDL_FPoint TransformPoint(const glm::mat4& worldMatrix, float x, float y) const;
 
 		SDL_Renderer* m_Renderer{};
 		SDL_Window* m_Window{};
