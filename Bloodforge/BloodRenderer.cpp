@@ -8,6 +8,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_pixels.h>
 #include "glm/glm.hpp"
+#include "RectColliderComponent.h"
 
 namespace Bloodforge
 {
@@ -66,6 +67,21 @@ namespace Bloodforge
 		rect.h = height;
 
 		SDL_RenderRect(m_Renderer, &rect);
+	}
+
+	void BloodRenderer::DrawRectangle(const Rectf& rect, const Color& color) const
+	{
+		SDL_FPoint linePoints[5] = 
+		{
+			{ rect.TopLeft.X, rect.TopLeft.Y },
+			{ rect.TopRight.X, rect.TopRight.Y },
+			{ rect.BottomRight.X, rect.BottomRight.Y },
+			{ rect.BottomLeft.X, rect.BottomLeft.Y },
+			{ rect.TopLeft.X, rect.TopLeft.Y }
+		};
+
+		SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
+		SDL_RenderLines(GetSDLRenderer(), linePoints, 5);
 	}
 
 	void BloodRenderer::RenderTexture(const Texture2D& texture, const Vector2& pos, const Color& color) const

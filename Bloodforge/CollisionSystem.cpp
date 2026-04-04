@@ -80,7 +80,7 @@ namespace Bloodforge
 				// Draw debug rendering
 				RectColliderComponent& rect = rectArray[index];
 				const Rectf& collisionRect = rect.GetRect();
-				BloodRenderer::GetInstance().DrawRectangle({ collisionRect.X, collisionRect.Y }, collisionRect.Width, collisionRect.Height, Color(255, 0, 0, 255));
+				BloodRenderer::GetInstance().DrawRectangle(collisionRect, Color(255, 255, 255, 255));
 			}
 		}
 	}

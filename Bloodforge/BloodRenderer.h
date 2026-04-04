@@ -9,6 +9,7 @@ struct SDL_FPoint;
 
 namespace Bloodforge
 {
+	struct Rectf;
 	struct Vector2;
 	class Texture2D;
 
@@ -22,6 +23,7 @@ namespace Bloodforge
 		void Render();
 
 		void DrawRectangle(const Vector2& pos, float width, float height, const Color& color) const;
+		void DrawRectangle(const Rectf& rect, const Color& color) const;
 		void RenderTexture(const Texture2D& texture, const Vector2& pos, const Color& color) const;
 		void RenderTexture(const Texture2D& texture, const glm::mat4& worldMatrix, const Color& color) const;
 

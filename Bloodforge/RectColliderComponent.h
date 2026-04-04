@@ -12,6 +12,10 @@ namespace Bloodforge
 		float Y;
 		float Width;
 		float Height;
+		Vector2 TopLeft;
+		Vector2 TopRight;
+		Vector2 BottomRight;
+		Vector2 BottomLeft;
 	};
 
 	struct RectColliderComponent final :Component<RectColliderComponent>
@@ -44,6 +48,8 @@ namespace Bloodforge
 		std::unique_ptr<Event<int>> OnCollisionExitEvent;
 
 	private:
+		Vector2 RotateRectPoint(float x, float y, float cosRot, float sinRot);
+
 		Vector2 Size;
 		Vector2 Offset;
 

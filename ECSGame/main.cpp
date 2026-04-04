@@ -19,23 +19,31 @@
 #include <WindowUtils.h>
 #include <SdbmHash.h>
 #include <RectColliderComponent.h>
-#include <BloodRenderer.h>
+
+void InitializeRectColliderComponent(Bloodforge::Entity& entity, const Bloodforge::Vector2& size, const Bloodforge::Vector2& offset = { 0.0f, 0.0f })
+{
+	auto& entityManager = Bloodforge::EntityManager::GetInstance();
+	Bloodforge::RectColliderComponent* collider = entityManager.GetComponent<Bloodforge::RectColliderComponent>(entity);
+	collider->SetSize(size);
+	collider->SetOffset(offset);
+}
 
 void LoadFunction()
 {
 	auto& scene = Bloodforge::SceneManager::GetInstance().GetActiveScene();
 	auto& entityManager = Bloodforge::EntityManager::GetInstance();
 
-	Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, RotationComponent>();
+	Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, RotationComponent, Bloodforge::RectColliderComponent>();
 	int entityId = entity.Id;
 	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity)->Texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Heart.png");
 	Bloodforge::TransformComponent* transformComp1 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity);
-	transformComp1->SetLocalPosition(0.0f, 0.0f);
+	transformComp1->SetLocalPosition(300.0f, 300.0f);
 	// transformComp1->SetLocalScale({ 2.0f, 2.0f });
 	RotationComponent* rotComp = entityManager.GetComponent<RotationComponent>(entity);
 	rotComp->SpeedDegPerSec = 25.0f;
+	InitializeRectColliderComponent(entity, { 80.0f, 80.0f });
 
-	Bloodforge::Entity& entity2 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, RotationComponent>();
+	Bloodforge::Entity& entity2 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, RotationComponent, Bloodforge::RectColliderComponent>();
 	int entity2Id = entity2.Id;
 	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity2)->Texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Heart.png");
 	Bloodforge::TransformComponent* transformComp2 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity2);
@@ -45,17 +53,18 @@ void LoadFunction()
 	transformComp2->SetLocalRotation(10.0f);
 	RotationComponent* rotComp2 = entityManager.GetComponent<RotationComponent>(entity2);
 	rotComp2->SpeedDegPerSec = 90.f;
+	InitializeRectColliderComponent(entity2, { 80.0f, 80.0f });
 
-	Bloodforge::Entity& entity3 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, RotationComponent>();
-	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity3)->Texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Heart.png");
-	Bloodforge::TransformComponent* transformComp3 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity3);
-	transformComp3->SetParent(entity2Id);
-	transformComp3->SetLocalPosition(50.0f, 50.0f);
-	transformComp3->SetLocalRotation(45.0f);
-	transformComp3->SetLocalScale({ 0.5f, 0.5f });
-	RotationComponent* rotComp3 = entityManager.GetComponent<RotationComponent>(entity3);
-	rotComp3->SpeedDegPerSec = 180.f;
-
+	// Bloodforge::Entity& entity3 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, RotationComponent, Bloodforge::RectColliderComponent>();
+	// entityManager.GetComponent<Bloodforge::SpriteComponent>(entity3)->Texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Heart.png");
+	// Bloodforge::TransformComponent* transformComp3 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity3);
+	// transformComp3->SetParent(entity2Id);
+	// transformComp3->SetLocalPosition(50.0f, 50.0f);
+	// transformComp3->SetLocalRotation(45.0f);
+	// transformComp3->SetLocalScale({ 1.0f, 1.0f });
+	// RotationComponent* rotComp3 = entityManager.GetComponent<RotationComponent>(entity3);
+	// rotComp3->SpeedDegPerSec = 180.f;
+	// InitializeRectColliderComponent(entity3, { 80.0f, 80.0f });
 
 	scene.RegisterSystem<TestSystem>();
 }
