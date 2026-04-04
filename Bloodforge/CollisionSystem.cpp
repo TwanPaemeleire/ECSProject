@@ -29,10 +29,10 @@ namespace Bloodforge
 					for (int innerIndex = index + 1; innerIndex < rectArray2.size(); ++innerIndex)
 					{
 						RectColliderComponent& rect2 = rectArray2[innerIndex];
-						TransformComponent& transform2 = transformArray1[innerIndex];
+						TransformComponent& transform2 = transformArray2[innerIndex];
 						if (rect1.OwnerEntityId == rect2.OwnerEntityId) continue; // Checking collider against itself
 
-						if (IsOverlapping(transform1, rect1, transform2, rect2))
+						if (IsOverlapping(rect1.GetRect(), rect2.GetRect()))
 						{
 							std::pair<int, int> pair = { transform1.OwnerEntityId, transform2.OwnerEntityId };
 							currentFrameCollisions.emplace_back(pair);
@@ -98,14 +98,47 @@ namespace Bloodforge
 		}
 	}
 
-	bool CollisionSystem::IsOverlapping(TransformComponent&, RectColliderComponent& rect1, TransformComponent&, RectColliderComponent& rect2)
+	bool CollisionSystem::IsOverlapping(const Rectf& rect1, const Rectf& rect2)
 	{
-		const Rectf& rectHitBox1 = rect1.GetRect();
-		const Rectf& rectHitBox2 = rect2.GetRect();
+		Vector2 axes[4]
+		{
+			(rect1.TopRight - rect1.TopLeft).GetPerpendicular().Normalized(),
+			(rect1.BottomLeft - rect1.TopLeft).GetPerpendicular().Normalized(),
+			(rect2.TopRight - rect2.TopLeft).GetPerpendicular().Normalized(),
+			(rect2.BottomLeft - rect2.TopLeft).GetPerpendicular().Normalized()
+		};
 
-		return (rectHitBox1.X < rectHitBox2.X + rectHitBox2.Width)  &&
-			   (rectHitBox1.X + rectHitBox1.Width > rectHitBox2.X)  && 
-			   (rectHitBox1.Y < rectHitBox2.Y + rectHitBox2.Height) &&
-			   (rectHitBox1.Y + rectHitBox1.Height > rectHitBox2.Y);
+		for (const Vector2& axis : axes)
+		{
+			if (!IsOverlappingOnAxis(rect1, rect2, axis)) return false;
+		}
+
+		return true;
+	}
+
+	void CollisionSystem::ProjectRectOntoAxis(const Rectf& rect, const Vector2& axis, float& min, float& max)
+	{
+		const float points[4] = 
+		{ 
+			Vector2::Dot(rect.TopLeft, axis), 
+			Vector2::Dot(rect.TopRight, axis),
+			Vector2::Dot(rect.BottomRight, axis),
+			Vector2::Dot(rect.BottomLeft, axis)
+		};
+
+		min = std::min(std::min(points[0], points[1]), std::min(points[2], points[3]));
+		max = std::max(std::max(points[0], points[1]), std::max(points[2], points[3]));
+	}
+
+	bool CollisionSystem::IsOverlappingOnAxis(const Rectf& rect1, const Rectf& rect2, const Vector2& axis)
+	{
+		float minA;
+		float maxA;
+		float minB;
+		float maxB;
+		ProjectRectOntoAxis(rect1, axis, minA, maxA);
+		ProjectRectOntoAxis(rect2, axis, minB, maxB);
+
+		return !(maxA < minB || maxB < minA);
 	}
 }

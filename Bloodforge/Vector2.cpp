@@ -44,6 +44,15 @@ namespace Bloodforge
 		};
     }
 
+    Vector2 Vector2::GetPerpendicular() const
+    {
+        return 
+        {
+            -Y,
+            X,
+		};
+    }
+
     Vector2 Vector2::operator+(const Vector2& obj) const
     {
         return

@@ -14,6 +14,7 @@ namespace Bloodforge
 		Vector2 Normalized() const;
 		// Pass the angle in degrees
 		Vector2 Rotate(float angle) const;
+		Vector2 GetPerpendicular() const;
 
 		Vector2 operator+ (const Vector2 & obj) const;
 		Vector2 operator- (const Vector2 & obj) const;

@@ -44,7 +44,7 @@ void LoadFunction()
 	InitializeRectColliderComponent(entity, { 80.0f, 80.0f });
 
 	Bloodforge::Entity& entity2 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, RotationComponent, Bloodforge::RectColliderComponent>();
-	int entity2Id = entity2.Id;
+	// int entity2Id = entity2.Id;
 	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity2)->Texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Heart.png");
 	Bloodforge::TransformComponent* transformComp2 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity2);
 	transformComp2->SetParent(entityId);
