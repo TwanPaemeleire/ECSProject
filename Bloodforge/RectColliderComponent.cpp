@@ -5,7 +5,7 @@
 
 namespace Bloodforge
 {
-	const Rectf& RectColliderComponent::GetRect()
+	const ColliderRect& RectColliderComponent::GetRect()
 	{
 		if (WorldPosNeedsUpdate)
 		{

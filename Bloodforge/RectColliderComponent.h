@@ -6,7 +6,7 @@
 
 namespace Bloodforge
 {
-	struct Rectf
+	struct ColliderRect
 	{
 		float X;
 		float Y;
@@ -27,7 +27,7 @@ namespace Bloodforge
 			OnCollisionExitEvent = std::make_unique<Event<int>>();
 		}
 
-		const Rectf& GetRect();
+		const ColliderRect& GetRect();
 
 		void SetSize(const Vector2& size)
 		{
@@ -53,7 +53,7 @@ namespace Bloodforge
 		Vector2 Size;
 		Vector2 Offset;
 
-		Rectf WorldSpaceRect = {};
+		ColliderRect WorldSpaceRect = {};
 		bool WorldPosNeedsUpdate = false;
 	};
 }

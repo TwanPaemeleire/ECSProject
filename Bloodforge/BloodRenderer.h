@@ -9,8 +9,9 @@ struct SDL_FPoint;
 
 namespace Bloodforge
 {
-	struct Rectf;
+	struct ColliderRect;
 	struct Vector2;
+	struct Rect;
 	class Texture2D;
 
 	class BloodRenderer : public Singleton<BloodRenderer>
@@ -23,9 +24,10 @@ namespace Bloodforge
 		void Render();
 
 		void DrawRectangle(const Vector2& pos, float width, float height, const Color& color) const;
-		void DrawRectangle(const Rectf& rect, const Color& color) const;
+		void DrawRectangle(const ColliderRect& rect, const Color& color) const;
 		void RenderTexture(const Texture2D& texture, const Vector2& pos, const Color& color) const;
 		void RenderTexture(const Texture2D& texture, const glm::mat4& worldMatrix, const Color& color) const;
+		void RenderTexture(const Texture2D& texture, const glm::mat4& worldMatrix, const Rect& srcRect, const Color& color) const;
 
 		SDL_Renderer* GetSDLRenderer() const;
 		const Color& GetBackgroundColor() const { return m_ClearColor; }

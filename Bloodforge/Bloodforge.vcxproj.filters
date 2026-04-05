@@ -177,6 +177,7 @@
     <ClInclude Include="CollisionSystem.h">
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Rect.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Generated">

@@ -9,6 +9,7 @@
 #include <SDL3/SDL_pixels.h>
 #include "glm/glm.hpp"
 #include "RectColliderComponent.h"
+#include "Rect.h"
 
 namespace Bloodforge
 {
@@ -69,7 +70,7 @@ namespace Bloodforge
 		SDL_RenderRect(m_Renderer, &rect);
 	}
 
-	void BloodRenderer::DrawRectangle(const Rectf& rect, const Color& color) const
+	void BloodRenderer::DrawRectangle(const ColliderRect& rect, const Color& color) const
 	{
 		SDL_FPoint linePoints[5] = 
 		{
@@ -127,6 +128,51 @@ namespace Bloodforge
 
 		vertices[3].position = TransformPoint(worldMatrix, -halfWidth, halfHeight);
 		vertices[3].tex_coord = SDL_FPoint{ 0.0f, 1.0f };
+		vertices[3].color = sdlColor;
+
+		int indices[6] = { 0, 1, 2, 0, 2, 3 };
+
+		SDL_RenderGeometry(GetSDLRenderer(), texture.GetSDLTexture(), vertices, 4, indices, 6);
+	}
+
+	void BloodRenderer::RenderTexture(const Texture2D& texture, const glm::mat4& worldMatrix, const Rect& srcRect, const Color& color) const
+	{
+		const float textureWidth = texture.GetSizeX();
+		const float textureHeight = texture.GetSizeY();
+
+		const float width = srcRect.Width;
+		const float height = srcRect.Height;
+		const float halfWidth = width * 0.5f;
+		const float halfHeight = height * 0.5f;
+
+		const float u0 = srcRect.X / textureWidth;
+		const float v0 = srcRect.Y / textureHeight;
+		const float u1 = (srcRect.X + srcRect.Width) / textureWidth;
+		const float v1 = (srcRect.Y + srcRect.Height) / textureHeight;
+
+		SDL_Vertex vertices[4]{};
+		SDL_FColor sdlColor =
+		{
+			color.r / 255.f,
+			color.g / 255.f,
+			color.b / 255.f,
+			color.a / 255.f
+		};
+
+		vertices[0].position = TransformPoint(worldMatrix, -halfWidth, -halfHeight);
+		vertices[0].tex_coord = SDL_FPoint{ u0, v0 };
+		vertices[0].color = sdlColor;
+
+		vertices[1].position = TransformPoint(worldMatrix, halfWidth, -halfHeight);
+		vertices[1].tex_coord = SDL_FPoint{ u1, v0 };
+		vertices[1].color = sdlColor;
+
+		vertices[2].position = TransformPoint(worldMatrix, halfWidth, halfHeight);
+		vertices[2].tex_coord = SDL_FPoint{ u1, v1 };
+		vertices[2].color = sdlColor;
+
+		vertices[3].position = TransformPoint(worldMatrix, -halfWidth, halfHeight);
+		vertices[3].tex_coord = SDL_FPoint{ u0, v1 };
 		vertices[3].color = sdlColor;
 
 		int indices[6] = { 0, 1, 2, 0, 2, 3 };

@@ -5,6 +5,7 @@
 #include "TransformComponent.h"
 #include "BloodRenderer.h"
 #include "Texture2D.h"
+#include "Rect.h"
 
 namespace Bloodforge
 {

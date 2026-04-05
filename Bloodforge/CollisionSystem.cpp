@@ -79,7 +79,7 @@ namespace Bloodforge
 			{
 				// Draw debug rendering
 				RectColliderComponent& rect = rectArray[index];
-				const Rectf& collisionRect = rect.GetRect();
+				const ColliderRect& collisionRect = rect.GetRect();
 				BloodRenderer::GetInstance().DrawRectangle(collisionRect, Color(255, 255, 255, 255));
 			}
 		}
@@ -98,7 +98,7 @@ namespace Bloodforge
 		}
 	}
 
-	bool CollisionSystem::IsOverlapping(const Rectf& rect1, const Rectf& rect2)
+	bool CollisionSystem::IsOverlapping(const ColliderRect& rect1, const ColliderRect& rect2)
 	{
 		Vector2 axes[4]
 		{
@@ -116,7 +116,7 @@ namespace Bloodforge
 		return true;
 	}
 
-	void CollisionSystem::ProjectRectOntoAxis(const Rectf& rect, const Vector2& axis, float& min, float& max)
+	void CollisionSystem::ProjectRectOntoAxis(const ColliderRect& rect, const Vector2& axis, float& min, float& max)
 	{
 		const float points[4] = 
 		{ 
@@ -130,7 +130,7 @@ namespace Bloodforge
 		max = std::max(std::max(points[0], points[1]), std::max(points[2], points[3]));
 	}
 
-	bool CollisionSystem::IsOverlappingOnAxis(const Rectf& rect1, const Rectf& rect2, const Vector2& axis)
+	bool CollisionSystem::IsOverlappingOnAxis(const ColliderRect& rect1, const ColliderRect& rect2, const Vector2& axis)
 	{
 		float minA;
 		float maxA;

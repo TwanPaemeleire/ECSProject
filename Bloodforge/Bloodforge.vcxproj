@@ -211,6 +211,7 @@
     <ClInclude Include="GlobalEventHandler.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Rect.h" />
     <ClInclude Include="RectColliderComponent.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />

@@ -4,7 +4,7 @@
 
 namespace Bloodforge
 {
-	struct Rectf;
+	struct ColliderRect;
 	struct Vector2;
 	struct RectColliderComponent;
 	struct TransformComponent;
@@ -16,10 +16,10 @@ namespace Bloodforge
 
 	private:
 		void UpdateAllCollisionRects();
-		bool IsOverlapping(const Rectf& rect1, const Rectf& rect2);
+		bool IsOverlapping(const ColliderRect& rect1, const ColliderRect& rect2);
 
-		void ProjectRectOntoAxis(const Rectf& rect, const Vector2& axis, float& min, float& max);
-		bool IsOverlappingOnAxis(const Rectf& rect1, const Rectf& rect2, const Vector2& axis);
+		void ProjectRectOntoAxis(const ColliderRect& rect, const Vector2& axis, float& min, float& max);
+		bool IsOverlappingOnAxis(const ColliderRect& rect1, const ColliderRect& rect2, const Vector2& axis);
 		std::vector<std::pair<int, int>> m_LastFrameCollisions;
 	};
 }
