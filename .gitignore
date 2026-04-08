@@ -80,3 +80,14 @@ ipch/
 Thumbs.db
 ehthumbs.db
 .DS_Store
+
+
+# ------------------------------
+# Un-ignore Third Party Libraries
+# ------------------------------
+!3rdParty/
+!3rdParty/**
+
+!3rdParty/**/*.lib
+!3rdParty/**/*.dll
+!3rdParty/**/*.pdb
