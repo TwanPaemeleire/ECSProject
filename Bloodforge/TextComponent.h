@@ -4,6 +4,7 @@
 #include "Color.h"
 #include <memory>
 #include "Texture2D.h"
+#include "Font.h"
 
 namespace Bloodforge
 {
@@ -20,6 +21,7 @@ namespace Bloodforge
 		{
 			FontSize = size;
 			FontNeedsUpdate = true;
+			TextNeedsUpdate = true;
 		}
 
 		void SetColor(const Color& color)
@@ -31,6 +33,7 @@ namespace Bloodforge
 		void SetFont(Font* font)
 		{
 			Font = font;
+			FontSize = font->GetFontSize();
 			TextNeedsUpdate = true;
 		}
 
@@ -54,13 +57,16 @@ namespace Bloodforge
 		const std::string& GetText() const { return Text; }
 		const Color& GetColor() const { return Color; }
 
+		bool FlipHorizontal = false;
+		bool FlipVertical = false;
+
 	private:
 		std::string Text = "";
 		float FontSize = 0.0f;
 		Color Color = {};
 		Font* Font = nullptr;
 		std::unique_ptr<Texture2D> Texture;
-		bool TextNeedsUpdate = true;
-		bool FontNeedsUpdate = true;
+		bool TextNeedsUpdate = false;
+		bool FontNeedsUpdate = false;
 	};
 }

@@ -29,14 +29,13 @@ namespace Bloodforge
 	class ResourceManager final : public Singleton<ResourceManager>
 	{
 	public:
-		virtual void InitializeBeforeFirstUse() override;
 		Texture2D* LoadTexture(const std::string& file);
 		Font* LoadFont(const std::string& file, float size);
 		CustomCursor* LoadCustomCursor(CursorId id, const std::string& file, int xOffset, int yOffset);
 
 	protected:
 		friend class Singleton<ResourceManager>;
-		ResourceManager() = default;
+		ResourceManager();
 
 	private:
 		std::unordered_map<std::string, std::unique_ptr<Texture2D>> m_LoadedTextures;

@@ -26,8 +26,8 @@ namespace Bloodforge
 		void DrawRectangle(const Vector2& pos, float width, float height, const Color& color) const;
 		void DrawRectangle(const ColliderRect& rect, const Color& color) const;
 		void RenderTexture(const Texture2D& texture, const Vector2& pos, const Color& color) const;
-		void RenderTexture(const Texture2D& texture, const glm::mat4& worldMatrix, const Color& color) const;
-		void RenderTexture(const Texture2D& texture, const glm::mat4& worldMatrix, const Rect& srcRect, const Color& color) const;
+		void RenderTexture(const Texture2D& texture, const glm::mat4& worldMatrix, const Color& color, bool flippedHorizontal, bool flippedVertical) const;
+		void RenderTexture(const Texture2D& texture, const glm::mat4& worldMatrix, const Rect& srcRect, const Color& color, bool flippedHorizontal, bool flippedVertical) const;
 
 		SDL_Renderer* GetSDLRenderer() const;
 		const Color& GetBackgroundColor() const { return m_ClearColor; }
@@ -37,7 +37,6 @@ namespace Bloodforge
 		int GetWindowWidth() const { return m_WindowWidth; }
 		int GetWindowHeight() const { return m_WindowHeight; }
 	private:
-
 		SDL_FPoint TransformPoint(const glm::mat4& worldMatrix, float x, float y) const;
 
 		SDL_Renderer* m_Renderer{};

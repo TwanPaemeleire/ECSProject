@@ -13,5 +13,7 @@ namespace Bloodforge
 
 		Texture2D* Texture = nullptr;
 		Color Color{};
+		bool FlipHorizontal = false;
+		bool FlipVertical = false;
 	};
 }

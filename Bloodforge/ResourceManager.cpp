@@ -10,11 +10,6 @@
 
 namespace Bloodforge
 {
-	void ResourceManager::InitializeBeforeFirstUse()
-	{
-		TTF_Init();
-	}
-
 	Texture2D* Bloodforge::ResourceManager::LoadTexture(const std::string& file)
 	{
 		if (m_LoadedTextures.find(file) == m_LoadedTextures.end())
@@ -31,6 +26,7 @@ namespace Bloodforge
 		}
 		return m_LoadedFonts.at(key).get();
 	}
+
 	CustomCursor* ResourceManager::LoadCustomCursor(CursorId id, const std::string& file, int xOffset, int yOffset)
 	{
 		auto it = m_LoadedCustomCursors.find(id);
@@ -51,5 +47,10 @@ namespace Bloodforge
 		m_LoadedCustomCursors[id] = std::move(cursor);
 
 		return customCursor;
+	}
+
+	ResourceManager::ResourceManager()
+	{
+		TTF_Init();
 	}
 }

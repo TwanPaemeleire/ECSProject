@@ -18,7 +18,7 @@ namespace Bloodforge
 			{
 				SpriteComponent& spriteComp = view.GetComponentArray<SpriteComponent>()[i];
 				TransformComponent& transform = view.GetComponentArray<TransformComponent>()[i];
-				BloodRenderer::GetInstance().RenderTexture(*spriteComp.Texture, transform.GetWorldMatrix(), spriteComp.Color);
+				BloodRenderer::GetInstance().RenderTexture(*spriteComp.Texture, transform.GetWorldMatrix(), spriteComp.Color, spriteComp.FlipHorizontal, spriteComp.FlipVertical);
 			}
 		}
 	}
