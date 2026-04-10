@@ -20,6 +20,8 @@
 #include <SdbmHash.h>
 #include <RectColliderComponent.h>
 #include <BloodRenderer.h>
+#include <SpriteAnimationComponent.h>
+#include <SpriteAnimationSystem.h>
 
 void InitializeRectColliderComponent(Bloodforge::Entity& entity, const Bloodforge::Vector2& size, const Bloodforge::Vector2& offset = { 0.0f, 0.0f })
 {
@@ -36,24 +38,28 @@ void LoadFunction()
 	auto& renderer = Bloodforge::BloodRenderer::GetInstance();
 	renderer.SetBackgroundColor({ 127, 127, 127, 255 });
 
-	Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, Bloodforge::RectColliderComponent>();
+	Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, Bloodforge::RectColliderComponent, Bloodforge::SpriteAnimationComponent>();
 	int entityId = entity.Id;
-	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity)->Texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("BatSheet.png");
+	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity)->SetTexture(Bloodforge::ResourceManager::GetInstance().LoadTexture("BatSheet.png"));
 	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity)->FlipVertical = false;
 	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity)->FlipHorizontal = true;
+	Bloodforge::SpriteAnimationComponent* animComp = entityManager.GetComponent<Bloodforge::SpriteAnimationComponent>(entity);
+	Bloodforge::AnimationUils::InitializeAnimation(*animComp, Bloodforge::ResourceManager::GetInstance().LoadTexture("Test.png"), 5);
+	animComp->FrameTime = 0.08f;
+	animComp->StartingFrameIndexAfterLoop = 0;
+	animComp->StartingFrame = 4;
 	Bloodforge::TransformComponent* transformComp1 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity);
 	transformComp1->SetLocalPosition(300.0f, 300.0f);
-	transformComp1->SetLocalScale({ 0.25f, 0.25f });
-	InitializeRectColliderComponent(entity, { 80.0f, 80.0f });
+	InitializeRectColliderComponent(entity, { 40.0f, 40.0f });
 
 	Bloodforge::Entity& entity2 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, Bloodforge::RectColliderComponent>();
 	int entity2Id = entity2.Id;
-	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity2)->Texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Heart.png");
+	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity2)->SetTexture(Bloodforge::ResourceManager::GetInstance().LoadTexture("Heart.png"));
 	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity2)->FlipVertical = true;
 	Bloodforge::TransformComponent* transformComp2 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity2);
 	transformComp2->SetParent(entityId);
 	transformComp2->SetLocalPosition(100.0f, 100.0f);
-	transformComp2->SetLocalScale({4.0f, 4.0f});
+	transformComp2->SetLocalScale({1.0f, 1.0f});
 	InitializeRectColliderComponent(entity2, { 80.0f, 80.0f });
 
 	Bloodforge::Entity& entity3 = entityManager.CreateEntity<Bloodforge::TransformComponent, RotationComponent, Bloodforge::TextComponent>();
@@ -70,6 +76,7 @@ void LoadFunction()
 	rotComp3->SpeedDegPerSec = 180.f;
 
 	scene.RegisterSystem<TestSystem>();
+	scene.RegisterSystem<Bloodforge::SpriteAnimationSystem>();
 }
 
 int main(int, char* []) 

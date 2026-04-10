@@ -29,12 +29,12 @@ namespace Bloodforge
 		return m_Texture;
 	}
 
-	float Texture2D::GetSizeX() const
+	float Texture2D::GetWidth() const
 	{
 		return m_Size.X;
 	}
 
-	float Texture2D::GetSizeY() const
+	float Texture2D::GetHeight() const
 	{
 		return m_Size.Y;
 	}

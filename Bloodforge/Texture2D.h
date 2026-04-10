@@ -18,8 +18,8 @@ namespace Bloodforge
 
 		SDL_Texture* GetSDLTexture() const;
 
-		float GetSizeX() const;
-		float GetSizeY() const;
+		float GetWidth() const;
+		float GetHeight() const;
 		const Vector2& GetSize() const;
 	private:
 		SDL_Texture* m_Texture;

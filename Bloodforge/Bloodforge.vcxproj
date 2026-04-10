@@ -219,6 +219,8 @@
     <ClInclude Include="SdbmHash.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SpeedTracker.h" />
+    <ClInclude Include="SpriteAnimationComponent.h" />
+    <ClInclude Include="SpriteAnimationSystem.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="SpriteSystem.h" />
     <ClInclude Include="System.h" />
@@ -251,6 +253,9 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SpeedTracker.cpp" />
+    <ClCompile Include="SpriteAnimationComponent.cpp" />
+    <ClCompile Include="SpriteAnimationSystem.cpp" />
+    <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="SpriteSystem.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="TextSystem.cpp" />

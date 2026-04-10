@@ -91,8 +91,8 @@ namespace Bloodforge
 		SDL_FRect dstRect{};
 		dstRect.x = screenPos.X;
 		dstRect.y = screenPos.Y;
-		dstRect.w = texture.GetSizeX();
-		dstRect.h = texture.GetSizeY();
+		dstRect.w = texture.GetWidth();
+		dstRect.h = texture.GetHeight();
 		SDL_SetTextureColorMod(texture.GetSDLTexture(), color.r, color.g, color.b);
 		SDL_SetTextureAlphaMod(texture.GetSDLTexture(), color.a);
 		SDL_RenderTexture(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dstRect);
@@ -100,8 +100,8 @@ namespace Bloodforge
 
 	void BloodRenderer::RenderTexture(const Texture2D& texture, const glm::mat4& worldMatrix, const Color& color, bool flipHorizontal, bool flipVertical) const
 	{
-		const float width = texture.GetSizeX();
-		const float height = texture.GetSizeY();
+		const float width = texture.GetWidth();
+		const float height = texture.GetHeight();
 		float halfWidth = width * 0.5f;
 		float halfHeight = height * 0.5f;
 
@@ -140,8 +140,8 @@ namespace Bloodforge
 
 	void BloodRenderer::RenderTexture(const Texture2D& texture, const glm::mat4& worldMatrix, const Rect& srcRect, const Color& color, bool flipHorizontal, bool flipVertical) const
 	{
-		const float textureWidth = texture.GetSizeX();
-		const float textureHeight = texture.GetSizeY();
+		const float textureWidth = texture.GetWidth();
+		const float textureHeight = texture.GetHeight();
 
 		const float width = srcRect.Width;
 		const float height = srcRect.Height;
