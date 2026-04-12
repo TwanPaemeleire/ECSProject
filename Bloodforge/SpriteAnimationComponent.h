@@ -1,10 +1,19 @@
 #pragma once
 #include "Component.h"
 #include "Rect.h"
+#include <functional>
 
 namespace Bloodforge
 {
 	class Texture2D;
+
+	struct AnimationEventData
+	{
+		int FrameToTrigger = 0;
+		float Offset = 0.0f;
+		bool HasBeenTriggered = false;
+		int CallbackIndex = 0;
+	};
 
 	struct SpriteAnimationComponent final : public Component<SpriteAnimationComponent>
 	{
@@ -22,9 +31,10 @@ namespace Bloodforge
 		int CurrentFrame = 0;
 		float FrameWidth = 0.0f;
 		float FrameHeight = 0.0f;
+		std::vector<AnimationEventData> AnimationEvents;
 	};
 
-	namespace AnimationUils
+	namespace AnimationUtils
 	{
 		void InitializeAnimation(SpriteAnimationComponent& animation, Texture2D* texture, int numberOfFrames);
 		
@@ -35,5 +45,7 @@ namespace Bloodforge
 
 		void AdvanceToNextFrame(SpriteAnimationComponent& animation);
 		void RegressToPreviousFrame(SpriteAnimationComponent& animation);
+
+		void AddAnimationEvent(SpriteAnimationComponent& animation, std::function<void()> callback, int indexOfFrameToTriggerOn, float offset = 0.0f);
 	}
 }

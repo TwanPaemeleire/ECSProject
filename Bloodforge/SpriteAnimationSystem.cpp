@@ -4,6 +4,7 @@
 #include "SpriteComponent.h"
 #include "SpriteAnimationComponent.h"
 #include "BloodTime.h"
+#include <utility>
 
 namespace Bloodforge
 {
@@ -18,7 +19,7 @@ namespace Bloodforge
 				SpriteAnimationComponent& animationComp = view.GetComponentArray<SpriteAnimationComponent>()[i];
 				if (animationComp.PlayOnStart)
 				{
-					AnimationUils::Play(animationComp);
+					AnimationUtils::Play(animationComp);
 				}
 
 				spriteComp.SetTexture(animationComp.Texture);
@@ -38,15 +39,46 @@ namespace Bloodforge
 				if (animationComp.IsPlaying)
 				{
 					animationComp.FrameTimeCounter += BloodTime::GetInstance().DeltaTime;
+					HandleAnimationEvents(animationComp);
 					if (animationComp.FrameTimeCounter >= animationComp.FrameTime)
 					{
-						AnimationUils::AdvanceToNextFrame(animationComp);
+						AnimationUtils::AdvanceToNextFrame(animationComp);
+
+						if (animationComp.CurrentFrame == 0)
+						{
+							ResetAllAnimationEvents(animationComp);
+						}
 					}
 
 					spriteComp.SetCustomSourceRect(animationComp.CurrentSourceRect);
 					spriteComp.SetTexture(animationComp.Texture);
 				}
 			}
+		}
+	}
+
+	int SpriteAnimationSystem::AddAnimationEvent(std::function<void()> callback)
+	{
+		m_AnimationEventsCallbacks.insert({ m_NextAnimationEventCallbackID, std::move(callback) });
+		return m_NextAnimationEventCallbackID++;
+	}
+
+	void SpriteAnimationSystem::HandleAnimationEvents(SpriteAnimationComponent& spriteAnimComp)
+	{
+		for (AnimationEventData& animEventData : spriteAnimComp.AnimationEvents)
+		{
+			if (!animEventData.HasBeenTriggered && spriteAnimComp.CurrentFrame == animEventData.FrameToTrigger && spriteAnimComp.FrameTimeCounter >= animEventData.Offset)
+			{
+				m_AnimationEventsCallbacks[animEventData.CallbackIndex]();
+				animEventData.HasBeenTriggered = true;
+			}
+		}
+	}
+	void SpriteAnimationSystem::ResetAllAnimationEvents(SpriteAnimationComponent& spriteAnimComp)
+	{
+		for (AnimationEventData& animEventData : spriteAnimComp.AnimationEvents)
+		{
+			animEventData.HasBeenTriggered = false;
 		}
 	}
 }

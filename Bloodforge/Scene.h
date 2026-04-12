@@ -5,6 +5,7 @@
 #include <typeindex>
 #include <stdexcept>
 #include <algorithm>
+#include <iterator>
 
 namespace Bloodforge
 {
@@ -13,7 +14,6 @@ namespace Bloodforge
 
 	template <typename SystemType>
 	concept RegisterableSystem = std::is_base_of<System, SystemType>::value;
-
 
 	class Scene
 	{
@@ -34,9 +34,13 @@ namespace Bloodforge
 		template <RegisterableSystem SystemType>
 		void RegisterSystem();
 
+		template <RegisterableSystem SystemType>
+		SystemType* GetSystem();
+
 	private:
 		std::vector<std::unique_ptr<System>> m_RegisteredSystems;
-		std::vector<std::type_index> m_RegisteredSystemTypes;
+		std::unordered_map<std::type_index, int> m_SystemMap;
+
 		std::function<void()> m_LoadFunction;
 	};
 
@@ -44,15 +48,25 @@ namespace Bloodforge
 	inline void Scene::RegisterSystem()
 	{
 		std::type_index typeIndex = std::type_index(typeid(SystemType));
-		auto it = std::find(m_RegisteredSystemTypes.begin(), m_RegisteredSystemTypes.end(), typeIndex);
-		if (it == m_RegisteredSystemTypes.end())
+		if (!m_SystemMap.contains(typeIndex))
 		{
 			m_RegisteredSystems.emplace_back(std::make_unique<SystemType>());
-			m_RegisteredSystemTypes.emplace_back(typeIndex);
+			m_SystemMap.insert({ typeIndex, static_cast<int>(m_RegisteredSystems.size()) - 1 });
 		}
 		else
 		{
 			throw std::runtime_error("Trying to registered a system that has already been registered.");
 		}
+	}
+
+	template<RegisterableSystem SystemType>
+	inline SystemType* Scene::GetSystem()
+	{
+		std::type_index typeIndex = std::type_index(typeid(SystemType));
+		if (m_SystemMap.contains(typeIndex))
+		{
+			return static_cast<SystemType*>(m_RegisteredSystems[m_SystemMap[typeIndex]].get());
+		}
+		throw std::runtime_error("Trying to get a system type that hasn't been registered.");
 	}
 }

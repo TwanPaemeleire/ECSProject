@@ -1,9 +1,11 @@
 #include "pch.h"
 #include "SpriteAnimationComponent.h"
 #include "Texture2D.h"
-#include <iostream>
+#include "SceneManager.h"
+#include "SpriteAnimationSystem.h"
+#include <utility>
 
-namespace Bloodforge::AnimationUils
+namespace Bloodforge::AnimationUtils
 {
 	void InitializeAnimation(SpriteAnimationComponent& animation, Texture2D* texture, int numberOfFrames)
 	{
@@ -75,5 +77,11 @@ namespace Bloodforge::AnimationUils
 			--animation.CurrentFrame;
 			animation.FrameTimeCounter = 0.0f;
 		}
+	}
+
+	void AddAnimationEvent(SpriteAnimationComponent& animation, std::function<void()> callback, int frameToTrigger, float offset)
+	{
+		SpriteAnimationSystem* animSystem = SceneManager::GetInstance().GetActiveScene().GetSystem<SpriteAnimationSystem>();
+		animation.AnimationEvents.push_back({ frameToTrigger, offset, false, animSystem->AddAnimationEvent(std::move(callback))});
 	}
 }

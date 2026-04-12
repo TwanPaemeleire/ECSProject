@@ -31,6 +31,11 @@ void InitializeRectColliderComponent(Bloodforge::Entity& entity, const Bloodforg
 	collider->SetOffset(offset);
 }
 
+void AnimationEventTest()
+{
+	std::cout << "Anim event triggered" << std::endl;
+}
+
 void LoadFunction()
 {
 	auto& scene = Bloodforge::SceneManager::GetInstance().GetActiveScene();
@@ -44,10 +49,11 @@ void LoadFunction()
 	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity)->FlipVertical = false;
 	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity)->FlipHorizontal = true;
 	Bloodforge::SpriteAnimationComponent* animComp = entityManager.GetComponent<Bloodforge::SpriteAnimationComponent>(entity);
-	Bloodforge::AnimationUils::InitializeAnimation(*animComp, Bloodforge::ResourceManager::GetInstance().LoadTexture("Test.png"), 5);
-	animComp->FrameTime = 0.08f;
+	Bloodforge::AnimationUtils::InitializeAnimation(*animComp, Bloodforge::ResourceManager::GetInstance().LoadTexture("Test.png"), 5);
+	animComp->FrameTime = 1.0f;
 	animComp->StartingFrameIndexAfterLoop = 0;
-	animComp->StartingFrame = 4;
+	animComp->StartingFrame = 0;
+	Bloodforge::AnimationUtils::AddAnimationEvent(*animComp, AnimationEventTest, 4);
 	Bloodforge::TransformComponent* transformComp1 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity);
 	transformComp1->SetLocalPosition(300.0f, 300.0f);
 	InitializeRectColliderComponent(entity, { 40.0f, 40.0f });
@@ -76,7 +82,6 @@ void LoadFunction()
 	rotComp3->SpeedDegPerSec = 180.f;
 
 	scene.RegisterSystem<TestSystem>();
-	scene.RegisterSystem<Bloodforge::SpriteAnimationSystem>();
 }
 
 int main(int, char* []) 
