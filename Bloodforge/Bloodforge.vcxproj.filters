@@ -70,9 +70,15 @@
     <ClCompile Include="CollisionSystem.cpp">
       <Filter>Source Files\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteAnimationSystem.cpp" />
-    <ClCompile Include="SpriteAnimationComponent.cpp" />
-    <ClCompile Include="SpriteComponent.cpp" />
+    <ClCompile Include="SpriteAnimatorSystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteAnimatorComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -138,7 +144,7 @@
     <ClInclude Include="SceneManager.h">
       <Filter>Header Files\Architecture</Filter>
     </ClInclude>
-    <ClInclude Include="SdbmHash.h">
+    <ClInclude Include="IdCreator.h">
       <Filter>Header Files\Architecture</Filter>
     </ClInclude>
     <ClInclude Include="InputHandler.h">
@@ -180,13 +186,15 @@
     <ClInclude Include="CollisionSystem.h">
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteAnimationComponent.h">
+    <ClInclude Include="SpriteAnimatorComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="Rect.h">
       <Filter>Header Files\Architecture</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteAnimationSystem.h" />
+    <ClInclude Include="SpriteAnimatorSystem.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Generated">

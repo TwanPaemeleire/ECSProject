@@ -16,9 +16,9 @@ void TestSystem::OnStart()
 		for (int i = 0; i < view.GetComponentArray<Bloodforge::RectColliderComponent>().size(); ++i)
 		{
 			Bloodforge::RectColliderComponent& colliderComp = view.GetComponentArray<Bloodforge::RectColliderComponent>()[i];
-			colliderComp.OnCollisionEnterEvent->AddListener(std::bind(&TestSystem::OnCollisionStart, this));
-			colliderComp.OnCollisionEvent->AddListener(std::bind(&TestSystem::OnCollision, this));
-			colliderComp.OnCollisionExitEvent->AddListener(std::bind(&TestSystem::OnCollisionEnd, this));
+			colliderComp.OnCollisionEnterEvent.AddListener(std::bind(&TestSystem::OnCollisionStart, this));
+			colliderComp.OnCollisionEvent.AddListener(std::bind(&TestSystem::OnCollision, this));
+			colliderComp.OnCollisionExitEvent.AddListener(std::bind(&TestSystem::OnCollisionEnd, this));
 		}
 	}
 }

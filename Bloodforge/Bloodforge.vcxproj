@@ -216,11 +216,11 @@
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="SdbmHash.h" />
+    <ClInclude Include="IdCreator.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SpeedTracker.h" />
-    <ClInclude Include="SpriteAnimationComponent.h" />
-    <ClInclude Include="SpriteAnimationSystem.h" />
+    <ClInclude Include="SpriteAnimatorComponent.h" />
+    <ClInclude Include="SpriteAnimatorSystem.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="SpriteSystem.h" />
     <ClInclude Include="System.h" />
@@ -253,8 +253,8 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SpeedTracker.cpp" />
-    <ClCompile Include="SpriteAnimationComponent.cpp" />
-    <ClCompile Include="SpriteAnimationSystem.cpp" />
+    <ClCompile Include="SpriteAnimatorComponent.cpp" />
+    <ClCompile Include="SpriteAnimatorSystem.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="SpriteSystem.cpp" />
     <ClCompile Include="System.cpp" />

@@ -1,0 +1,88 @@
+#include "pch.h"
+#include "SpriteAnimatorSystem.h"
+#include "EntityManager.h"
+#include "SpriteComponent.h"
+#include "SpriteAnimatorComponent.h"
+#include "BloodTime.h"
+#include <utility>
+
+namespace Bloodforge
+{
+	void SpriteAnimatorSystem::OnStart()
+	{
+		EntityQueryResult result = EntityManager::GetInstance().QueryEntities<SpriteAnimatorComponent, SpriteComponent>();
+		for (ChunkView view : result.Chunks)
+		{
+			for (int i = 0; i < view.GetComponentArray<SpriteAnimatorComponent>().size(); ++i)
+			{
+				SpriteComponent& spriteComp = view.GetComponentArray<SpriteComponent>()[i];
+				SpriteAnimatorComponent& animationComp = view.GetComponentArray<SpriteAnimatorComponent>()[i];
+				spriteComp.SetTexture(animationComp.AnimationsData[animationComp.CurrentPlayingId].Texture);
+			}
+		}
+	}
+
+	void SpriteAnimatorSystem::OnUpdate()
+	{
+		EntityQueryResult result = EntityManager::GetInstance().QueryEntities<SpriteAnimatorComponent, SpriteComponent>();
+		for (ChunkView view : result.Chunks)
+		{
+			for (int i = 0; i < view.GetComponentArray<SpriteAnimatorComponent>().size(); ++i)
+			{
+				SpriteComponent& spriteComp = view.GetComponentArray<SpriteComponent>()[i];
+				SpriteAnimatorComponent& animationComp = view.GetComponentArray<SpriteAnimatorComponent>()[i];
+				if (animationComp.IsPlaying)
+				{
+					if (!animationComp.IsPaused)
+					{
+						animationComp.FrameTimeCounter += BloodTime::GetInstance().DeltaTime;
+						HandleAnimationEvents(animationComp);
+						const AnimationData& animData = animationComp.AnimationsData[animationComp.CurrentPlayingId];
+						if (animationComp.FrameTimeCounter >= animData.FrameTime)
+						{
+							AnimationUtils::AdvanceToNextFrame(animationComp);
+
+							if (animationComp.CurrentFrame == 0)
+							{
+								ResetAllAnimationEvents(animationComp);
+							}
+						}
+					}
+
+					const AnimationData& animData = animationComp.AnimationsData[animationComp.CurrentPlayingId];
+					spriteComp.SetCustomSourceRect(animationComp.CurrentSourceRect);
+					spriteComp.SetTexture(animData.Texture);
+				}
+				else if (!animationComp.IsPlaying)
+				{
+					spriteComp.SetTexture(nullptr);
+				}
+			}
+		}
+	}
+
+	int SpriteAnimatorSystem::AddAnimationEvent(std::function<void(SpriteAnimatorComponent&)> callback)
+	{
+		m_AnimationEventsCallbacks.insert({ m_NextAnimationEventCallbackID, std::move(callback) });
+		return m_NextAnimationEventCallbackID++;
+	}
+
+	void SpriteAnimatorSystem::HandleAnimationEvents(SpriteAnimatorComponent& spriteAnimComp)
+	{
+		for (AnimationEventData& animEventData : spriteAnimComp.AnimationsData[spriteAnimComp.CurrentPlayingId].AnimationEvents)
+		{
+			if (!animEventData.HasBeenTriggered && spriteAnimComp.CurrentFrame == animEventData.FrameToTrigger && spriteAnimComp.FrameTimeCounter >= animEventData.Offset)
+			{
+				m_AnimationEventsCallbacks[animEventData.CallbackIndex](spriteAnimComp);
+				animEventData.HasBeenTriggered = true;
+			}
+		}
+	}
+	void SpriteAnimatorSystem::ResetAllAnimationEvents(SpriteAnimatorComponent& spriteAnimComp)
+	{
+		for (AnimationEventData& animEventData : spriteAnimComp.AnimationsData[spriteAnimComp.CurrentPlayingId].AnimationEvents)
+		{
+			animEventData.HasBeenTriggered = false;
+		}
+	}
+}

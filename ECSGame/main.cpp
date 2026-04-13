@@ -17,11 +17,10 @@
 #include <FileSaveLoadUtils.h>
 #include "TestSaveFile.h"
 #include <WindowUtils.h>
-#include <SdbmHash.h>
+#include <IdCreator.h>
 #include <RectColliderComponent.h>
 #include <BloodRenderer.h>
-#include <SpriteAnimationComponent.h>
-#include <SpriteAnimationSystem.h>
+#include <SpriteAnimatorComponent.h>
 
 void InitializeRectColliderComponent(Bloodforge::Entity& entity, const Bloodforge::Vector2& size, const Bloodforge::Vector2& offset = { 0.0f, 0.0f })
 {
@@ -31,9 +30,17 @@ void InitializeRectColliderComponent(Bloodforge::Entity& entity, const Bloodforg
 	collider->SetOffset(offset);
 }
 
-void AnimationEventTest()
+void AnimationEventTest(Bloodforge::SpriteAnimatorComponent& sprite)
 {
 	std::cout << "Anim event triggered" << std::endl;
+	Bloodforge::AnimationUtils::PlayAnimation(sprite, CreateId("TestAnim2"));
+}
+
+void AnimationEventTest2(Bloodforge::SpriteAnimatorComponent& sprite)
+{
+	std::cout << "Anim event2 triggered" << std::endl;
+	Bloodforge::AnimationUtils::PlayAnimation(sprite, CreateId("TestAnim"));
+
 }
 
 void LoadFunction()
@@ -43,17 +50,31 @@ void LoadFunction()
 	auto& renderer = Bloodforge::BloodRenderer::GetInstance();
 	renderer.SetBackgroundColor({ 127, 127, 127, 255 });
 
-	Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, Bloodforge::RectColliderComponent, Bloodforge::SpriteAnimationComponent>();
+	Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, Bloodforge::RectColliderComponent, Bloodforge::SpriteAnimatorComponent>();
 	int entityId = entity.Id;
 	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity)->SetTexture(Bloodforge::ResourceManager::GetInstance().LoadTexture("BatSheet.png"));
 	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity)->FlipVertical = false;
 	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity)->FlipHorizontal = true;
-	Bloodforge::SpriteAnimationComponent* animComp = entityManager.GetComponent<Bloodforge::SpriteAnimationComponent>(entity);
-	Bloodforge::AnimationUtils::InitializeAnimation(*animComp, Bloodforge::ResourceManager::GetInstance().LoadTexture("Test.png"), 5);
-	animComp->FrameTime = 1.0f;
-	animComp->StartingFrameIndexAfterLoop = 0;
-	animComp->StartingFrame = 0;
-	Bloodforge::AnimationUtils::AddAnimationEvent(*animComp, AnimationEventTest, 4);
+	Bloodforge::SpriteAnimatorComponent* animComp = entityManager.GetComponent<Bloodforge::SpriteAnimatorComponent>(entity);
+
+	Bloodforge::AnimationData data;
+	data.FrameTime = 1.0f;
+	data.ShouldLoop = true;
+	data.NumberOfFrames = 5;
+	data.Texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Test.png");
+	Bloodforge::AnimationUtils::AddAnimation(*animComp, CreateId("TestAnim"), data);
+	Bloodforge::AnimationUtils::AddAnimationEvent(*animComp, CreateId("TestAnim"), AnimationEventTest, 4);
+
+	Bloodforge::AnimationData data2;
+	data2.FrameTime = 1.0f;
+	data2.ShouldLoop = true;
+	data2.NumberOfFrames = 4;
+	data2.Texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Test2.png");
+	Bloodforge::AnimationUtils::AddAnimation(*animComp, CreateId("TestAnim2"), data2);
+	Bloodforge::AnimationUtils::AddAnimationEvent(*animComp, CreateId("TestAnim2"), AnimationEventTest2, 1);
+
+	Bloodforge::AnimationUtils::PlayAnimation(*animComp, CreateId("TestAnim"));
+
 	Bloodforge::TransformComponent* transformComp1 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity);
 	transformComp1->SetLocalPosition(300.0f, 300.0f);
 	InitializeRectColliderComponent(entity, { 40.0f, 40.0f });
@@ -99,7 +120,7 @@ int main(int, char* [])
 	Bloodforge::WindowUtils::SetWindowBordered(true);
 	Bloodforge::WindowUtils::SetWindowFullScreen(false);
 	Bloodforge::WindowUtils::SetWindowIcon("Heart.png");
-	Bloodforge::WindowUtils::SetCustomCursor(Bloodforge::ResourceManager::GetInstance().LoadCustomCursor(make_sdbm_hash("TestCursor"), "Cursor.png", 0, 0));
+	Bloodforge::WindowUtils::SetCustomCursor(Bloodforge::ResourceManager::GetInstance().LoadCustomCursor(CreateId("TestCursor"), "Cursor.png", 0, 0));
 
 	auto& sceneManager = Bloodforge::SceneManager::GetInstance();
 	sceneManager.RegisterScene("TestScene", LoadFunction);

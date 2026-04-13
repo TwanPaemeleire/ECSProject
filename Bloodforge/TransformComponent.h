@@ -48,7 +48,7 @@ namespace Bloodforge
 		bool m_IsDirty{ true };
 
 		Vector2 m_LocalPosition{ 0.f, 0.f };
-		float   m_LocalRotationDeg{ 0.f };
+		float m_LocalRotationDeg{ 0.f };
 		Vector2 m_LocalScale{ 1.f, 1.f };
 
 		Vector2 m_WorldPosition;

@@ -1,9 +1,9 @@
 #pragma once
-template <int length> struct sdbm_hash
+template <int length> struct CustomId
 {
     consteval static unsigned int _calculate(const char* const text, unsigned int& value)
     {
-        const unsigned int character = sdbm_hash<length - 1>::_calculate(text, value);
+        const unsigned int character = CustomId<length - 1>::_calculate(text, value);
         value = character + (value << 6) + (value << 16) - value;
         return text[length - 1];
     }
@@ -14,12 +14,12 @@ template <int length> struct sdbm_hash
         return character + (value << 6) + (value << 16) - value;
     }
 };
-template <> struct sdbm_hash<1>
+template <> struct CustomId<1>
 {
     consteval static int _calculate(const char* const text, unsigned int&) { return text[0]; }
 };
-template <size_t N> consteval unsigned int make_sdbm_hash(const char(&text)[N])
+template <size_t N> consteval unsigned int CreateId(const char(&text)[N])
 {
-    return sdbm_hash<N - 1>::calculate(text);
+    return CustomId<N - 1>::calculate(text);
 }
 #pragma once

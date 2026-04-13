@@ -20,13 +20,6 @@ namespace Bloodforge
 
 	struct RectColliderComponent final :Component<RectColliderComponent>
 	{
-		RectColliderComponent()
-		{
-			OnCollisionEnterEvent = std::make_unique<Event<int>>();
-			OnCollisionEvent = std::make_unique<Event<int>>();
-			OnCollisionExitEvent = std::make_unique<Event<int>>();
-		}
-
 		const ColliderRect& GetRect();
 
 		void SetSize(const Vector2& size)
@@ -43,9 +36,9 @@ namespace Bloodforge
 
 		void UpdateWorldSpaceRect();
 
-		std::unique_ptr<Event<int>> OnCollisionEnterEvent;
-		std::unique_ptr<Event<int>> OnCollisionEvent;
-		std::unique_ptr<Event<int>> OnCollisionExitEvent;
+		Event<int> OnCollisionEnterEvent;
+		Event<int> OnCollisionEvent;
+		Event<int> OnCollisionExitEvent;
 
 	private:
 		Vector2 RotateRectPoint(float x, float y, float cosRot, float sinRot);

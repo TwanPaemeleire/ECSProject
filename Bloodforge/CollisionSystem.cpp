@@ -38,13 +38,13 @@ namespace Bloodforge
 							currentFrameCollisions.emplace_back(pair);
 							if (std::find(m_LastFrameCollisions.begin(), m_LastFrameCollisions.end(), pair) == m_LastFrameCollisions.end()) // Were not colliding last frame
 							{
-								rect1.OnCollisionEnterEvent->Invoke(rect2.OwnerEntityId);
-								rect2.OnCollisionEnterEvent->Invoke(rect1.OwnerEntityId);
+								rect1.OnCollisionEnterEvent.Invoke(rect2.OwnerEntityId);
+								rect2.OnCollisionEnterEvent.Invoke(rect1.OwnerEntityId);
 							}
 
 							// Collision event gets called every frame
-							rect1.OnCollisionEvent->Invoke(rect2.OwnerEntityId);
-							rect2.OnCollisionEvent->Invoke(rect1.OwnerEntityId);
+							rect1.OnCollisionEvent.Invoke(rect2.OwnerEntityId);
+							rect2.OnCollisionEvent.Invoke(rect1.OwnerEntityId);
 
 						}
 					}
@@ -60,8 +60,8 @@ namespace Bloodforge
 				EntityManager& entityManager = EntityManager::GetInstance();
 				int first = lastFramePair.first;
 				int second = lastFramePair.second;
-				entityManager.GetComponent<RectColliderComponent>(entityManager.GetEntity(first))->OnCollisionExitEvent->Invoke(second);
-				entityManager.GetComponent<RectColliderComponent>(entityManager.GetEntity(second))->OnCollisionExitEvent->Invoke(first);
+				entityManager.GetComponent<RectColliderComponent>(entityManager.GetEntity(first))->OnCollisionExitEvent.Invoke(second);
+				entityManager.GetComponent<RectColliderComponent>(entityManager.GetEntity(second))->OnCollisionExitEvent.Invoke(first);
 			}
 		}
 
