@@ -50,12 +50,14 @@ void LoadFunction()
 	auto& renderer = Bloodforge::BloodRenderer::GetInstance();
 	renderer.SetBackgroundColor({ 127, 127, 127, 255 });
 
-	Bloodforge::Entity& entity = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, Bloodforge::RectColliderComponent, Bloodforge::SpriteAnimatorComponent>();
+	//////////
+	Bloodforge::Entity& entity = entityManager.CreateEntity();
 	int entityId = entity.Id;
-	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity)->SetTexture(Bloodforge::ResourceManager::GetInstance().LoadTexture("BatSheet.png"));
-	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity)->FlipVertical = false;
-	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity)->FlipHorizontal = true;
-	Bloodforge::SpriteAnimatorComponent* animComp = entityManager.GetComponent<Bloodforge::SpriteAnimatorComponent>(entity);
+	Bloodforge::SpriteComponent* spriteComp = entityManager.AddComponent<Bloodforge::SpriteComponent>(entityId);
+	spriteComp->SetTexture(Bloodforge::ResourceManager::GetInstance().LoadTexture("BatSheet.png"));
+	spriteComp->FlipVertical = false;
+	spriteComp->FlipHorizontal = true;
+	Bloodforge::SpriteAnimatorComponent* animComp = entityManager.AddComponent<Bloodforge::SpriteAnimatorComponent>(entity);
 
 	Bloodforge::AnimationData data;
 	data.FrameTime = 1.0f;
@@ -77,30 +79,40 @@ void LoadFunction()
 
 	Bloodforge::TransformComponent* transformComp1 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity);
 	transformComp1->SetLocalPosition(300.0f, 300.0f);
-	InitializeRectColliderComponent(entity, { 40.0f, 40.0f });
 
-	Bloodforge::Entity& entity2 = entityManager.CreateEntity<Bloodforge::TransformComponent, Bloodforge::SpriteComponent, Bloodforge::RectColliderComponent>();
+	entityManager.AddComponent<Bloodforge::RectColliderComponent>(entity);
+	InitializeRectColliderComponent(entity, { 40.0f, 40.0f });
+	//////////
+
+	//////////
+	Bloodforge::Entity& entity2 = entityManager.CreateEntity();
 	int entity2Id = entity2.Id;
-	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity2)->SetTexture(Bloodforge::ResourceManager::GetInstance().LoadTexture("Heart.png"));
-	entityManager.GetComponent<Bloodforge::SpriteComponent>(entity2)->FlipVertical = true;
+	Bloodforge::SpriteComponent* spriteComp2 = entityManager.AddComponent<Bloodforge::SpriteComponent>(entity2);
+	spriteComp2->SetTexture(Bloodforge::ResourceManager::GetInstance().LoadTexture("Heart.png"));
+	spriteComp2->FlipVertical = true;
 	Bloodforge::TransformComponent* transformComp2 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity2);
 	transformComp2->SetParent(entityId);
 	transformComp2->SetLocalPosition(100.0f, 100.0f);
 	transformComp2->SetLocalScale({1.0f, 1.0f});
+	entityManager.AddComponent<Bloodforge::RectColliderComponent>(entity2);
 	InitializeRectColliderComponent(entity2, { 80.0f, 80.0f });
+	//////////
 
-	Bloodforge::Entity& entity3 = entityManager.CreateEntity<Bloodforge::TransformComponent, RotationComponent, Bloodforge::TextComponent>();
-	entityManager.GetComponent<Bloodforge::TextComponent>(entity3)->SetFont(Bloodforge::ResourceManager::GetInstance().LoadFont("Font2.otf", 60));
-	entityManager.GetComponent<Bloodforge::TextComponent>(entity3)->SetText("Testing");
-	entityManager.GetComponent<Bloodforge::TextComponent>(entity3)->SetColor({ 0,0,0,255 });
-	entityManager.GetComponent<Bloodforge::TextComponent>(entity3)->FlipHorizontal = true;
-	entityManager.GetComponent<Bloodforge::TextComponent>(entity3)->FlipVertical = true;
+	//////////
+	Bloodforge::Entity& entity3 = entityManager.CreateEntity();
+	Bloodforge::TextComponent* textComp = entityManager.AddComponent<Bloodforge::TextComponent>(entity3);
+	textComp->SetFont(Bloodforge::ResourceManager::GetInstance().LoadFont("Font2.otf", 60));
+	textComp->SetText("Testing");
+	textComp->SetColor({ 0,0,0,255 });
+	textComp->FlipHorizontal = true;
+	textComp->FlipVertical = true;
 	Bloodforge::TransformComponent* transformComp3 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity3);
 	transformComp3->SetParent(entity2Id);
 	transformComp3->SetLocalPosition(100.0f, 100.0f);
 	transformComp3->SetLocalScale({ 1.0f, 1.0f });
-	RotationComponent* rotComp3 = entityManager.GetComponent<RotationComponent>(entity3);
+	RotationComponent* rotComp3 = entityManager.AddComponent<RotationComponent>(entity3);
 	rotComp3->SpeedDegPerSec = 180.f;
+	//////////
 
 	scene.RegisterSystem<TestSystem>();
 }

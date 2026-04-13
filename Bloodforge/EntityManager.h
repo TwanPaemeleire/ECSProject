@@ -41,7 +41,6 @@ namespace Bloodforge
 	public:
 		~EntityManager() = default;
 
-		template <typename... Components>
 		Entity& CreateEntity(int newChunkCapacity = 20);
 
 		void DestroyEntity(int entityId);
@@ -55,9 +54,9 @@ namespace Bloodforge
 		EntityQueryResult<Components...> QueryEntities();
 
 		template<typename ComponentType>
-		void AddComponent(Entity& entity);
+		ComponentType* AddComponent(Entity& entity);
 		template<typename ComponentType>
-		void AddComponent(int entityId);
+		ComponentType* AddComponent(int entityId);
 		template <typename ComponentType>
 		ComponentType* GetComponent(Entity& entity);
 		template <typename ComponentType>
@@ -70,6 +69,10 @@ namespace Bloodforge
 		ComponentType* GetComponentInParent(Entity& entity);
 		template <typename ComponentType>
 		ComponentType* GetComponentInParent(int entityId);
+		template <typename ComponentType>
+		bool HasComponent(int entityId);
+		template <typename ComponentType>
+		bool HasComponent(Entity& entity);
 
 		void DestroyAllEntities();
 	private:
@@ -95,12 +98,11 @@ namespace Bloodforge
 		EntityManager();
 	};
 
-	template<typename ...Components>
 	inline Entity& EntityManager::CreateEntity(int newChunkCapacity)
 	{
 		//std::cout << "---------- Creating Entity ----------" << std::endl;
 
-		ArchetypeIdentifierMask identifier = GetArchetypeIds<Components...>();
+		ArchetypeIdentifierMask identifier = GetArchetypeIds<TransformComponent>();
 		EntityChunk* chunk = GetFirstAvailableChunk(identifier, newChunkCapacity);
 
 		int id;
@@ -125,16 +127,59 @@ namespace Bloodforge
 	}
 
 	template<typename ComponentType>
-	inline void EntityManager::AddComponent(Entity& entity)
+	inline ComponentType* EntityManager::AddComponent(Entity& entity)
 	{
+		if (entity.CurrentArchetypeId.HasComponent(Component<ComponentType>::Index))
+		{
+			throw std::exception("Trying to add a component to an entity that already has it.");
+		}
+		m_ComponentRegistry->TryRegisterComponent<ComponentType>();
+
+		// Get old chunk and archetype
 		auto* oldChunk = m_EntityChunks[entity.CurrentArchetypeId][entity.CurrentChunkIndex].get();
-		UpdateArchetypeId<ComponentType>(entity);
+		ArchetypeIdentifierMask oldArchetypeMask = entity.CurrentArchetypeId;
+
+		// Create new archetype and chunk
+		ArchetypeIdentifierMask newArchetypeMask = oldArchetypeMask;
+		newArchetypeMask.AddComponent(Component<ComponentType>::Index);
+		EntityChunk* newChunk = GetFirstAvailableChunk(newArchetypeMask, 20);
+
+		// Add entity to new chunk
+		int newIndex = newChunk->AddEntity(entity.Id);
+
+		// Copy old components
+		for (int componentId : oldArchetypeMask.GetComponentIndices())
+		{
+			void* srcArray = oldChunk->GetComponentArray(componentId);
+			void* dstArray = newChunk->GetComponentArray(componentId);
+			int oldIndex = oldChunk->GetEntityInChunkIndex(entity.Id);
+			auto& info = m_ComponentRegistry->GetComponentInfo(componentId);
+
+			std::memcpy(static_cast<char*>(dstArray) + newIndex * info.Size, static_cast<char*>(srcArray) + oldIndex * info.Size, info.Size);
+		}
+
+		// Construct new component
+		int compId = Component<ComponentType>::Index;
+		void* array = newChunk->GetComponentArray(compId);
+		auto& info = m_ComponentRegistry->GetComponentInfo(compId);
+
+		void* elementPtr = static_cast<char*>(array) + newIndex * info.Size;
+		info.Construct(elementPtr, entity.Id);
+
+		// Remove from old chunk
+		oldChunk->RemoveEntityAndComponents(entity);
+
+		// Update entity data
+		entity.CurrentArchetypeId = newArchetypeMask;
+		entity.CurrentChunkIndex = newChunk->GetChunkIndex();
+
+		return GetComponent<ComponentType>(entity);
 	}
 
 	template<typename ComponentType>
-	inline void EntityManager::AddComponent(int entityId)
+	inline ComponentType* EntityManager::AddComponent(int entityId)
 	{
-		AddComponent<ComponentType>(GetEntity(entityId));
+		return AddComponent<ComponentType>(GetEntity(entityId));
 	}
 
 	template<typename ComponentType>
@@ -184,6 +229,18 @@ namespace Bloodforge
 	inline ComponentType* EntityManager::GetComponentInParent(int entityId)
 	{
 		return GetComponentInParent(GetEntity(entityId));
+	}
+
+	template<typename ComponentType>
+	inline bool EntityManager::HasComponent(int entityId)
+	{
+		return GetEntity(entityId).CurrentArchetypeId.HasComponent(Component<ComponentType>::Index);
+	}
+
+	template<typename ComponentType>
+	inline bool EntityManager::HasComponent(Entity& entity)
+	{
+		return HasComponent<ComponentType>(entity.Id);
 	}
 
 	template<typename ...Components>

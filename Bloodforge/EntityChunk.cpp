@@ -101,7 +101,6 @@ namespace Bloodforge
 		return it->second.Data;
 	}
 
-
 	void EntityChunk::ConstructComponentArray(int componentIndex)
 	{
 		auto& info = EntityManager::GetInstance().GetComponentRegistry()->GetComponentInfo(componentIndex);
