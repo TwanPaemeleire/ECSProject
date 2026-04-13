@@ -34,6 +34,17 @@ namespace Bloodforge
             componentIndices.emplace_back(componentId);
         }
 
+        void RemoveComponent(int componentId)
+        {
+            int word = componentId >> 6;
+            if (word < Bits.size())
+            {
+                Bits[word] &= ~(1ULL << (componentId & 63));
+            }
+
+            componentIndices.erase(std::remove(componentIndices.begin(), componentIndices.end(), componentId), componentIndices.end());
+        }
+
         bool HasComponent(int componentId) const
         {
             int word = componentId >> 6;

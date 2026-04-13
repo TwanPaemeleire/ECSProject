@@ -81,6 +81,8 @@ void LoadFunction()
 	transformComp1->SetLocalPosition(300.0f, 300.0f);
 
 	entityManager.AddComponent<Bloodforge::RectColliderComponent>(entity);
+	entityManager.RemoveComponent<Bloodforge::RectColliderComponent>(entity);
+	entityManager.AddComponent<Bloodforge::RectColliderComponent>(entity);
 	InitializeRectColliderComponent(entity, { 40.0f, 40.0f });
 	//////////
 
@@ -104,7 +106,6 @@ void LoadFunction()
 	textComp->SetFont(Bloodforge::ResourceManager::GetInstance().LoadFont("Font2.otf", 60));
 	textComp->SetText("Testing");
 	textComp->SetColor({ 0,0,0,255 });
-	textComp->FlipHorizontal = true;
 	textComp->FlipVertical = true;
 	Bloodforge::TransformComponent* transformComp3 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity3);
 	transformComp3->SetParent(entity2Id);
