@@ -80,7 +80,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL3\include;$(SolutionDir)3rdParty\SDL3_image\include;$(SolutionDir)3rdParty\SDL3_ttf\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL3\include;$(SolutionDir)3rdParty\SDL3_image\include;$(SolutionDir)3rdParty\SDL3_ttf\include;$(SolutionDir)3rdParty\SDL3_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -91,13 +91,14 @@
     <PostBuildEvent>
       <Command> xcopy "$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget)\SDL3.dll" "$(OutputPath)" /R /Y
  xcopy "$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget)\SDL3_image.dll" "$(OutputPath)" /R /Y
- xcopy "$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget)\SDL3_ttf.dll" "$(OutputPath)" /R /Y</Command>
+ xcopy "$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget)\SDL3_ttf.dll" "$(OutputPath)" /R /Y
+ xcopy "$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget)\SDL3_mixer.dll" "$(OutputPath)" /R /Y</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL3.lib;SDL3_image.lib;SDL3_ttf.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;SDL3_mixer.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -111,7 +112,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL3\include;$(SolutionDir)3rdParty\SDL3_image\include;$(SolutionDir)3rdParty\SDL3_ttf\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL3\include;$(SolutionDir)3rdParty\SDL3_image\include;$(SolutionDir)3rdParty\SDL3_ttf\include;$(SolutionDir)3rdParty\SDL3_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -122,13 +123,14 @@
     <PostBuildEvent>
       <Command> xcopy "$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget)\SDL3.dll" "$(OutputPath)" /R /Y
  xcopy "$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget)\SDL3_image.dll" "$(OutputPath)" /R /Y
- xcopy "$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget)\SDL3_ttf.dll" "$(OutputPath)" /R /Y</Command>
+ xcopy "$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget)\SDL3_ttf.dll" "$(OutputPath)" /R /Y
+ xcopy "$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget)\SDL3_mixer.dll" "$(OutputPath)" /R /Y</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL3.lib;SDL3_image.lib;SDL3_ttf.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;SDL3_mixer.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -140,7 +142,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL3\include;$(SolutionDir)3rdParty\SDL3_image\include;$(SolutionDir)3rdParty\SDL3_ttf\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL3\include;$(SolutionDir)3rdParty\SDL3_image\include;$(SolutionDir)3rdParty\SDL3_ttf\include;$(SolutionDir)3rdParty\SDL3_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -151,13 +153,14 @@
     <PostBuildEvent>
       <Command> xcopy "$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget)\SDL3.dll" "$(OutputPath)" /R /Y
  xcopy "$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget)\SDL3_image.dll" "$(OutputPath)" /R /Y
- xcopy "$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget)\SDL3_ttf.dll" "$(OutputPath)" /R /Y</Command>
+ xcopy "$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget)\SDL3_ttf.dll" "$(OutputPath)" /R /Y
+ xcopy "$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget)\SDL3_mixer.dll" "$(OutputPath)" /R /Y</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL3.lib;SDL3_image.lib;SDL3_ttf.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;SDL3_mixer.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -171,7 +174,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL3\include;$(SolutionDir)3rdParty\SDL3_image\include;$(SolutionDir)3rdParty\SDL3_ttf\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL3\include;$(SolutionDir)3rdParty\SDL3_image\include;$(SolutionDir)3rdParty\SDL3_ttf\include;$(SolutionDir)3rdParty\SDL3_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -182,13 +185,14 @@
     <PostBuildEvent>
       <Command> xcopy "$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget)\SDL3.dll" "$(OutputPath)" /R /Y
  xcopy "$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget)\SDL3_image.dll" "$(OutputPath)" /R /Y
- xcopy "$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget)\SDL3_ttf.dll" "$(OutputPath)" /R /Y</Command>
+ xcopy "$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget)\SDL3_ttf.dll" "$(OutputPath)" /R /Y
+ xcopy "$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget)\SDL3_mixer.dll" "$(OutputPath)" /R /Y</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL3.lib;SDL3_image.lib;SDL3_ttf.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;SDL3_mixer.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -218,6 +222,7 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="IdCreator.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="SoundPlayer.h" />
     <ClInclude Include="SpeedTracker.h" />
     <ClInclude Include="SpriteAnimatorComponent.h" />
     <ClInclude Include="SpriteAnimatorSystem.h" />
@@ -252,6 +257,7 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SoundPlayer.cpp" />
     <ClCompile Include="SpeedTracker.cpp" />
     <ClCompile Include="SpriteAnimatorComponent.cpp" />
     <ClCompile Include="SpriteAnimatorSystem.cpp" />
