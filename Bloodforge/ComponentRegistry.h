@@ -41,8 +41,9 @@ namespace Bloodforge
 		info.Alignment = alignof(ComponentType);
 		info.Construct = [](void* ptr, int entityId)
 			{
+				ComponentType* comp = static_cast<ComponentType*>(ptr);
 				new (ptr) ComponentType{};
-				static_cast<ComponentType*>(ptr)->OwnerEntityId = entityId;
+				comp->OwnerEntityId = entityId;
 			};
 		info.Destruct = [](void* ptr)
 			{

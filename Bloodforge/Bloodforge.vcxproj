@@ -197,6 +197,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ArchetypeIdentifierMask.h" />
+    <ClInclude Include="AudioSource.h" />
+    <ClInclude Include="AudioSourceSystem.h" />
     <ClInclude Include="Bloodforge.h" />
     <ClInclude Include="BloodRenderer.h" />
     <ClInclude Include="BloodTime.h" />
@@ -222,7 +224,6 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="IdCreator.h" />
     <ClInclude Include="Singleton.h" />
-    <ClInclude Include="SoundPlayer.h" />
     <ClInclude Include="SpeedTracker.h" />
     <ClInclude Include="SpriteAnimatorComponent.h" />
     <ClInclude Include="SpriteAnimatorSystem.h" />
@@ -237,6 +238,8 @@
     <ClInclude Include="WindowUtils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AudioSource.cpp" />
+    <ClCompile Include="AudioSourceSystem.cpp" />
     <ClCompile Include="Bloodforge.cpp" />
     <ClCompile Include="BloodRenderer.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
@@ -257,7 +260,6 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="SoundPlayer.cpp" />
     <ClCompile Include="SpeedTracker.cpp" />
     <ClCompile Include="SpriteAnimatorComponent.cpp" />
     <ClCompile Include="SpriteAnimatorSystem.cpp" />

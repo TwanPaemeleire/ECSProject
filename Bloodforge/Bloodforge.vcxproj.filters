@@ -79,7 +79,8 @@
     <ClCompile Include="SpriteComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="SoundPlayer.cpp" />
+    <ClCompile Include="AudioSource.cpp" />
+    <ClCompile Include="AudioSourceSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -196,7 +197,8 @@
     <ClInclude Include="SpriteAnimatorSystem.h">
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="SoundPlayer.h" />
+    <ClInclude Include="AudioSource.h" />
+    <ClInclude Include="AudioSourceSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Generated">

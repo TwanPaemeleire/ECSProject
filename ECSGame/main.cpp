@@ -21,7 +21,7 @@
 #include <RectColliderComponent.h>
 #include <BloodRenderer.h>
 #include <SpriteAnimatorComponent.h>
-#include <SoundPlayer.h>
+#include <AudioSource.h>
 
 void InitializeRectColliderComponent(Bloodforge::Entity& entity, const Bloodforge::Vector2& size, const Bloodforge::Vector2& offset = { 0.0f, 0.0f })
 {
@@ -85,6 +85,11 @@ void LoadFunction()
 	entityManager.RemoveComponent<Bloodforge::RectColliderComponent>(entity);
 	entityManager.AddComponent<Bloodforge::RectColliderComponent>(entity);
 	InitializeRectColliderComponent(entity, { 40.0f, 40.0f });
+
+	Bloodforge::AudioSource* audioSource = entityManager.AddComponent<Bloodforge::AudioSource>(entity);
+	Bloodforge::ResourceManager::GetInstance().LoadAudio(CreateId("TestSound"), "TestSound.wav");
+	audioSource->SetAudio(CreateId("TestSound"));
+	audioSource->Play();
 	//////////
 
 	//////////
@@ -117,9 +122,6 @@ void LoadFunction()
 	//////////
 
 	scene.RegisterSystem<TestSystem>();
-
-	Bloodforge::SoundPlayer::GetInstance().RequestLoadSound("TestSound.wav", CreateId("Testing"));
-	Bloodforge::SoundPlayer::GetInstance().RequestPlaySound(CreateId("Testing"), 1.0f);
 }
 
 int main(int, char* []) 

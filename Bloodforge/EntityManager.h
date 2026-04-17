@@ -126,6 +126,15 @@ namespace Bloodforge
 		m_Entities[id].SetCurrentChunk(identifier, static_cast<int>(m_EntityChunks[identifier].size()) - 1);
 		chunk->AddEntity(id);
 
+		// Construct transform component
+		m_ComponentRegistry->TryRegisterComponent<TransformComponent>();
+		int compId = Component<TransformComponent>::Index;
+		void* array = chunk->GetComponentArray(compId);
+		auto& info = m_ComponentRegistry->GetComponentInfo(compId);
+
+		void* elementPtr = static_cast<char*>(array) + chunk->GetEntityInChunkIndex(id) * info.Size;
+		info.Construct(elementPtr, id);
+
 		//std::cout << "-------------------------------------" << std::endl;
 		return m_Entities[id];
 	}
@@ -217,6 +226,15 @@ namespace Bloodforge
 
 			std::memcpy(static_cast<char*>(dstArray) + newIndex * info.Size, static_cast<char*>(srcArray) + oldIndex * info.Size, info.Size);
 		}
+
+		// Destruct old component
+		int compId = Component<ComponentType>::Index;
+		void* array = oldChunk->GetComponentArray(compId);
+		auto& info = m_ComponentRegistry->GetComponentInfo(compId);
+
+		int oldIndex = oldChunk->GetEntityInChunkIndex(entity.Id);
+		void* elementPtr = static_cast<char*>(array) + oldIndex * info.Size;
+		info.Destruct(elementPtr);
 
 		// Remove from old chunk
 		oldChunk->RemoveEntityAndComponents(entity);

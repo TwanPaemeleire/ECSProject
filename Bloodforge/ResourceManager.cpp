@@ -7,9 +7,15 @@
 #include <iostream>
 #include <filesystem>
 #include <SDL3_image/SDL_image.h>
+#include <SDL3_mixer/SDL_mixer.h>
 
 namespace Bloodforge
 {
+	ResourceManager::~ResourceManager()
+	{
+		MIX_Quit();
+	}
+
 	Texture2D* Bloodforge::ResourceManager::LoadTexture(const std::string& file)
 	{
 		if (m_LoadedTextures.find(file) == m_LoadedTextures.end())
@@ -49,8 +55,29 @@ namespace Bloodforge
 		return customCursor;
 	}
 
+	MIX_Audio* ResourceManager::LoadAudio(SoundId id, const std::string& file)
+	{
+		if (!m_LoadedAudio.contains(id))
+		{
+			m_LoadedAudio.insert({ id, MIX_LoadAudio(m_Mixer, file.c_str(), false) });
+		}
+		return m_LoadedAudio[id];
+	}
+
+	MIX_Audio* ResourceManager::GetAudio(SoundId id)
+	{
+		if (!m_LoadedAudio.contains(id))
+		{
+			return nullptr;
+		}
+		return m_LoadedAudio[id];
+	}
+
 	ResourceManager::ResourceManager()
 	{
 		TTF_Init();
+
+		MIX_Init();
+		m_Mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nullptr);
 	}
 }
