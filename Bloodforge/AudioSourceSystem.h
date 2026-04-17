@@ -6,20 +6,20 @@ struct MIX_Mixer;
 struct MIX_Track;
 namespace Bloodforge
 {
-	struct AudioSource;
+	struct AudioSourceComponent;
 	class AudioSourceSystem final : public System
 	{
 	public:
 		virtual void OnStart() override;
 
-		void SetAudioOfTrack(AudioSource& audioSource);
-		void StartPlayingAudioSource(AudioSource& audioSource);
-		void StopPlayingAudioSource(AudioSource& audioSource);
-		void PauseAudioSource(AudioSource& audioSource);
-		void ResumeAudioSource(AudioSource& audioSource);
+		void SetAudioOfTrack(AudioSourceComponent& audioSource);
+		void StartPlayingAudioSource(AudioSourceComponent& audioSource);
+		void StopPlayingAudioSource(AudioSourceComponent& audioSource);
+		void PauseAudioSource(AudioSourceComponent& audioSource);
+		void ResumeAudioSource(AudioSourceComponent& audioSource);
 
-		void AddAudioSource(AudioSource& audioSource);
-		void RemoveAudioSource(AudioSource& audioSource);
+		void AddAudioSource(AudioSourceComponent& audioSource);
+		void RemoveAudioSource(AudioSourceComponent& audioSource);
 	private:
 		int GetAvailableMixTrackIndex();
 

@@ -8,6 +8,7 @@
 #include "CollisionSystem.h"
 #include "SpriteAnimatorSystem.h"
 #include "AudioSourceSystem.h"
+#include "FunctionInvokeSystem.h"
 
 namespace Bloodforge
 {
@@ -25,6 +26,7 @@ namespace Bloodforge
 		RegisterSystem<CollisionSystem>();
 		RegisterSystem<SpriteAnimatorSystem>();
 		RegisterSystem<AudioSourceSystem>();
+		RegisterSystem<FunctionInvokeSystem>();
 
 		m_LoadFunction();
 	}

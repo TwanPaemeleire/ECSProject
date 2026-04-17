@@ -79,8 +79,13 @@
     <ClCompile Include="SpriteComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="AudioSource.cpp" />
-    <ClCompile Include="AudioSourceSystem.cpp" />
+    <ClCompile Include="AudioSourceComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSourceSystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="FunctionInvokeSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -197,8 +202,14 @@
     <ClInclude Include="SpriteAnimatorSystem.h">
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="AudioSource.h" />
-    <ClInclude Include="AudioSourceSystem.h" />
+    <ClInclude Include="AudioSourceComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSourceSystem.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="FunctionInvokeSystem.h" />
+    <ClInclude Include="FunctionInvokeComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Generated">

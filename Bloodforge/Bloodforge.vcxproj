@@ -197,7 +197,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ArchetypeIdentifierMask.h" />
-    <ClInclude Include="AudioSource.h" />
+    <ClInclude Include="AudioSourceComponent.h" />
     <ClInclude Include="AudioSourceSystem.h" />
     <ClInclude Include="Bloodforge.h" />
     <ClInclude Include="BloodRenderer.h" />
@@ -214,6 +214,8 @@
     <ClInclude Include="FileSaveLoadUtils.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="FunctionInvokeComponent.h" />
+    <ClInclude Include="FunctionInvokeSystem.h" />
     <ClInclude Include="GlobalEventHandler.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="pch.h" />
@@ -238,7 +240,7 @@
     <ClInclude Include="WindowUtils.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AudioSource.cpp" />
+    <ClCompile Include="AudioSourceComponent.cpp" />
     <ClCompile Include="AudioSourceSystem.cpp" />
     <ClCompile Include="Bloodforge.cpp" />
     <ClCompile Include="BloodRenderer.cpp" />
@@ -249,6 +251,7 @@
     <ClCompile Include="EntityChunk.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="Font.cpp" />
+    <ClCompile Include="FunctionInvokeSystem.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

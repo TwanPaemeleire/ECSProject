@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "AudioSource.h"
+#include "AudioSourceComponent.h"
 #include "SceneManager.h"
 #include "AudioSourceSystem.h"
 #include <SDL3_mixer/SDL_mixer.h>
@@ -7,33 +7,33 @@
 
 namespace Bloodforge
 {
-	AudioSource::AudioSource()
+	AudioSourceComponent::AudioSourceComponent()
 	{
 		SceneManager::GetInstance().GetActiveScene().GetSystem<AudioSourceSystem>()->AddAudioSource(*this);
 	}
 
-	void AudioSource::Play()
+	void AudioSourceComponent::Play()
 	{
 		IsPlaying = true;
 		IsPaused = false;
 		SceneManager::GetInstance().GetActiveScene().GetSystem<AudioSourceSystem>()->StartPlayingAudioSource(*this);
 	}
 
-	void AudioSource::Pause()
+	void AudioSourceComponent::Pause()
 	{
 		if (!IsPlaying) return;
 		IsPaused = true;
 		SceneManager::GetInstance().GetActiveScene().GetSystem<AudioSourceSystem>()->PauseAudioSource(*this);
 	}
 
-	void AudioSource::Stop()
+	void AudioSourceComponent::Stop()
 	{
 		if (!IsPlaying) return;
 		IsPaused = false;
 		SceneManager::GetInstance().GetActiveScene().GetSystem<AudioSourceSystem>()->StopPlayingAudioSource(*this);
 	}
 
-	void AudioSource::SetAudio(SoundId id)
+	void AudioSourceComponent::SetAudio(SoundId id)
 	{
 		MIX_Audio* audio = ResourceManager::GetInstance().GetAudio(id);
 		if (audio == nullptr)

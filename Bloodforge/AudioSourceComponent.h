@@ -5,9 +5,9 @@ using SoundId = unsigned int;
 
 namespace Bloodforge
 {
-	struct AudioSource final : Component<AudioSource>
+	struct AudioSourceComponent final : Component<AudioSourceComponent>
 	{
-		AudioSource();
+		AudioSourceComponent();
 		void Play();
 		void Pause();
 		void Stop();
