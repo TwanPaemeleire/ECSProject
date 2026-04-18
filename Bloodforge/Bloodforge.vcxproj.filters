@@ -85,7 +85,9 @@
     <ClCompile Include="AudioSourceSystem.cpp">
       <Filter>Source Files\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="FunctionInvokeSystem.cpp" />
+    <ClCompile Include="FunctionInvokeSystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -208,8 +210,12 @@
     <ClInclude Include="AudioSourceSystem.h">
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="FunctionInvokeSystem.h" />
-    <ClInclude Include="FunctionInvokeComponent.h" />
+    <ClInclude Include="FunctionInvokeComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="FunctionInvokeSystem.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Generated">

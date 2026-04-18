@@ -12,35 +12,38 @@ namespace Bloodforge
 		SceneManager::GetInstance().GetActiveScene().GetSystem<AudioSourceSystem>()->AddAudioSource(*this);
 	}
 
+	AudioSourceComponent::~AudioSourceComponent()
+	{
+		SceneManager::GetInstance().GetActiveScene().GetSystem<AudioSourceSystem>()->RemoveAudioSource(*this);
+	}
+
 	void AudioSourceComponent::Play()
 	{
-		IsPlaying = true;
-		IsPaused = false;
 		SceneManager::GetInstance().GetActiveScene().GetSystem<AudioSourceSystem>()->StartPlayingAudioSource(*this);
 	}
 
 	void AudioSourceComponent::Pause()
 	{
-		if (!IsPlaying) return;
-		IsPaused = true;
 		SceneManager::GetInstance().GetActiveScene().GetSystem<AudioSourceSystem>()->PauseAudioSource(*this);
 	}
 
 	void AudioSourceComponent::Stop()
 	{
-		if (!IsPlaying) return;
-		IsPaused = false;
 		SceneManager::GetInstance().GetActiveScene().GetSystem<AudioSourceSystem>()->StopPlayingAudioSource(*this);
 	}
 
 	void AudioSourceComponent::SetAudio(SoundId id)
 	{
-		MIX_Audio* audio = ResourceManager::GetInstance().GetAudio(id);
-		if (audio == nullptr)
-		{
-			throw std::exception("Trying to set an audio with an id that hasn't been loaded.");
-		}
-		CurrentSoundId = id;
-		SceneManager::GetInstance().GetActiveScene().GetSystem<AudioSourceSystem>()->SetAudioOfTrack(*this);
+		SceneManager::GetInstance().GetActiveScene().GetSystem<AudioSourceSystem>()->SetAudioOfTrack(*this, id);
+	}
+
+	void AudioSourceComponent::SetAudioGroup(AudioGroupId id)
+	{
+		SceneManager::GetInstance().GetActiveScene().GetSystem<AudioSourceSystem>()->AddAudioToAudioGroup(*this, id);
+	}
+
+	void AudioSourceComponent::SetVolume(float volume)
+	{
+		SceneManager::GetInstance().GetActiveScene().GetSystem<AudioSourceSystem>()->SetAudioTrackVolume(*this, volume);
 	}
 }

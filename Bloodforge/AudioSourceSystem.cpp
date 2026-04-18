@@ -3,6 +3,7 @@
 #include "ResourceManager.h"
 #include "AudioSourceComponent.h"
 #include <SDL3_mixer/SDL_mixer.h>
+#include "EntityManager.h"
 
 namespace Bloodforge
 {
@@ -11,29 +12,67 @@ namespace Bloodforge
 		m_Mixer = ResourceManager::GetInstance().GetMixer();
 	}
 
-	void AudioSourceSystem::SetAudioOfTrack(AudioSourceComponent& audioSource)
+	void AudioSourceSystem::SetAudioOfTrack(AudioSourceComponent& audioSource, SoundId id)
 	{
-		MIX_SetTrackAudio(m_AllMixTracks[audioSource.TrackIndex], ResourceManager::GetInstance().GetAudio(audioSource.CurrentSoundId));
+		MIX_Audio* audio = ResourceManager::GetInstance().GetAudio(id);
+		if (audio == nullptr)
+		{
+			throw std::exception("Trying to set an audio with an id that hasn't been loaded.");
+		}
+		audioSource.CurrentSoundId = id;
+		MIX_SetTrackAudio(m_AllMixTracks[audioSource.TrackIndex].Track, audio);
+		RecalculateTrackVolume(audioSource.TrackIndex);
+	}
+
+	void AudioSourceSystem::AddAudioToAudioGroup( AudioSourceComponent& audioSource, AudioGroupId id)
+	{
+		if (audioSource.CurrentAudioGroupId != 0)
+		{
+			// Remove from old group
+			m_AudioGroupData[audioSource.CurrentAudioGroupId].TrackIndices.erase(std::remove(m_AudioGroupData[audioSource.CurrentAudioGroupId].TrackIndices.begin(), m_AudioGroupData[audioSource.CurrentAudioGroupId].TrackIndices.end(), audioSource.TrackIndex), m_AudioGroupData[audioSource.CurrentAudioGroupId].TrackIndices.end());
+		}
+		audioSource.CurrentAudioGroupId = id;
+		m_AudioGroupData[id].TrackIndices.emplace_back(audioSource.TrackIndex);
+		m_AllMixTracks[audioSource.TrackIndex].GroupId = id;
 	}
 
 	void AudioSourceSystem::StartPlayingAudioSource(AudioSourceComponent& audioSource)
 	{
-		MIX_PlayTrack(m_AllMixTracks[audioSource.TrackIndex], 0);
+		audioSource.IsPlaying = true;
+		audioSource.IsPaused = false;
+		MIX_PlayTrack(m_AllMixTracks[audioSource.TrackIndex].Track, 0);
 	}
 
 	void AudioSourceSystem::StopPlayingAudioSource(AudioSourceComponent& audioSource)
 	{
-		MIX_StopTrack(m_AllMixTracks[audioSource.TrackIndex], 0);
+		if (!audioSource.IsPlaying) return;
+		audioSource.IsPlaying = false;
+		audioSource.IsPaused = false;
+		MIX_StopTrack(m_AllMixTracks[audioSource.TrackIndex].Track, 0);
 	}
 
 	void AudioSourceSystem::PauseAudioSource(AudioSourceComponent& audioSource)
 	{
-		MIX_PauseTrack(m_AllMixTracks[audioSource.TrackIndex]);
+		if (!audioSource.IsPlaying || audioSource.IsPaused) return;
+		audioSource.IsPaused = true;
+		MIX_PauseTrack(m_AllMixTracks[audioSource.TrackIndex].Track);
 	}
 
 	void AudioSourceSystem::ResumeAudioSource(AudioSourceComponent& audioSource)
 	{
-		MIX_ResumeTrack(m_AllMixTracks[audioSource.TrackIndex]);
+		MIX_ResumeTrack(m_AllMixTracks[audioSource.TrackIndex].Track);
+	}
+
+	void AudioSourceSystem::StopAllAudioSources()
+	{
+		EntityQueryResult result = EntityManager::GetInstance().QueryEntities<AudioSourceComponent>();
+		for (ChunkView<AudioSourceComponent>& chunk : result.Chunks)
+		{
+			for (AudioSourceComponent& audioSource : chunk.GetComponentArray<AudioSourceComponent>())
+			{
+				StopPlayingAudioSource(audioSource);
+			}
+		}
 	}
 
 	void AudioSourceSystem::AddAudioSource(AudioSourceComponent& audioSource)
@@ -44,7 +83,39 @@ namespace Bloodforge
 	void AudioSourceSystem::RemoveAudioSource(AudioSourceComponent& audioSource)
 	{
 		audioSource.Stop();
+		m_AudioGroupData[audioSource.CurrentAudioGroupId].TrackIndices.erase(std::remove(m_AudioGroupData[audioSource.CurrentAudioGroupId].TrackIndices.begin(), m_AudioGroupData[audioSource.CurrentAudioGroupId].TrackIndices.end(), audioSource.TrackIndex), m_AudioGroupData[audioSource.CurrentAudioGroupId].TrackIndices.end());
 		m_FreeIndices.emplace_back(audioSource.TrackIndex);
+	}
+
+	void AudioSourceSystem::SetAudioTrackVolume(AudioSourceComponent& audioSource, float volume)
+	{
+		audioSource.Volume = volume;
+		m_AllMixTracks[audioSource.TrackIndex].Volume = volume;
+		RecalculateTrackVolume(audioSource.TrackIndex);
+	}
+
+	void AudioSourceSystem::SetMasterVolume(float volume)
+	{
+		MIX_SetMixerGain(m_Mixer, volume);
+		m_MasterVolume = volume;
+		for (int index = 0; index < m_AllMixTracks.size(); index++)
+		{
+			RecalculateTrackVolume(index);
+		}
+	}
+
+	void AudioSourceSystem::SetAudioGroupVolume(AudioGroupId id, float volume)
+	{
+		if (!m_AudioGroupData.contains(id))
+		{
+			throw std::exception("Trying to set the volume of an audio group with an id that doesn't exist.");
+		}
+		
+		m_AudioGroupData[id].Volume = volume;
+		for (int index : m_AudioGroupData[id].TrackIndices)
+		{
+			RecalculateTrackVolume(index);
+		}
 	}
 
 	int AudioSourceSystem::GetAvailableMixTrackIndex()
@@ -59,5 +130,11 @@ namespace Bloodforge
 		int trackIdx = m_FreeIndices[m_FreeIndices.size() - 1];
 		m_FreeIndices.erase(m_FreeIndices.end() - 1, m_FreeIndices.end());
 		return trackIdx;
+	}
+
+	void AudioSourceSystem::RecalculateTrackVolume(int trackIndex)
+	{
+		float groupVolume = m_AudioGroupData[m_AllMixTracks[trackIndex].GroupId].Volume;
+		MIX_SetTrackGain(m_AllMixTracks[trackIndex].Track, m_MasterVolume * groupVolume * m_AllMixTracks[trackIndex].Volume);
 	}
 }
