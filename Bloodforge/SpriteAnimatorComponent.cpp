@@ -5,13 +5,13 @@
 #include "SpriteAnimatorSystem.h"
 #include <utility>
 
-namespace Bloodforge::AnimationUtils
+namespace Bloodforge
 {
-	void AnimationUtils::AddAnimation(SpriteAnimatorComponent& animation, AnimationId id, const AnimationData& animationData)
+	void SpriteAnimatorComponent::AddAnimation(AnimationId id, const AnimationData& animationData)
 	{
-		if (!animation.AnimationsData.contains(id))
+		if (!AnimationsData.contains(id))
 		{
-			animation.AnimationsData.insert({ id, animationData });
+			AnimationsData.insert({ id, animationData });
 		}
 		else
 		{
@@ -19,94 +19,94 @@ namespace Bloodforge::AnimationUtils
 		}
 	}
 
-	void PlayAnimation(SpriteAnimatorComponent& animation, AnimationId id)
+	void SpriteAnimatorComponent::PlayAnimation(AnimationId id)
 	{
-		if (!animation.AnimationsData.contains(id))
+		if (!AnimationsData.contains(id))
 		{
 			throw std::exception("Trying to play an animation with an id that hasn't been added.");
 		}
 
-		AnimationData& data = animation.AnimationsData[id];
+		AnimationData& data = AnimationsData[id];
 		for (AnimationEventData& eventData : data.AnimationEvents)
 		{
 			eventData.HasBeenTriggered = false;
 		}
 
-		animation.IsPlaying = true;
-		animation.CurrentFrame = data.StartingFrame;
-		animation.FrameTimeCounter = 0.0f;
-		animation.CurrentPlayingId = id;
-		animation.CurrentFrameWidth = data.Texture->GetWidth() / data.NumberOfFrames;
-		animation.CurrentFrameHeight = data.Texture->GetHeight();
-		animation.CurrentTexture = data.Texture;
-		animation.CurrentSourceRect.X = data.StartingFrame * animation.CurrentFrameWidth;
-		animation.CurrentSourceRect.Y = 0.0f;
-		animation.CurrentSourceRect.Width = animation.CurrentFrameWidth;
-		animation.CurrentSourceRect.Height = animation.CurrentFrameHeight;
+		IsPlaying = true;
+		CurrentFrame = data.StartingFrame;
+		FrameTimeCounter = 0.0f;
+		CurrentPlayingId = id;
+		CurrentFrameWidth = data.Texture->GetWidth() / data.NumberOfFrames;
+		CurrentFrameHeight = data.Texture->GetHeight();
+		CurrentTexture = data.Texture;
+		CurrentSourceRect.X = data.StartingFrame * CurrentFrameWidth;
+		CurrentSourceRect.Y = 0.0f;
+		CurrentSourceRect.Width = CurrentFrameWidth;
+		CurrentSourceRect.Height = CurrentFrameHeight;
 	}
 
-	void Pause(SpriteAnimatorComponent& animation)
+	void SpriteAnimatorComponent::SpriteAnimatorComponent::Pause()
 	{
-		if (!animation.IsPlaying) return;
-		animation.IsPaused = true;
+		if (!IsPlaying) return;
+		IsPaused = true;
 	}
 
-	void Resume(SpriteAnimatorComponent& animation)
+	void SpriteAnimatorComponent::Resume()
 	{
-		if (!animation.IsPlaying) return;
-		animation.IsPaused = false;
+		if (!IsPlaying) return;
+		IsPaused = false;
 	}
 
-	void Stop(SpriteAnimatorComponent& animation)
+	void SpriteAnimatorComponent::Stop()
 	{
-		animation.IsPlaying = false;
-		animation.IsPaused = false;
+		IsPlaying = false;
+		IsPaused = false;
 	}
 
-	void AdvanceToNextFrame(SpriteAnimatorComponent& animation)
+	void SpriteAnimatorComponent::AdvanceToNextFrame()
 	{
-		const AnimationData& data = animation.AnimationsData[animation.CurrentPlayingId];
-		if (animation.CurrentFrame < data.NumberOfFrames - 1) // Go to next frame, end of animation not reached yet
+		const AnimationData& data = AnimationsData[CurrentPlayingId];
+		if (CurrentFrame < data.NumberOfFrames - 1) // Go to next frame, end of animation not reached yet
 		{
-			++animation.CurrentFrame;
-			animation.FrameTimeCounter = 0.0f;
+			++CurrentFrame;
+			FrameTimeCounter = 0.0f;
 		}
 		else // Go to next frame, end of animation has been reached
 		{
 			if (data.ShouldLoop)
 			{
-				animation.CurrentFrame = data.StartingFrameIndexAfterLoop;
-				animation.FrameTimeCounter = 0.0f;
+				CurrentFrame = data.StartingFrameIndexAfterLoop;
+				FrameTimeCounter = 0.0f;
 
 			}
 			else
 			{
-				Pause(animation);
-				animation.CurrentFrame = data.NumberOfFrames - 1;
-				animation.FrameTimeCounter = 0.0f;
+				Pause();
+				CurrentFrame = data.NumberOfFrames - 1;
+				FrameTimeCounter = 0.0f;
 			}
 		}
 
-		animation.CurrentSourceRect.X = animation.CurrentFrame * animation.CurrentFrameWidth;
-		animation.CurrentSourceRect.Y = 0.0f;
+		CurrentSourceRect.X = CurrentFrame * CurrentFrameWidth;
+		CurrentSourceRect.Y = 0.0f;
 	}
 
-	void RegressToPreviousFrame(SpriteAnimatorComponent& animation)
+	void SpriteAnimatorComponent::RegressToPreviousFrame()
 	{
-		if (animation.CurrentFrame > 0)
+		if (CurrentFrame > 0)
 		{
-			--animation.CurrentFrame;
-			animation.FrameTimeCounter = 0.0f;
+			--CurrentFrame;
+			FrameTimeCounter = 0.0f;
 		}
 	}
 
-	void AddAnimationEvent(SpriteAnimatorComponent& animation, AnimationId id, std::function<void(SpriteAnimatorComponent&)> callback, int frameToTrigger, float offset)
+	void SpriteAnimatorComponent::AddAnimationEvent(AnimationId id, std::function<void(SpriteAnimatorComponent&)> callback, int frameToTrigger, float offset)
 	{
 		SpriteAnimatorSystem* animSystem = SceneManager::GetInstance().GetActiveScene().GetSystem<SpriteAnimatorSystem>();
-		if (!animation.AnimationsData.contains(id))
+		if (!AnimationsData.contains(id))
 		{
 			throw std::exception("Trying to add animation event to an animation with an id that doesn't exist");
 		}
-		animation.AnimationsData[id].AnimationEvents.push_back({frameToTrigger, offset, false, animSystem->AddAnimationEvent(std::move(callback))});
+		AnimationsData[id].AnimationEvents.push_back({frameToTrigger, offset, false, animSystem->AddAnimationEvent(std::move(callback))});
 	}
 }

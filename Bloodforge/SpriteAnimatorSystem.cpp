@@ -40,7 +40,7 @@ namespace Bloodforge
 						const AnimationData& animData = animationComp.AnimationsData[animationComp.CurrentPlayingId];
 						if (animationComp.FrameTimeCounter >= animData.FrameTime)
 						{
-							AnimationUtils::AdvanceToNextFrame(animationComp);
+							animationComp.AdvanceToNextFrame();
 
 							if (animationComp.CurrentFrame == 0)
 							{

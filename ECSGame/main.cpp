@@ -33,106 +33,30 @@ void InitializeRectColliderComponent(Bloodforge::Entity& entity, const Bloodforg
 	collider->SetOffset(offset);
 }
 
-void AnimationEventTest(Bloodforge::SpriteAnimatorComponent& sprite)
-{
-	std::cout << "Anim event triggered" << std::endl;
-	Bloodforge::AnimationUtils::PlayAnimation(sprite, CreateId("TestAnim2"));
-}
-
-void AnimationEventTest2(Bloodforge::SpriteAnimatorComponent& sprite)
-{
-	std::cout << "Anim event2 triggered" << std::endl;
-	Bloodforge::AnimationUtils::PlayAnimation(sprite, CreateId("TestAnim"));
-
-}
-
 void LoadFunction()
 {
 	auto& scene = Bloodforge::SceneManager::GetInstance().GetActiveScene();
 	auto& entityManager = Bloodforge::EntityManager::GetInstance();
 	auto& renderer = Bloodforge::BloodRenderer::GetInstance();
-	renderer.SetBackgroundColor({ 127, 127, 127, 255 });
+	renderer.SetBackgroundColor({ 127, 127, 127, 0 });
 
 	//////////
-	Bloodforge::Entity& entity = entityManager.CreateEntity();
-	int entityId = entity.Id;
-	Bloodforge::SpriteComponent* spriteComp = entityManager.AddComponent<Bloodforge::SpriteComponent>(entityId);
-	spriteComp->SetTexture(Bloodforge::ResourceManager::GetInstance().LoadTexture("BatSheet.png"));
-	spriteComp->FlipVertical = false;
-	spriteComp->FlipHorizontal = true;
-	Bloodforge::SpriteAnimatorComponent* animComp = entityManager.AddComponent<Bloodforge::SpriteAnimatorComponent>(entity);
+	Bloodforge::Entity& towerEntity = entityManager.CreateEntity();
+	int towerEntityId = towerEntity.Id;
 
-	Bloodforge::AnimationData data;
-	data.FrameTime = 1.0f;
-	data.ShouldLoop = true;
-	data.NumberOfFrames = 5;
-	data.Texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Test.png");
-	Bloodforge::AnimationUtils::AddAnimation(*animComp, CreateId("TestAnim"), data);
-	Bloodforge::AnimationUtils::AddAnimationEvent(*animComp, CreateId("TestAnim"), AnimationEventTest, 4);
-
-	Bloodforge::AnimationData data2;
-	data2.FrameTime = 1.0f;
-	data2.ShouldLoop = true;
-	data2.NumberOfFrames = 4;
-	data2.Texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Test2.png");
-	Bloodforge::AnimationUtils::AddAnimation(*animComp, CreateId("TestAnim2"), data2);
-	Bloodforge::AnimationUtils::AddAnimationEvent(*animComp, CreateId("TestAnim2"), AnimationEventTest2, 1);
-
-	Bloodforge::AnimationUtils::PlayAnimation(*animComp, CreateId("TestAnim"));
-
-	Bloodforge::TransformComponent* transformComp1 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity);
-	transformComp1->SetLocalPosition(300.0f, 300.0f);
-
-	entityManager.AddComponent<Bloodforge::RectColliderComponent>(entity);
-	entityManager.RemoveComponent<Bloodforge::RectColliderComponent>(entity);
-	entityManager.AddComponent<Bloodforge::RectColliderComponent>(entity);
-	InitializeRectColliderComponent(entity, { 40.0f, 40.0f });
-
-	Bloodforge::AudioSourceComponent* audioSource = entityManager.AddComponent<Bloodforge::AudioSourceComponent>(entity);
-	Bloodforge::ResourceManager::GetInstance().LoadAudio(CreateId("TestSound"), "TestSound.wav");
-	audioSource->SetAudio(CreateId("TestSound"));
-	audioSource->SetAudioGroup(CreateId("TestGroup"));
-	audioSource->Play();
-
-	scene.GetSystem<Bloodforge::AudioSourceSystem>()->SetAudioGroupVolume(CreateId("TestGroup"), 0.5f);
-	scene.GetSystem<Bloodforge::AudioSourceSystem>()->SetMasterVolume(0.5f);
-	audioSource->SetVolume(0.5f);
-	//////////
-
-	//////////
-	Bloodforge::Entity& invokeEntity = entityManager.CreateEntity();
-	Bloodforge::FunctionInvokeComponent* invokeComp = entityManager.AddComponent<Bloodforge::FunctionInvokeComponent>(invokeEntity);
-	invokeComp->Function = [audioSource]() { audioSource->Stop(); };
-	invokeComp->TimeToInvoke = 2.0f;
-	//////////
-
-	//////////
-	Bloodforge::Entity& entity2 = entityManager.CreateEntity();
-	int entity2Id = entity2.Id;
-	Bloodforge::SpriteComponent* spriteComp2 = entityManager.AddComponent<Bloodforge::SpriteComponent>(entity2);
-	spriteComp2->SetTexture(Bloodforge::ResourceManager::GetInstance().LoadTexture("Heart.png"));
-	spriteComp2->FlipVertical = true;
-	Bloodforge::TransformComponent* transformComp2 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity2);
-	transformComp2->SetParent(entityId);
-	transformComp2->SetLocalPosition(100.0f, 100.0f);
-	transformComp2->SetLocalScale({1.0f, 1.0f});
-	entityManager.AddComponent<Bloodforge::RectColliderComponent>(entity2);
-	InitializeRectColliderComponent(entity2, { 80.0f, 80.0f });
-	//////////
-
-	//////////
-	Bloodforge::Entity& entity3 = entityManager.CreateEntity();
-	Bloodforge::TextComponent* textComp = entityManager.AddComponent<Bloodforge::TextComponent>(entity3);
-	textComp->SetFont(Bloodforge::ResourceManager::GetInstance().LoadFont("Font2.otf", 60));
-	textComp->SetText("Testing");
-	textComp->SetColor({ 0,0,0,255 });
-	textComp->FlipVertical = true;
-	Bloodforge::TransformComponent* transformComp3 = entityManager.GetComponent<Bloodforge::TransformComponent>(entity3);
-	transformComp3->SetParent(entity2Id);
-	transformComp3->SetLocalPosition(100.0f, 100.0f);
-	transformComp3->SetLocalScale({ 1.0f, 1.0f });
-	RotationComponent* rotComp3 = entityManager.AddComponent<RotationComponent>(entity3);
-	rotComp3->SpeedDegPerSec = 180.f;
+	{
+		entityManager.AddComponent<Bloodforge::SpriteComponent>(towerEntityId);
+		Bloodforge::SpriteAnimatorComponent* animComp = entityManager.AddComponent<Bloodforge::SpriteAnimatorComponent>(towerEntityId);
+		Bloodforge::AnimationData towerIdleData;
+		towerIdleData.FrameTime = 0.05f;
+		towerIdleData.ShouldLoop = true;
+		towerIdleData.NumberOfFrames = 8;
+		towerIdleData.Texture = Bloodforge::ResourceManager::GetInstance().LoadTexture("Tower/TowerIdle.png");
+		animComp->AddAnimation(CreateId("TowerIdle"), towerIdleData);
+		animComp->PlayAnimation(CreateId("TowerIdle"));
+		Bloodforge::TransformComponent* transformComp = entityManager.GetComponent<Bloodforge::TransformComponent>(towerEntityId);
+		transformComp->SetLocalPosition(renderer.GetWindowWidth() / 2.0f, renderer.GetWindowHeight() / 2.0f);
+	}
 	//////////
 
 	scene.RegisterSystem<TestSystem>();

@@ -30,6 +30,18 @@ namespace Bloodforge
 
 	struct SpriteAnimatorComponent final : public Component<SpriteAnimatorComponent>
 	{
+		void AddAnimation(AnimationId id, const AnimationData& animationData);
+
+		void PlayAnimation(AnimationId id);
+		void Pause();
+		void Resume();
+		void Stop();
+
+		void AdvanceToNextFrame();
+		void RegressToPreviousFrame();
+
+		void AddAnimationEvent(AnimationId id, std::function<void(SpriteAnimatorComponent&)> callback, int indexOfFrameToTriggerOn, float offset = 0.0f);
+
 		std::unordered_map<AnimationId, AnimationData> AnimationsData;
 
 		AnimationId CurrentPlayingId = 0;
@@ -43,19 +55,4 @@ namespace Bloodforge
 		int CurrentFrame = 0;
 		float FrameTimeCounter = 0.0f;
 	};
-
-	namespace AnimationUtils
-	{
-		void AddAnimation(SpriteAnimatorComponent& animation, AnimationId id, const AnimationData& animationData);
-		
-		void PlayAnimation(SpriteAnimatorComponent& animation, AnimationId id);
-		void Pause(SpriteAnimatorComponent& animation);
-		void Resume(SpriteAnimatorComponent& animation);
-		void Stop(SpriteAnimatorComponent& animation);
-
-		void AdvanceToNextFrame(SpriteAnimatorComponent& animation);
-		void RegressToPreviousFrame(SpriteAnimatorComponent& animation);
-
-		void AddAnimationEvent(SpriteAnimatorComponent& animation, AnimationId id, std::function<void(SpriteAnimatorComponent&)> callback, int indexOfFrameToTriggerOn, float offset = 0.0f);
-	}
 }
