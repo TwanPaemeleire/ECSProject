@@ -5,25 +5,20 @@
 #endif
 
 #include <EntityManager.h>
-#include <SpriteComponent.h>
-#include <TransformComponent.h>
 #include <Bloodforge.h>
 #include <SceneManager.h>
-#include <Scene.h>
 #include <ResourceManager.h>
-#include "TestSystem.h"
-#include "RotationComponent.h"
-#include <TextComponent.h>
 #include <FileSaveLoadUtils.h>
 #include "TestSaveFile.h"
 #include <WindowUtils.h>
 #include <IdCreator.h>
-#include <RectColliderComponent.h>
 #include <BloodRenderer.h>
+
+#include <SpriteComponent.h>
+#include <TransformComponent.h>
+#include <RectColliderComponent.h>
 #include <SpriteAnimatorComponent.h>
-#include <AudioSourceComponent.h>
-#include <FunctionInvokeComponent.h>
-#include <AudioSourceSystem.h>
+#include "EnemySpawnSystem.h"
 
 void InitializeRectColliderComponent(Bloodforge::Entity& entity, const Bloodforge::Vector2& size, const Bloodforge::Vector2& offset = { 0.0f, 0.0f })
 {
@@ -59,7 +54,7 @@ void LoadFunction()
 	}
 	//////////
 
-	scene.RegisterSystem<TestSystem>();
+	scene.RegisterSystem<EnemySpawnSystem>();
 }
 
 int main(int, char* []) 

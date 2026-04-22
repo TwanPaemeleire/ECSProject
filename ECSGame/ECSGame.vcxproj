@@ -143,13 +143,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EnemySpawnSystem.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="TestSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RotationComponent.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemySpawnSystem.h" />
     <ClInclude Include="TestSaveFile.h" />
-    <ClInclude Include="TestSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
