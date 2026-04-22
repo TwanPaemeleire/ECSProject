@@ -11,26 +11,35 @@ namespace Bloodforge
 	{
 		UpdateAllCollisionRects();
 		std::vector<std::pair<int, int>> currentFrameCollisions;
-		EntityQueryResult result = EntityManager::GetInstance().QueryEntities<RectColliderComponent, TransformComponent>();
-		for (ChunkView<RectColliderComponent, TransformComponent>& view : result.Chunks)
+		EntityManager& entityManager = EntityManager::GetInstance();
+		EntityQueryResult result = entityManager.QueryEntities<RectColliderComponent, TransformComponent>();
+		for (size_t chunkIndex = 0; chunkIndex < result.Chunks.size(); ++chunkIndex)
 		{
+			auto& view = result.Chunks[chunkIndex];
 			std::span<RectColliderComponent> rectArray1 = view.GetComponentArray<RectColliderComponent>();
 			std::span<TransformComponent> transformArray1 = view.GetComponentArray<TransformComponent>();
 
-			for (ChunkView<RectColliderComponent, TransformComponent>& innerView : result.Chunks)
+			for (size_t innerChunkIndex = chunkIndex; innerChunkIndex < result.Chunks.size(); ++innerChunkIndex)
 			{
+				auto& innerView = result.Chunks[innerChunkIndex];
 				std::span<RectColliderComponent> rectArray2 = innerView.GetComponentArray<RectColliderComponent>();
 				std::span<TransformComponent> transformArray2 = innerView.GetComponentArray<TransformComponent>();
-
 				for (int index = 0; index < rectArray1.size(); ++index)
 				{
+					int innerIndexStart = (chunkIndex == innerChunkIndex) ? index + 1 : 0;
 					RectColliderComponent& rect1 = rectArray1[index];
 					TransformComponent& transform1 = transformArray1[index];
-					for (int innerIndex = index + 1; innerIndex < rectArray2.size(); ++innerIndex)
+					for (int innerIndex = innerIndexStart; innerIndex < rectArray2.size(); ++innerIndex)
 					{
 						RectColliderComponent& rect2 = rectArray2[innerIndex];
 						TransformComponent& transform2 = transformArray2[innerIndex];
 						if (rect1.OwnerEntityId == rect2.OwnerEntityId) continue; // Checking collider against itself
+						
+						Entity& entity1 = entityManager.GetEntity(rect1.OwnerEntityId);
+						Entity& entity2 = entityManager.GetEntity(rect2.OwnerEntityId);
+						bool rect1IgnoresRect2 = std::find(rect1.IgnoreTags.begin(), rect1.IgnoreTags.end(), entity2.Tag) != rect1.IgnoreTags.end();
+						bool rect2IgnoresRect1 = std::find(rect2.IgnoreTags.begin(), rect2.IgnoreTags.end(), entity1.Tag) != rect2.IgnoreTags.end();
+						if (rect1IgnoresRect2 && rect2IgnoresRect1) continue; // If they both ignore each other, no need to check collision
 
 						if (IsOverlapping(rect1.GetRect(), rect2.GetRect()))
 						{
@@ -38,13 +47,13 @@ namespace Bloodforge
 							currentFrameCollisions.emplace_back(pair);
 							if (std::find(m_LastFrameCollisions.begin(), m_LastFrameCollisions.end(), pair) == m_LastFrameCollisions.end()) // Were not colliding last frame
 							{
-								rect1.OnCollisionEnterEvent.Invoke(rect2.OwnerEntityId);
-								rect2.OnCollisionEnterEvent.Invoke(rect1.OwnerEntityId);
+								if(!rect1IgnoresRect2) rect1.OnCollisionEnterEvent.Invoke(rect2.OwnerEntityId);
+								if(!rect2IgnoresRect1) rect2.OnCollisionEnterEvent.Invoke(rect1.OwnerEntityId);
 							}
 
 							// Collision event gets called every frame
-							rect1.OnCollisionEvent.Invoke(rect2.OwnerEntityId);
-							rect2.OnCollisionEvent.Invoke(rect1.OwnerEntityId);
+							if(!rect1IgnoresRect2) rect1.OnCollisionEvent.Invoke(rect2.OwnerEntityId);
+							if(!rect2IgnoresRect1) rect2.OnCollisionEvent.Invoke(rect1.OwnerEntityId);
 
 						}
 					}
@@ -57,11 +66,16 @@ namespace Bloodforge
 		{
 			if (std::find(currentFrameCollisions.begin(), currentFrameCollisions.end(), lastFramePair) == currentFrameCollisions.end())
 			{
-				EntityManager& entityManager = EntityManager::GetInstance();
 				int first = lastFramePair.first;
 				int second = lastFramePair.second;
-				entityManager.GetComponent<RectColliderComponent>(entityManager.GetEntity(first))->OnCollisionExitEvent.Invoke(second);
-				entityManager.GetComponent<RectColliderComponent>(entityManager.GetEntity(second))->OnCollisionExitEvent.Invoke(first);
+				Entity& firstEntity = entityManager.GetEntity(first);
+				Entity& secondEntity = entityManager.GetEntity(second);
+				RectColliderComponent* firstRect = entityManager.GetComponent<RectColliderComponent>(firstEntity);
+				RectColliderComponent* secondRect = entityManager.GetComponent<RectColliderComponent>(secondEntity);
+				bool firstIgnoresSecond = std::find(firstRect->IgnoreTags.begin(), firstRect->IgnoreTags.end(), secondEntity.Tag) != firstRect->IgnoreTags.end();
+				bool secondIgnoresFirst = std::find(secondRect->IgnoreTags.begin(), secondRect->IgnoreTags.end(), firstEntity.Tag) != secondRect->IgnoreTags.end();
+				if(!firstIgnoresSecond) firstRect->OnCollisionExitEvent.Invoke(second);
+				if(!secondIgnoresFirst) secondRect->OnCollisionExitEvent.Invoke(first);
 			}
 		}
 

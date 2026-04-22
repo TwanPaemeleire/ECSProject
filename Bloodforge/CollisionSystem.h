@@ -1,6 +1,8 @@
 #pragma once
 #include "System.h"
 #include <vector>
+#include <unordered_set>
+#include <unordered_map>
 
 namespace Bloodforge
 {

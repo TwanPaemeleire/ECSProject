@@ -9,6 +9,7 @@
 #include <BloodRenderer.h>
 #include <BloodTime.h>
 #include <FunctionInvokeComponent.h>
+#include <RectColliderComponent.h>
 using namespace Bloodforge;
 
 void EnemySpawnSystem::OnStart()
@@ -81,6 +82,10 @@ void EnemySpawnSystem::SpawnEnemy()
 	data.Texture = ResourceManager::GetInstance().LoadTexture("BatSheet.png");
 	animator->AddAnimation(CreateId("Bat"), data);
 	animator->PlayAnimation(CreateId("Bat"));
+
+	enemyEntity.Tag = CreateId("Bat");
+	/*RectColliderComponent* rectComp = */entityManager.AddComponent<RectColliderComponent>(enemyEntity);
+	// rectComp->IgnoreTags.emplace_back(CreateId("Bat"));
 }
 
 void EnemySpawnSystem::InitializeEnemy1(Enemy* enemy)

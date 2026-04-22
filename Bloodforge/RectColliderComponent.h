@@ -4,6 +4,8 @@
 #include "Event.h"
 #include <memory>
 
+using TagId = unsigned int;
+
 namespace Bloodforge
 {
 	struct ColliderRect
@@ -39,6 +41,8 @@ namespace Bloodforge
 		Event<int> OnCollisionEnterEvent;
 		Event<int> OnCollisionEvent;
 		Event<int> OnCollisionExitEvent;
+
+		std::vector<TagId> IgnoreTags;
 
 	private:
 		Vector2 RotateRectPoint(float x, float y, float cosRot, float sinRot);

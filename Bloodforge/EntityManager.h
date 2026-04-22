@@ -13,6 +13,8 @@
 #include "TransformComponent.h"
 #include "Singleton.h"
 
+using TagId = unsigned int;
+
 namespace Bloodforge
 {
 	struct Entity;
