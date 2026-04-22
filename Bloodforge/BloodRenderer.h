@@ -36,6 +36,7 @@ namespace Bloodforge
 
 		int GetWindowWidth() const { return m_WindowWidth; }
 		int GetWindowHeight() const { return m_WindowHeight; }
+		void SetWindowSize(int width, int height);
 	private:
 		SDL_FPoint TransformPoint(const glm::mat4& worldMatrix, float x, float y) const;
 

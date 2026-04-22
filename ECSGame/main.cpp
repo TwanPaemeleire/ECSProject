@@ -71,6 +71,7 @@ int main(int, char* [])
 	Bloodforge::WindowUtils::SetWindowAlwaysOnTop(false);
 	Bloodforge::WindowUtils::SetWindowBordered(true);
 	Bloodforge::WindowUtils::SetWindowFullScreen(false);
+	Bloodforge::WindowUtils::SetWindowSize(950, 950);
 	Bloodforge::WindowUtils::SetWindowIcon("Heart.png");
 	Bloodforge::WindowUtils::SetCustomCursor(Bloodforge::ResourceManager::GetInstance().LoadCustomCursor(CreateId("TestCursor"), "Cursor.png", 0, 0));
 

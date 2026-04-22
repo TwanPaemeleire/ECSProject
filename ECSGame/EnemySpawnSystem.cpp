@@ -84,7 +84,8 @@ void EnemySpawnSystem::SpawnEnemy()
 	animator->PlayAnimation(CreateId("Bat"));
 
 	enemyEntity.Tag = CreateId("Bat");
-	/*RectColliderComponent* rectComp = */entityManager.AddComponent<RectColliderComponent>(enemyEntity);
+	RectColliderComponent* rectComp = entityManager.AddComponent<RectColliderComponent>(enemyEntity);
+	rectComp->SetSize({ 60.0f, 60.0f });
 	// rectComp->IgnoreTags.emplace_back(CreateId("Bat"));
 }
 

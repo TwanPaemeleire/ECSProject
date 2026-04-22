@@ -1,8 +1,6 @@
 #pragma once
 #include "System.h"
-#include <vector>
 #include <unordered_set>
-#include <unordered_map>
 
 namespace Bloodforge
 {
@@ -18,10 +16,15 @@ namespace Bloodforge
 
 	private:
 		void UpdateAllCollisionRects();
+		bool IsOverlappingAABB(const ColliderRect& rect1, const ColliderRect& rect2);
 		bool IsOverlapping(const ColliderRect& rect1, const ColliderRect& rect2);
+
+		uint64_t Pack(int a, int b);
+		int UnpackFirst(uint64_t packed);
+		int UnpackSecond(uint64_t packed);
 
 		void ProjectRectOntoAxis(const ColliderRect& rect, const Vector2& axis, float& min, float& max);
 		bool IsOverlappingOnAxis(const ColliderRect& rect1, const ColliderRect& rect2, const Vector2& axis);
-		std::vector<std::pair<int, int>> m_LastFrameCollisions;
+		std::unordered_set<uint64_t> m_LastFrameCollisions;
 	};
 }

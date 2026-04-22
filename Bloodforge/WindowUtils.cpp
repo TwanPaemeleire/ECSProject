@@ -11,13 +11,14 @@ namespace Bloodforge::WindowUtils
 {
 	void SetWindowSize(int sizeX, int sizeY)
 	{
-		SDL_SetWindowSize(BloodRenderer::GetInstance().GetSDLWindow(), sizeX, sizeY);
+		BloodRenderer::GetInstance().SetWindowSize(sizeX, sizeY);
 	}
 
 	void SetWindowAlwaysOnTop(bool alwaysOnTop)
 	{
 		SDL_SetWindowAlwaysOnTop(BloodRenderer::GetInstance().GetSDLWindow(), alwaysOnTop);
 	}
+
 	void SetWindowBordered(bool borderless)
 	{
 		SDL_SetWindowBordered(BloodRenderer::GetInstance().GetSDLWindow(), borderless);

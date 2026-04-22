@@ -10,7 +10,7 @@ namespace Bloodforge
 	void CollisionSystem::OnLateUpdate()
 	{
 		UpdateAllCollisionRects();
-		std::vector<std::pair<int, int>> currentFrameCollisions;
+		std::unordered_set<uint64_t> currentFrameCollisions;
 		EntityManager& entityManager = EntityManager::GetInstance();
 		EntityQueryResult result = entityManager.QueryEntities<RectColliderComponent, TransformComponent>();
 		for (size_t chunkIndex = 0; chunkIndex < result.Chunks.size(); ++chunkIndex)
@@ -41,20 +41,24 @@ namespace Bloodforge
 						bool rect2IgnoresRect1 = std::find(rect2.IgnoreTags.begin(), rect2.IgnoreTags.end(), entity1.Tag) != rect2.IgnoreTags.end();
 						if (rect1IgnoresRect2 && rect2IgnoresRect1) continue; // If they both ignore each other, no need to check collision
 
-						if (IsOverlapping(rect1.GetRect(), rect2.GetRect()))
+						if (IsOverlappingAABB(rect1.GetRect(), rect2.GetRect())) 
 						{
-							std::pair<int, int> pair = { transform1.OwnerEntityId, transform2.OwnerEntityId };
-							currentFrameCollisions.emplace_back(pair);
-							if (std::find(m_LastFrameCollisions.begin(), m_LastFrameCollisions.end(), pair) == m_LastFrameCollisions.end()) // Were not colliding last frame
+							if ((transform1.GetWorldRotation() == 0.0f && transform2.GetWorldRotation() == 0.0f) || IsOverlapping(rect1.GetRect(), rect2.GetRect()))
 							{
-								if(!rect1IgnoresRect2) rect1.OnCollisionEnterEvent.Invoke(rect2.OwnerEntityId);
-								if(!rect2IgnoresRect1) rect2.OnCollisionEnterEvent.Invoke(rect1.OwnerEntityId);
+								std::pair<int, int> pair = { transform1.OwnerEntityId, transform2.OwnerEntityId };
+								currentFrameCollisions.insert(Pack(transform1.OwnerEntityId, transform2.OwnerEntityId));
+								// Were not colliding last frame
+								if (!m_LastFrameCollisions.contains(Pack(transform1.OwnerEntityId, transform2.OwnerEntityId)))
+								{
+									if (!rect1IgnoresRect2) rect1.OnCollisionEnterEvent.Invoke(rect2.OwnerEntityId);
+									if (!rect2IgnoresRect1) rect2.OnCollisionEnterEvent.Invoke(rect1.OwnerEntityId);
+								}
+
+								// Collision event gets called every frame
+								if (!rect1IgnoresRect2) rect1.OnCollisionEvent.Invoke(rect2.OwnerEntityId);
+								if (!rect2IgnoresRect1) rect2.OnCollisionEvent.Invoke(rect1.OwnerEntityId);
+
 							}
-
-							// Collision event gets called every frame
-							if(!rect1IgnoresRect2) rect1.OnCollisionEvent.Invoke(rect2.OwnerEntityId);
-							if(!rect2IgnoresRect1) rect2.OnCollisionEvent.Invoke(rect1.OwnerEntityId);
-
 						}
 					}
 				}
@@ -64,10 +68,10 @@ namespace Bloodforge
 		// Check for collision exits
 		for (const auto& lastFramePair : m_LastFrameCollisions)
 		{
-			if (std::find(currentFrameCollisions.begin(), currentFrameCollisions.end(), lastFramePair) == currentFrameCollisions.end())
+			if(!currentFrameCollisions.contains(lastFramePair))
 			{
-				int first = lastFramePair.first;
-				int second = lastFramePair.second;
+				int first = UnpackFirst(lastFramePair);
+				int second = UnpackSecond(lastFramePair);
 				Entity& firstEntity = entityManager.GetEntity(first);
 				Entity& secondEntity = entityManager.GetEntity(second);
 				RectColliderComponent* firstRect = entityManager.GetComponent<RectColliderComponent>(firstEntity);
@@ -112,6 +116,13 @@ namespace Bloodforge
 		}
 	}
 
+	bool CollisionSystem::IsOverlappingAABB(const ColliderRect& rect1, const ColliderRect& rect2)
+	{
+		if (rect1.TopRight.X < rect2.TopLeft.X || rect1.TopLeft.X > rect2.TopRight.X) return false;
+		if (rect1.TopRight.Y < rect2.TopLeft.Y || rect1.TopLeft.Y > rect2.TopRight.Y) return false;
+		return true;
+	}
+
 	bool CollisionSystem::IsOverlapping(const ColliderRect& rect1, const ColliderRect& rect2)
 	{
 		Vector2 axes[4]
@@ -128,6 +139,21 @@ namespace Bloodforge
 		}
 
 		return true;
+	}
+
+	uint64_t CollisionSystem::Pack(int a, int b)
+	{
+		return (static_cast<uint64_t>(a) << 32) | b;
+	}
+
+	int CollisionSystem::UnpackFirst(uint64_t packed)
+	{
+		return static_cast<int>(packed >> 32);
+	}
+
+	int CollisionSystem::UnpackSecond(uint64_t packed)
+	{
+		return static_cast<int>(packed & 0xFFFFFFFF);
 	}
 
 	void CollisionSystem::ProjectRectOntoAxis(const ColliderRect& rect, const Vector2& axis, float& min, float& max)

@@ -192,6 +192,13 @@ namespace Bloodforge
 		return m_Renderer;
 	}
 
+	void BloodRenderer::SetWindowSize(int width, int height)
+	{
+		m_WindowWidth = width;
+		m_WindowHeight = height;
+		SDL_SetWindowSize(BloodRenderer::GetInstance().GetSDLWindow(), width, height);
+	}
+
 	SDL_FPoint BloodRenderer::TransformPoint(const glm::mat4& worldMatrix, float x, float y) const
 	{
 		glm::vec4 point = worldMatrix * glm::vec4(x, y, 0.0f, 1.0f);
