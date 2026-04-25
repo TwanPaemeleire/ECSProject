@@ -10,6 +10,8 @@
 #include "AudioSourceSystem.h"
 #include "FunctionInvokeSystem.h"
 
+#include "EntityManager.h"
+
 namespace Bloodforge
 {
 	Scene::Scene(std::function<void()> loadFunction)
@@ -67,6 +69,7 @@ namespace Bloodforge
 		{
 			system->OnLateUpdate();
 		}
+		EntityManager::GetInstance().DestroyMarkedForDestructionEntities();
 	}
 
 	void Scene::Render() const

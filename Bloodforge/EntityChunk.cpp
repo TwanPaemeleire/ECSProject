@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "EntityChunk.h"
 #include "EntityManager.h"
+#include <ranges>
 
 namespace Bloodforge
 {
@@ -15,6 +16,8 @@ namespace Bloodforge
 			m_ComponentIdToArrayIndex[id] = index++;
 			ConstructComponentArray(id);
 		}
+
+		m_ComponentIndices = identifier.GetComponentIndices();
 
 		// std::cout << "EntityChunk created with capacity: " << capacity << std::endl;
 		// std::cout << "With following component types: ";
@@ -63,7 +66,7 @@ namespace Bloodforge
 		else
 		{
 			m_EntityIds[entityIndexInChunk] = m_EntityIds[m_CurrentFreeIndex - 1];
-			MoveComponents(entityIndexInChunk, m_CurrentFreeIndex - 1, entity.CurrentArchetypeId.GetComponentIndices());
+			MoveComponents(entityIndexInChunk, m_CurrentFreeIndex - 1, m_ComponentIndices/*entity.CurrentArchetypeId.GetComponentIndices()*/);
 
 			m_EntityIdToChunkIndex[m_EntityIds[entityIndexInChunk]] = entityIndexInChunk; // Update the moved entity's index in the map
 			// std::cout << "Moved entity with ID: " << m_EntityIds[entityIndexInChunk] << " to index: " << entityIndexInChunk << " originally at: " << m_CurrentFreeIndex - 1 << std::endl;
@@ -87,7 +90,7 @@ namespace Bloodforge
 	void* EntityChunk::GetComponentArray(int componentId) const
 	{
 		auto it = m_ComponentArrays.find(componentId);
-		if (it == m_ComponentArrays.end()) throw std::runtime_error("Component not found");
+		if (it == m_ComponentArrays.end()) return nullptr;
 		return it->second.Data;
 	}
 

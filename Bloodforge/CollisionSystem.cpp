@@ -37,8 +37,8 @@ namespace Bloodforge
 						
 						Entity& entity1 = entityManager.GetEntity(rect1.OwnerEntityId);
 						Entity& entity2 = entityManager.GetEntity(rect2.OwnerEntityId);
-						bool rect1IgnoresRect2 = std::find(rect1.IgnoreTags.begin(), rect1.IgnoreTags.end(), entity2.Tag) != rect1.IgnoreTags.end();
-						bool rect2IgnoresRect1 = std::find(rect2.IgnoreTags.begin(), rect2.IgnoreTags.end(), entity1.Tag) != rect2.IgnoreTags.end();
+						bool rect1IgnoresRect2 = rect1.IgnoreTags.contains(entity2.Tag); // std::find(rect1.IgnoreTags.begin(), rect1.IgnoreTags.end(), entity2.Tag) != rect1.IgnoreTags.end();
+						bool rect2IgnoresRect1 = rect2.IgnoreTags.contains(entity1.Tag); // std::find(rect2.IgnoreTags.begin(), rect2.IgnoreTags.end(), entity1.Tag) != rect2.IgnoreTags.end();
 						if (rect1IgnoresRect2 && rect2IgnoresRect1) continue; // If they both ignore each other, no need to check collision
 
 						if (IsOverlappingAABB(rect1.GetRect(), rect2.GetRect())) 
@@ -46,19 +46,20 @@ namespace Bloodforge
 							if ((transform1.GetWorldRotation() == 0.0f && transform2.GetWorldRotation() == 0.0f) || IsOverlapping(rect1.GetRect(), rect2.GetRect()))
 							{
 								std::pair<int, int> pair = { transform1.OwnerEntityId, transform2.OwnerEntityId };
-								currentFrameCollisions.insert(Pack(transform1.OwnerEntityId, transform2.OwnerEntityId));
 								// Were not colliding last frame
 								if (!m_LastFrameCollisions.contains(Pack(transform1.OwnerEntityId, transform2.OwnerEntityId)))
 								{
-									if (!rect1IgnoresRect2) rect1.OnCollisionEnterEvent.Invoke(rect2.OwnerEntityId);
-									if (!rect2IgnoresRect1) rect2.OnCollisionEnterEvent.Invoke(rect1.OwnerEntityId);
+									if (!rect1IgnoresRect2) rect1.OnCollisionEnterEvent.Invoke(rect1.OwnerEntityId, rect2.OwnerEntityId);
+									if (!rect2IgnoresRect1) rect2.OnCollisionEnterEvent.Invoke(rect2.OwnerEntityId, rect1.OwnerEntityId);
 								}
 
 								// Collision event gets called every frame
-								if (!rect1IgnoresRect2) rect1.OnCollisionEvent.Invoke(rect2.OwnerEntityId);
-								if (!rect2IgnoresRect1) rect2.OnCollisionEvent.Invoke(rect1.OwnerEntityId);
+								if (!rect1IgnoresRect2) rect1.OnCollisionEvent.Invoke(rect1.OwnerEntityId, rect2.OwnerEntityId);
+								if (!rect2IgnoresRect1) rect2.OnCollisionEvent.Invoke(rect2.OwnerEntityId, rect1.OwnerEntityId);
 
 							}
+							if (entity1.MarkedForDestruction || entity2.MarkedForDestruction) continue; // If either entity is marked for destruction, skip adding to current collisions to prevent collision exit from being called next frame
+							currentFrameCollisions.insert(Pack(transform1.OwnerEntityId, transform2.OwnerEntityId));
 						}
 					}
 				}
@@ -74,12 +75,14 @@ namespace Bloodforge
 				int second = UnpackSecond(lastFramePair);
 				Entity& firstEntity = entityManager.GetEntity(first);
 				Entity& secondEntity = entityManager.GetEntity(second);
+				if (!firstEntity.IsAlive || !secondEntity.IsAlive) continue;
 				RectColliderComponent* firstRect = entityManager.GetComponent<RectColliderComponent>(firstEntity);
 				RectColliderComponent* secondRect = entityManager.GetComponent<RectColliderComponent>(secondEntity);
-				bool firstIgnoresSecond = std::find(firstRect->IgnoreTags.begin(), firstRect->IgnoreTags.end(), secondEntity.Tag) != firstRect->IgnoreTags.end();
-				bool secondIgnoresFirst = std::find(secondRect->IgnoreTags.begin(), secondRect->IgnoreTags.end(), firstEntity.Tag) != secondRect->IgnoreTags.end();
-				if(!firstIgnoresSecond) firstRect->OnCollisionExitEvent.Invoke(second);
-				if(!secondIgnoresFirst) secondRect->OnCollisionExitEvent.Invoke(first);
+				if (!firstRect || !secondRect) continue;
+				bool firstIgnoresSecond = firstRect->IgnoreTags.contains(secondEntity.Tag);
+				bool secondIgnoresFirst = secondRect->IgnoreTags.contains(firstEntity.Tag);
+				if(!firstIgnoresSecond) firstRect->OnCollisionExitEvent.Invoke(first, second);
+				if(!secondIgnoresFirst) secondRect->OnCollisionExitEvent.Invoke(second, first);
 			}
 		}
 
@@ -119,7 +122,7 @@ namespace Bloodforge
 	bool CollisionSystem::IsOverlappingAABB(const ColliderRect& rect1, const ColliderRect& rect2)
 	{
 		if (rect1.TopRight.X < rect2.TopLeft.X || rect1.TopLeft.X > rect2.TopRight.X) return false;
-		if (rect1.TopRight.Y < rect2.TopLeft.Y || rect1.TopLeft.Y > rect2.TopRight.Y) return false;
+		if (rect1.BottomLeft.Y < rect2.TopLeft.Y || rect1.TopLeft.Y > rect2.BottomLeft.Y) return false;
 		return true;
 	}
 

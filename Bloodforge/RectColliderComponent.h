@@ -3,6 +3,7 @@
 #include "Vector2.h"
 #include "Event.h"
 #include <memory>
+#include <unordered_set>
 
 using TagId = unsigned int;
 
@@ -38,11 +39,11 @@ namespace Bloodforge
 
 		void UpdateWorldSpaceRect();
 
-		Event<int> OnCollisionEnterEvent;
-		Event<int> OnCollisionEvent;
-		Event<int> OnCollisionExitEvent;
+		Event<int, int> OnCollisionEnterEvent;
+		Event<int, int> OnCollisionEvent;
+		Event<int, int> OnCollisionExitEvent;
 
-		std::vector<TagId> IgnoreTags;
+		std::unordered_set<TagId> IgnoreTags;
 
 	private:
 		Vector2 RotateRectPoint(float x, float y, float cosRot, float sinRot);

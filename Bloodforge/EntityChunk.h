@@ -44,6 +44,7 @@ namespace Bloodforge
 		std::unordered_map<int, ComponentArray> m_ComponentArrays;
 		std::unordered_map<int, int> m_EntityIdToChunkIndex; // Map to track entity IDs and their corresponding chunk indices
 		std::unordered_map<int, int> m_ComponentIdToArrayIndex; // Map to track component IDs and their corresponding array indices
+		std::vector<int> m_ComponentIndices; // List of component indices for this chunk's archetype
 		bool m_IsFull = false;
 		size_t m_EntityCount = 0;
 		size_t m_Capacity = 0;

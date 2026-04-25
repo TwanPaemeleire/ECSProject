@@ -1,7 +1,6 @@
 #pragma once
-#include <string>
-#include <vector>
 #include "ArchetypeIdentifierMask.h"
+#include <string>
 
 using TagId = unsigned int;
 
@@ -18,5 +17,8 @@ namespace Bloodforge
 		ArchetypeIdentifierMask CurrentArchetypeId;
 		int CurrentChunkIndex = -1;
 		TagId Tag = 0;
+		std::string Name;
+		bool MarkedForDestruction = false;
+		bool IsAlive = true;
 	};
 }

@@ -10,10 +10,12 @@
 #include <BloodTime.h>
 #include <FunctionInvokeComponent.h>
 #include <RectColliderComponent.h>
+#include "Health.h"
 using namespace Bloodforge;
 
 void EnemySpawnSystem::OnStart()
 {
+	SpawnEnemy();
 	SpawnLoop();
 }
 
@@ -50,7 +52,7 @@ void EnemySpawnSystem::SpawnLoop()
 		SpawnEnemy();
 		SpawnLoop();
 	};
-	functionInvokeComp->TimeToInvoke = 0.02f;
+	functionInvokeComp->TimeToInvoke = 0.05f;
 }
 
 void EnemySpawnSystem::SpawnEnemy()
@@ -58,8 +60,10 @@ void EnemySpawnSystem::SpawnEnemy()
 	EntityManager& entityManager = EntityManager::GetInstance();
 
 	Entity& enemyEntity = entityManager.CreateEntity();
+	enemyEntity.Name = "Enemy";
+	enemyEntity.Tag = CreateId("Enemy");
 	Enemy* enemy = entityManager.AddComponent<Enemy>(enemyEntity);
-	InitializeEnemy1(enemy);
+	enemy->Speed = 20.0f;
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -83,14 +87,16 @@ void EnemySpawnSystem::SpawnEnemy()
 	animator->AddAnimation(CreateId("Bat"), data);
 	animator->PlayAnimation(CreateId("Bat"));
 
-	enemyEntity.Tag = CreateId("Bat");
 	RectColliderComponent* rectComp = entityManager.AddComponent<RectColliderComponent>(enemyEntity);
-	rectComp->SetSize({ 60.0f, 60.0f });
-	// rectComp->IgnoreTags.emplace_back(CreateId("Bat"));
-}
+	rectComp->SetSize({ 100.0f, 45.0f });
+	rectComp->IgnoreTags.insert(CreateId("Bat"));
+	rectComp->SetOffset({-10, 17});
 
-void EnemySpawnSystem::InitializeEnemy1(Enemy* enemy)
-{
-	enemy->Health = 1.0f;
-	enemy->Speed = 20.0f;
+	Health* health = entityManager.AddComponent<Health>(enemyEntity);
+	health->OnDeathEvent.AddListener([](int enemyEntityId)
+		{
+			EntityManager::GetInstance().DestroyEntity(enemyEntityId);
+		});
+	health->MaxHealth = 5.0f;
+	health->CurrentHealth = 5.0f;
 }

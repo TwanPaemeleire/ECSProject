@@ -12,7 +12,6 @@ public:
 private:
 	void SpawnLoop();
 	void SpawnEnemy();
-	void InitializeEnemy1(Enemy* enemy);
 
 	float m_SpawnRadius = 400.0f;
 };

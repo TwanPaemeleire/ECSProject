@@ -81,6 +81,7 @@ namespace Bloodforge
 		bool HasComponent(Entity& entity);
 
 		void DestroyAllEntities();
+		void DestroyMarkedForDestructionEntities();
 	private:
 
 		template <typename... ComponentTypes>
@@ -93,6 +94,8 @@ namespace Bloodforge
 
 		template <typename T>
 		std::type_index ReturnComponentInfo();
+
+		std::vector<int> m_EntitiesToDestroy;
 
 		std::unordered_map<ArchetypeIdentifierMask, std::vector<std::unique_ptr<EntityChunk>>, ArchetypeIdentifierMaskHash> m_EntityChunks;
 		std::vector<Entity> m_Entities;

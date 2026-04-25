@@ -67,6 +67,8 @@ namespace Bloodforge
 		{
 			return static_cast<SystemType*>(m_RegisteredSystems[m_SystemMap[typeIndex]].get());
 		}
-		throw std::runtime_error("Trying to get a system type that hasn't been registered.");
+		m_RegisteredSystems.emplace_back(std::make_unique<SystemType>());
+		m_SystemMap.insert({ typeIndex, static_cast<int>(m_RegisteredSystems.size()) - 1 });
+		return static_cast<SystemType*>(m_RegisteredSystems[m_SystemMap[typeIndex]].get());
 	}
 }

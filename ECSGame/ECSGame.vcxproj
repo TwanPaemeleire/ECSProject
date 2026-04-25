@@ -145,10 +145,17 @@
   <ItemGroup>
     <ClCompile Include="EnemySpawnSystem.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PlayerTowerSystem.cpp" />
+    <ClCompile Include="ProjectileSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemySpawnSystem.h" />
+    <ClInclude Include="Health.h" />
+    <ClInclude Include="PlayerTower.h" />
+    <ClInclude Include="PlayerTowerSystem.h" />
+    <ClInclude Include="Projectile.h" />
+    <ClInclude Include="ProjectileSystem.h" />
     <ClInclude Include="TestSaveFile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

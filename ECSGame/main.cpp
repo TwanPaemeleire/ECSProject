@@ -19,6 +19,10 @@
 #include <RectColliderComponent.h>
 #include <SpriteAnimatorComponent.h>
 #include "EnemySpawnSystem.h"
+#include "PlayerTowerSystem.h"
+#include "ProjectileSystem.h"
+#include "PlayerTower.h"
+#include "Health.h"
 
 void InitializeRectColliderComponent(Bloodforge::Entity& entity, const Bloodforge::Vector2& size, const Bloodforge::Vector2& offset = { 0.0f, 0.0f })
 {
@@ -37,6 +41,8 @@ void LoadFunction()
 
 	//////////
 	Bloodforge::Entity& towerEntity = entityManager.CreateEntity();
+	towerEntity.Name = "PlayerTower";
+	towerEntity.Tag = CreateId("PlayerTower");
 	int towerEntityId = towerEntity.Id;
 
 	{
@@ -51,10 +57,16 @@ void LoadFunction()
 		animComp->PlayAnimation(CreateId("TowerIdle"));
 		Bloodforge::TransformComponent* transformComp = entityManager.GetComponent<Bloodforge::TransformComponent>(towerEntityId);
 		transformComp->SetLocalPosition(renderer.GetWindowWidth() / 2.0f, renderer.GetWindowHeight() / 2.0f);
+		entityManager.AddComponent<PlayerTower>(towerEntityId);
+		entityManager.AddComponent<Health>(towerEntityId);
+		Bloodforge::RectColliderComponent* rectCollider = entityManager.AddComponent<Bloodforge::RectColliderComponent>(towerEntityId);
+		rectCollider->SetSize({ 350.0f, 350.0f });
 	}
 	//////////
 
 	scene.RegisterSystem<EnemySpawnSystem>();
+	scene.RegisterSystem<PlayerTowerSystem>();
+	scene.RegisterSystem<ProjectileSystem>();
 }
 
 int main(int, char* []) 
