@@ -40,7 +40,7 @@ namespace Bloodforge
 			throw std::runtime_error("Chunk is full. Cannot add more entities.");
 		}
 
-		int entityIndexInChunk = m_CurrentFreeIndex;
+		int entityIndexInChunk = m_EntityCount;
 
 		// std::cout << "Adding entity with ID: " << entityId << " to chunk with components:";
 		// ((std::cout << " " << typeid(Components).name()), ...);
@@ -50,29 +50,34 @@ namespace Bloodforge
 		m_EntityIdToChunkIndex[entityId] = entityIndexInChunk;
 
 		++m_EntityCount;
-		++m_CurrentFreeIndex;
 		m_IsFull = (m_EntityCount) >= m_Capacity;
 		return entityIndexInChunk; // Return the index of the newly added entity
 	}
 
 	void EntityChunk::RemoveEntityAndComponents(Entity& entity)
 	{
+		int lastIndex = m_EntityCount - 1;
 		int entityIndexInChunk = m_EntityIdToChunkIndex[entity.Id];
-		if (entityIndexInChunk == m_CurrentFreeIndex - 1) // If the entity to be removed is the last one, we can simply clear it without moving any data
-		{
-			// std::cout << "Removed entity with ID: " << entity->GetId() << " from index: " << entityIndexInChunk << std::endl;
-			// std::cout << "No data needed to be moved" << std::endl;
-		}
-		else
-		{
-			m_EntityIds[entityIndexInChunk] = m_EntityIds[m_CurrentFreeIndex - 1];
-			MoveComponents(entityIndexInChunk, m_CurrentFreeIndex - 1, m_ComponentIndices/*entity.CurrentArchetypeId.GetComponentIndices()*/);
 
-			m_EntityIdToChunkIndex[m_EntityIds[entityIndexInChunk]] = entityIndexInChunk; // Update the moved entity's index in the map
-			// std::cout << "Moved entity with ID: " << m_EntityIds[entityIndexInChunk] << " to index: " << entityIndexInChunk << " originally at: " << m_CurrentFreeIndex - 1 << std::endl;
+		if (entityIndexInChunk != lastIndex)
+		{
+			int movedEntity = m_EntityIds[lastIndex];
+
+			m_EntityIds[entityIndexInChunk] = movedEntity;
+
+			MoveComponents(entityIndexInChunk, lastIndex, m_ComponentIndices);
+
+			m_EntityIdToChunkIndex[movedEntity] = entityIndexInChunk;
+
+			Entity& movedEntityRef = EntityManager::GetInstance().GetEntity(movedEntity);
+			movedEntityRef.CurrentChunkIndex = GetChunkIndex();
 		}
+		//	m_EntityIds[entityIndexInChunk] = m_EntityIds[lastIndex];
+		//	MoveComponents(entityIndexInChunk, lastIndex, m_ComponentIndices);
+
+		//	m_EntityIdToChunkIndex[m_EntityIds[entityIndexInChunk]] = entityIndexInChunk; // Update the moved entity's index in the map
+		//}
 		m_EntityIdToChunkIndex.erase(entity.Id);
-		--m_CurrentFreeIndex;
 		--m_EntityCount;
 		m_IsFull = false;
 	}
@@ -82,9 +87,14 @@ namespace Bloodforge
 		return m_ComponentIdToArrayIndex.contains(componentIndex);
 	}
 
+	bool EntityChunk::HasEntity(int entityId) const
+	{
+		return m_EntityIdToChunkIndex.contains(entityId);
+	}
+
 	std::span<int> EntityChunk::GetEntityIndices() const
 	{
-		return { m_EntityIds.get(), m_EntityCount };
+		return { m_EntityIds.get(), static_cast<size_t>(m_EntityCount) };
 	}
 
 	void* EntityChunk::GetComponentArray(int componentId) const

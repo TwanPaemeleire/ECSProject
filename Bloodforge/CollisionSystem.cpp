@@ -91,6 +91,7 @@ namespace Bloodforge
 
 	void CollisionSystem::OnRender()
 	{
+#if _DEBUG
 		EntityQueryResult result = EntityManager::GetInstance().QueryEntities<RectColliderComponent, TransformComponent>();
 		for (ChunkView<RectColliderComponent, TransformComponent>& view : result.Chunks)
 		{
@@ -104,6 +105,7 @@ namespace Bloodforge
 				BloodRenderer::GetInstance().DrawRectangle(collisionRect, Color(255, 255, 255, 255));
 			}
 		}
+#endif
 	}
 
 	void CollisionSystem::UpdateAllCollisionRects()

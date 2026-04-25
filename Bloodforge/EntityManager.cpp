@@ -13,6 +13,7 @@ namespace Bloodforge
 	{
 		//std::cout << "--------- Destroying Entity ---------" << std::endl;
 		Entity& entity = m_Entities[entityId];
+		if (entity.MarkedForDestruction) return;
 		entity.MarkedForDestruction = true;
 		m_EntitiesToDestroy.emplace_back(entityId);
 		//std::cout << "-------------------------------------" << std::endl;
@@ -40,23 +41,27 @@ namespace Bloodforge
 
 	void EntityManager::DestroyMarkedForDestructionEntities()
 	{
-		// for (int entityId : m_EntitiesToDestroy)
-		// {
-		// 	Entity& entity = GetEntity(entityId);
-		// 	const ArchetypeIdentifierMask& chunkId = entity.CurrentArchetypeId;
-		// 	int chunkIndex = entity.CurrentChunkIndex;
-		// 	EntityChunk* entityChunk = m_EntityChunks[chunkId][chunkIndex].get();
-		// 	entityChunk->RemoveEntityAndComponents(entity);
-		// 	m_FreeIndices.push_back(entityId);
-		// }
 
 		std::for_each(m_EntitiesToDestroy.begin(), m_EntitiesToDestroy.end(), [this](int entityId)
 			{
 				Entity& entity = GetEntity(entityId);
 				entity.IsAlive = false;
 				const ArchetypeIdentifierMask& chunkId = entity.CurrentArchetypeId;
-				int chunkIndex = entity.CurrentChunkIndex;
-				EntityChunk* entityChunk = m_EntityChunks[chunkId][chunkIndex].get();
+				EntityChunk* entityChunk = nullptr;
+
+				auto& chunks = m_EntityChunks[chunkId];
+				for (auto& chunk : chunks)
+				{
+					if (chunk->HasEntity(entityId))
+					{
+						entityChunk = chunk.get();
+						break;
+					}
+				}
+				if (!entityChunk)
+				{
+					return;
+				}
 				entityChunk->RemoveEntityAndComponents(entity);
 				m_FreeIndices.push_back(entityId);
 			});

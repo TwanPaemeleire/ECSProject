@@ -31,6 +31,7 @@ namespace Bloodforge
 		int GetChunkIndex() const { return m_ChunkIndex; }
 
 		bool ContainsComponent(int componentIndex) const;
+		bool HasEntity(int entityId) const;
 		std::span<int> GetEntityIndices() const;
 
 		void* GetComponentArray(int componentId) const;
@@ -46,10 +47,8 @@ namespace Bloodforge
 		std::unordered_map<int, int> m_ComponentIdToArrayIndex; // Map to track component IDs and their corresponding array indices
 		std::vector<int> m_ComponentIndices; // List of component indices for this chunk's archetype
 		bool m_IsFull = false;
-		size_t m_EntityCount = 0;
+		int m_EntityCount = 0;
 		size_t m_Capacity = 0;
 		int m_ChunkIndex = -1;
-
-		int m_CurrentFreeIndex = 0; // Index to keep track of the next free index in the chunk
 	};
 }

@@ -76,7 +76,7 @@ void PlayerTowerSystem::ShootProjectile(TransformComponent* towerTransform)
 
 	TransformComponent* transformComp = entityManager.GetComponent<TransformComponent>(projectileEntity);
 	transformComp->SetLocalScale({ 1.0f, 1.0f });
-	transformComp->SetLocalPosition(towerTransform->GetWorldPosition().X, towerTransform->GetWorldPosition().Y - 10.0f);
+	transformComp->SetLocalPosition(towerTransform->GetWorldPosition().X, towerTransform->GetWorldPosition().Y - 35.0f);
 
 	Projectile* projectileComp = entityManager.AddComponent<Projectile>(projectileEntity);
 	projectileComp->Damage = 20.0f;
