@@ -1,6 +1,6 @@
 #pragma once
 #include <System.h>
-#include <stack>
+#include <unordered_set>
 
 namespace Bloodforge
 {
@@ -17,6 +17,7 @@ private:
 	void OnTowerDeath(int entityId);
 
 	void OnEnemyEnterRange(int selfId, int otherId);
+	void OnEnemyDeath(int entityId);
 
-	std::stack<int> m_EnemiesToShoot;
+	std::unordered_set<int> m_EnemiesToShoot;
 };

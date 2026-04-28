@@ -82,8 +82,8 @@ void PlayerTowerSystem::ShootProjectile(TransformComponent* towerTransform)
 	projectileComp->Damage = 20.0f;
 	projectileComp->Speed = 200.0f;
 
-	int enemyToShoot = m_EnemiesToShoot.top();
-	m_EnemiesToShoot.pop();
+	int enemyToShoot = *m_EnemiesToShoot.begin();
+	m_EnemiesToShoot.erase(enemyToShoot);
 	TransformComponent* enemyTransform = entityManager.GetComponent<TransformComponent>(enemyToShoot);
 	Vector2 enemyWorldPos = enemyTransform->GetWorldPosition();
 	Vector2 dir = enemyWorldPos - transformComp->GetWorldPosition();
@@ -106,5 +106,18 @@ void PlayerTowerSystem::OnTowerDeath(int entityId)
 
 void PlayerTowerSystem::OnEnemyEnterRange(int, int otherId)
 {
-	m_EnemiesToShoot.push(otherId);
+	Health* enemyHealth = EntityManager::GetInstance().GetComponent<Health>(otherId);
+	enemyHealth->OnDeathEvent.AddListener([this](int entityId)
+		{
+			OnEnemyDeath(entityId);
+		});
+	m_EnemiesToShoot.insert(otherId);
+}
+
+void PlayerTowerSystem::OnEnemyDeath(int entityId)
+{
+	if (m_EnemiesToShoot.contains(entityId))
+	{
+		m_EnemiesToShoot.erase(entityId);
+	}
 }

@@ -128,7 +128,7 @@ namespace Bloodforge
 			m_Entities.emplace_back(Entity(id));
 		}
 
-		m_Entities[id].SetCurrentChunk(identifier, static_cast<int>(m_EntityChunks[identifier].size()) - 1);
+		m_Entities[id].SetCurrentChunk(identifier, chunk->GetChunkIndex());
 		chunk->AddEntity(id);
 
 		// Construct transform component

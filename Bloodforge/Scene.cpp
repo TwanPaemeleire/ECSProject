@@ -65,6 +65,7 @@ namespace Bloodforge
 
 	void Scene::LateUpdate()
 	{
+		EntityManager::GetInstance().DestroyMarkedForDestructionEntities();
 		for (const std::unique_ptr<System>& system : m_RegisteredSystems)
 		{
 			system->OnLateUpdate();

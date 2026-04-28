@@ -52,7 +52,7 @@ void EnemySpawnSystem::SpawnLoop()
 		SpawnEnemy();
 		SpawnLoop();
 	};
-	functionInvokeComp->TimeToInvoke = 0.05f;
+	functionInvokeComp->TimeToInvoke = 0.02f;
 }
 
 void EnemySpawnSystem::SpawnEnemy()
@@ -63,7 +63,7 @@ void EnemySpawnSystem::SpawnEnemy()
 	enemyEntity.Name = "Enemy";
 	enemyEntity.Tag = CreateId("Enemy");
 	Enemy* enemy = entityManager.AddComponent<Enemy>(enemyEntity);
-	enemy->Speed = 20.0f;
+	enemy->Speed = 40.0f;
 
 	std::random_device rd;
 	std::mt19937 gen(rd());

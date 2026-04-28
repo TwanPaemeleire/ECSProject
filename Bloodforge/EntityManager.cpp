@@ -43,25 +43,11 @@ namespace Bloodforge
 	{
 
 		std::for_each(m_EntitiesToDestroy.begin(), m_EntitiesToDestroy.end(), [this](int entityId)
-			{
+		{
 				Entity& entity = GetEntity(entityId);
 				entity.IsAlive = false;
 				const ArchetypeIdentifierMask& chunkId = entity.CurrentArchetypeId;
-				EntityChunk* entityChunk = nullptr;
-
-				auto& chunks = m_EntityChunks[chunkId];
-				for (auto& chunk : chunks)
-				{
-					if (chunk->HasEntity(entityId))
-					{
-						entityChunk = chunk.get();
-						break;
-					}
-				}
-				if (!entityChunk)
-				{
-					return;
-				}
+				EntityChunk* entityChunk = m_EntityChunks[chunkId][entity.CurrentChunkIndex].get();
 				entityChunk->RemoveEntityAndComponents(entity);
 				m_FreeIndices.push_back(entityId);
 			});
