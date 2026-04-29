@@ -11,52 +11,44 @@ namespace Bloodforge
 {
 	void TextSystem::OnUpdate()
 	{
-		EntityQueryResult result = EntityManager::GetInstance().QueryEntities<TextComponent, TransformComponent>();
-
-		for (Bloodforge::ChunkView view : result.Chunks)
+		EntityQueryResult<TextComponent, TransformComponent> result = EntityManager::GetInstance().QueryEntities<TextComponent, TransformComponent>();
+		for (EntityView<TextComponent, TransformComponent>& view : result.EntityViews)
 		{
-			for (int i = 0; i < view.GetComponentArray<TextComponent>().size(); ++i)
+			TextComponent& textComp = view.GetComponent<TextComponent>();
+			if (textComp.TextDoesNeedUpdate())
 			{
-				TextComponent& textComp = view.GetComponentArray<TextComponent>()[i];
-				if (textComp.TextDoesNeedUpdate())
+				const Color& color = textComp.GetColor();
+				SDL_Color sdlColor = {color.r, color.g, color.b, color.a};
+
+				if (textComp.FontDoesNeedUpdate())
 				{
-					const Color& color = textComp.GetColor();
-					SDL_Color sdlColor = {color.r, color.g, color.b, color.a};
-
-					if (textComp.FontDoesNeedUpdate())
-					{
-						textComp.SetFont(ResourceManager::GetInstance().LoadFont(textComp.GetFont()->GetFontPath(), textComp.GetFontSize()));
-					}
-
-					const auto surf = TTF_RenderText_Blended(textComp.GetFont()->GetFontPointer(), textComp.GetText().c_str(), 0, sdlColor);
-					if (surf == nullptr)
-					{
-						throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
-					}
-					const auto texture = SDL_CreateTextureFromSurface(BloodRenderer::GetInstance().GetSDLRenderer(), surf);
-					if (texture == nullptr)
-					{
-						throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
-					}
-					SDL_DestroySurface(surf);
-					textComp.SetTexture(std::make_unique<Texture2D>(texture));
-					textComp.CompleteUpdate();
+					textComp.SetFont(ResourceManager::GetInstance().LoadFont(textComp.GetFont()->GetFontPath(), textComp.GetFontSize()));
 				}
+
+				const auto surf = TTF_RenderText_Blended(textComp.GetFont()->GetFontPointer(), textComp.GetText().c_str(), 0, sdlColor);
+				if (surf == nullptr)
+				{
+					throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
+				}
+				const auto texture = SDL_CreateTextureFromSurface(BloodRenderer::GetInstance().GetSDLRenderer(), surf);
+				if (texture == nullptr)
+				{
+					throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
+				}
+				SDL_DestroySurface(surf);
+				textComp.SetTexture(std::make_unique<Texture2D>(texture));
+				textComp.CompleteUpdate();
 			}
 		}
 	}
 	void TextSystem::OnRender()
 	{
-		EntityQueryResult result = EntityManager::GetInstance().QueryEntities<TextComponent, TransformComponent>();
-
-		for (Bloodforge::ChunkView view : result.Chunks)
+		EntityQueryResult<TextComponent, TransformComponent> result = EntityManager::GetInstance().QueryEntities<TextComponent, TransformComponent>();
+		for (EntityView<TextComponent, TransformComponent>& view : result.EntityViews)
 		{
-			for (int i = 0; i < view.GetComponentArray<TransformComponent>().size(); ++i)
-			{
-				TextComponent& textComp = view.GetComponentArray<TextComponent>()[i];
-				TransformComponent& transform = view.GetComponentArray<TransformComponent>()[i];
-				BloodRenderer::GetInstance().RenderTexture(*textComp.GetTexture(), transform.GetWorldMatrix(), textComp.GetColor(), textComp.FlipHorizontal, textComp.FlipVertical);
-			}
+			TextComponent& textComp = view.GetComponent<TextComponent>();
+			TransformComponent& transform = view.GetComponent<TransformComponent>();
+			BloodRenderer::GetInstance().RenderTexture(*textComp.GetTexture(), transform.GetWorldMatrix(), textComp.GetColor(), textComp.FlipHorizontal, textComp.FlipVertical);
 		}
 	}
 }

@@ -21,26 +21,19 @@ void EnemySpawnSystem::OnStart()
 
 void EnemySpawnSystem::OnUpdate()
 {
-	EntityQueryResult result = EntityManager::GetInstance().QueryEntities<Enemy, TransformComponent>();
+	EntityQueryResult<Enemy, TransformComponent> result = EntityManager::GetInstance().QueryEntities<Enemy, TransformComponent>();
 
-	int entityCount = 0;
-	for (ChunkView<Enemy, TransformComponent>& chunk : result.Chunks)
+	for (EntityView<Enemy, TransformComponent>& entityView : result.EntityViews)
 	{
-		std::span<Enemy> enemies = chunk.GetComponentArray<Enemy>();
-		std::span<TransformComponent> transforms = chunk.GetComponentArray<TransformComponent>();
-		for (size_t i = 0; i < chunk.Entities.size(); ++i)
-		{
-			Enemy& enemy = enemies[i];
-			TransformComponent& transform = transforms[i];
-			Vector2 directionToCenter = Vector2(BloodRenderer::GetInstance().GetWindowWidth() / 2.0f, BloodRenderer::GetInstance().GetWindowHeight() / 2.0f) - transform.GetLocalPosition();
-			enemy.Direction = directionToCenter.Normalized();
-			Vector2 movement = enemy.Direction * enemy.Speed * BloodTime::GetInstance().DeltaTime;
-			transform.SetLocalPosition(transform.GetLocalPosition() + movement);
-			++entityCount;
-		}
+		Enemy& enemy = entityView.GetComponent<Enemy>();
+		TransformComponent& transform = entityView.GetComponent<TransformComponent>();
+		Vector2 directionToCenter = Vector2(BloodRenderer::GetInstance().GetWindowWidth() / 2.0f, BloodRenderer::GetInstance().GetWindowHeight() / 2.0f) - transform.GetLocalPosition();
+		enemy.Direction = directionToCenter.Normalized();
+		Vector2 movement = enemy.Direction * enemy.Speed * BloodTime::GetInstance().DeltaTime;
+		transform.SetLocalPosition(transform.GetLocalPosition() + movement);
 	}
 
-	std::cout << "FPS: " << 1.0f / BloodTime::GetInstance().DeltaTime << " With enemy count: " << entityCount << std::endl;
+	std::cout << "FPS: " << 1.0f / BloodTime::GetInstance().DeltaTime << " With enemy count: " << result.EntityViews.size() << std::endl;
 }
 
 void EnemySpawnSystem::SpawnLoop()

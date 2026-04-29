@@ -226,7 +226,6 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="IdCreator.h" />
     <ClInclude Include="Singleton.h" />
-    <ClInclude Include="SpeedTracker.h" />
     <ClInclude Include="SpriteAnimatorComponent.h" />
     <ClInclude Include="SpriteAnimatorSystem.h" />
     <ClInclude Include="SpriteComponent.h" />
@@ -263,7 +262,6 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="SpeedTracker.cpp" />
     <ClCompile Include="SpriteAnimatorComponent.cpp" />
     <ClCompile Include="SpriteAnimatorSystem.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />

@@ -15,53 +15,42 @@ using namespace Bloodforge;
 void PlayerTowerSystem::OnStart()
 {
 	EntityManager& entityManager = EntityManager::GetInstance();
-	EntityQueryResult result = entityManager.QueryEntities<PlayerTower, Health, RectColliderComponent>();
-	for (ChunkView<PlayerTower, Health, RectColliderComponent>& chunk : result.Chunks)
+	EntityQueryResult<PlayerTower, Health, RectColliderComponent> result = entityManager.QueryEntities<PlayerTower, Health, RectColliderComponent>();
+
+	for (EntityView<PlayerTower, Health, RectColliderComponent>& entityView : result.EntityViews)
 	{
-		std::span<PlayerTower> towers = chunk.GetComponentArray<PlayerTower>();
-		std::span<Health> healths = chunk.GetComponentArray<Health>();
-		std::span<RectColliderComponent> rectColliders = chunk.GetComponentArray<RectColliderComponent>();
-		for (size_t i = 0; i < chunk.Entities.size(); i++)
-		{
-			Health& health = healths[i];
-			health.OnDeathEvent.AddListener([this](int entityId)
+		Health& health = entityView.GetComponent<Health>();
+		health.OnDeathEvent.AddListener([this](int entityId)
+			{
+				OnTowerDeath(entityId);
+			});
+		RectColliderComponent& rectCollider = entityView.GetComponent<RectColliderComponent>();
+		rectCollider.OnCollisionEnterEvent.AddListener([this](int selfId, int otherId)
+			{
+				EntityManager& entityManager = EntityManager::GetInstance();
+				Entity& otherEntity = entityManager.GetEntity(otherId);
+				if (otherEntity.Tag == CreateId("Enemy"))
 				{
-					OnTowerDeath(entityId);
-				});
-			RectColliderComponent& rectCollider = rectColliders[i];
-			Entity& towerEntity = entityManager.GetEntity(chunk.Entities[i]);
-			towerEntity;
-			rectCollider.OnCollisionEnterEvent.AddListener([this](int selfId, int otherId)
-				{
-					EntityManager& entityManager = EntityManager::GetInstance();
-					Entity& otherEntity = entityManager.GetEntity(otherId);
-					if (otherEntity.Tag == CreateId("Enemy"))
-					{
-						OnEnemyEnterRange(selfId, otherId);
-					}
-				});
-		}
+					OnEnemyEnterRange(selfId, otherId);
+				}
+			});
 	}
 }
 
 void PlayerTowerSystem::OnUpdate()
 {
 	EntityManager& entityManager = EntityManager::GetInstance();
-	EntityQueryResult result = entityManager.QueryEntities<PlayerTower, Health>();
-	for (ChunkView<PlayerTower, Health>& chunk : result.Chunks)
+	EntityQueryResult<PlayerTower, Health> result = entityManager.QueryEntities<PlayerTower, Health>();
+
+	for (EntityView<PlayerTower, Health>& entityView : result.EntityViews)
 	{
-		std::span<PlayerTower> towers = chunk.GetComponentArray<PlayerTower>();
-		std::span<Health> healths = chunk.GetComponentArray<Health>();
-		for (size_t i = 0; i < chunk.Entities.size(); i++)
+		PlayerTower& tower = entityView.GetComponent<PlayerTower>();
+		tower.TimeUntilNextShot -= BloodTime::GetInstance().DeltaTime;
+		if (tower.TimeUntilNextShot <= 0.0f && !m_EnemiesToShoot.empty())
 		{
-			PlayerTower& tower = towers[i];
-			tower.TimeUntilNextShot -= BloodTime::GetInstance().DeltaTime;
-			if (tower.TimeUntilNextShot <= 0.0f && !m_EnemiesToShoot.empty())
-			{
-				TransformComponent* towerTransform = entityManager.GetComponent<TransformComponent>(chunk.Entities[i]);
-				ShootProjectile(towerTransform);
-				tower.TimeUntilNextShot = tower.FireRateDelay;
-			}
+			TransformComponent* towerTransform = entityManager.GetComponent<TransformComponent>(entityView.EntityId);
+			ShootProjectile(towerTransform);
+			tower.TimeUntilNextShot = tower.FireRateDelay;
 		}
 	}
 }

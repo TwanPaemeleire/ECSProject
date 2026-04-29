@@ -20,22 +20,22 @@ namespace Bloodforge
 	struct Entity;
 
 	template <typename... Components>
-	struct ChunkView
+	struct EntityView
 	{
-		std::span<int> Entities;
-		std::tuple<std::span<Components>...> ComponentArrays;
+		int EntityId;
+		std::tuple<Components&...> Components;
 
 		template <typename ComponentType>
-		std::span<ComponentType> GetComponentArray()
+		ComponentType& GetComponent()
 		{
-			return std::get<std::span<ComponentType>>(ComponentArrays);
+			return std::get<ComponentType&>(Components);
 		}
 	};
 
 	template <typename... Components>
 	struct EntityQueryResult
 	{
-		std::vector<ChunkView<Components...>> Chunks;
+		std::vector<EntityView<Components...>> EntityViews;
 	};
 
 	class EntityManager : public Singleton<EntityManager>
@@ -86,8 +86,6 @@ namespace Bloodforge
 
 		template <typename... ComponentTypes>
 		ArchetypeIdentifierMask GetArchetypeIds();
-		template <typename ComponentType>
-		void UpdateArchetypeId(Entity& entity, bool isAdd = true);
 
 		EntityChunk* GetFirstAvailableChunk(ArchetypeIdentifierMask& id, int capacity);
 		EntityChunk* CreateNewChunk(ArchetypeIdentifierMask& id, int capacity);
@@ -319,7 +317,7 @@ namespace Bloodforge
 	template<typename ...Components>
 	inline EntityQueryResult<Components...> EntityManager::QueryEntities()
 	{
-		EntityQueryResult<Components...> result;
+		std::vector<EntityView<Components...>> entityViews;
 
 		for (const auto& pair : m_EntityChunks)
 		{
@@ -327,14 +325,22 @@ namespace Bloodforge
 			{
 				for (const std::unique_ptr<EntityChunk>& chunk : pair.second)
 				{
-					ChunkView<Components...> chunkView;
-					chunkView.Entities = chunk->GetEntityIndices();
-					chunkView.ComponentArrays = std::make_tuple(std::span<Components>(static_cast<Components*>(chunk->GetComponentArray(Component<Components>::Index)), chunk->GetEntityIndices().size())...);
-					result.Chunks.push_back(chunkView);
+					for (int chunkEntityIndex = 0; chunkEntityIndex < chunk->GetEntityIndices().size(); ++chunkEntityIndex)
+					{
+						std::span<int> entityIds = chunk->GetEntityIndices();
+						int indexInChunk = chunk->GetEntityInChunkIndex(entityIds[chunkEntityIndex]);
+
+						entityViews.push_back(EntityView<Components...>
+						{ 
+							entityIds[chunkEntityIndex],
+							std::tie(static_cast<Components*>(chunk->GetComponentArray(Component<Components>::Index))[indexInChunk]...) 
+						});
+					}
 				}
 			}
 		}
-		return result;
+
+		return EntityQueryResult<Components...>{ entityViews };
 	}
 
 	template<typename T>
@@ -350,20 +356,5 @@ namespace Bloodforge
 		ArchetypeIdentifierMask identifierMask;
 		((identifierMask.AddComponent(Component<ComponentTypes>::Index)), ...);
 		return identifierMask;
-	}
-
-	template<typename ComponentType>
-	inline void EntityManager::UpdateArchetypeId(Entity& entity, bool isAdd)
-	{
-		if (isAdd)
-		{
-			ArchetypeIdentifierMask& archetypeId = entity.CurrentArchetypeId;
-			archetypeId.AddComponent(Component<ComponentType>::Index);
-		}
-		else
-		{
-			ArchetypeIdentifierMask& archetypeId = entity.CurrentArchetypeId;
-			// TODO: Remove from mask here
-		}
 	}
 }

@@ -65,13 +65,11 @@ namespace Bloodforge
 
 	void AudioSourceSystem::StopAllAudioSources()
 	{
-		EntityQueryResult result = EntityManager::GetInstance().QueryEntities<AudioSourceComponent>();
-		for (ChunkView<AudioSourceComponent>& chunk : result.Chunks)
+		EntityQueryResult<AudioSourceComponent> result = EntityManager::GetInstance().QueryEntities<AudioSourceComponent>();
+		for (EntityView<AudioSourceComponent>& entityView : result.EntityViews)
 		{
-			for (AudioSourceComponent& audioSource : chunk.GetComponentArray<AudioSourceComponent>())
-			{
-				StopPlayingAudioSource(audioSource);
-			}
+			AudioSourceComponent& audioSource = entityView.GetComponent<AudioSourceComponent>();
+			StopPlayingAudioSource(audioSource);
 		}
 	}
 

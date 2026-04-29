@@ -4,9 +4,6 @@
     <ClCompile Include="pch.cpp">
       <Filter>Generated</Filter>
     </ClCompile>
-    <ClCompile Include="SpeedTracker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TransformComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
@@ -95,9 +92,6 @@
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Generated</Filter>
-    </ClInclude>
-    <ClInclude Include="SpeedTracker.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SpriteComponent.h">
       <Filter>Header Files\Components</Filter>

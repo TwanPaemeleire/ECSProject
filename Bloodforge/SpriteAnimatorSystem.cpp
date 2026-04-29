@@ -10,53 +10,48 @@ namespace Bloodforge
 {
 	void SpriteAnimatorSystem::OnStart()
 	{
-		EntityQueryResult result = EntityManager::GetInstance().QueryEntities<SpriteAnimatorComponent, SpriteComponent>();
-		for (ChunkView view : result.Chunks)
+		EntityQueryResult<SpriteAnimatorComponent, SpriteComponent> result = EntityManager::GetInstance().QueryEntities<SpriteAnimatorComponent, SpriteComponent>();
+		for (EntityView<SpriteAnimatorComponent, SpriteComponent>& view : result.EntityViews)
 		{
-			for (int i = 0; i < view.GetComponentArray<SpriteAnimatorComponent>().size(); ++i)
-			{
-				SpriteComponent& spriteComp = view.GetComponentArray<SpriteComponent>()[i];
-				SpriteAnimatorComponent& animationComp = view.GetComponentArray<SpriteAnimatorComponent>()[i];
-				spriteComp.SetTexture(animationComp.AnimationsData[animationComp.CurrentPlayingId].Texture);
-			}
+			SpriteComponent& spriteComp = view.GetComponent<SpriteComponent>();
+			SpriteAnimatorComponent& animationComp = view.GetComponent<SpriteAnimatorComponent>();
+			spriteComp.SetTexture(animationComp.AnimationsData[animationComp.CurrentPlayingId].Texture);
 		}
 	}
 
 	void SpriteAnimatorSystem::OnUpdate()
 	{
-		EntityQueryResult result = EntityManager::GetInstance().QueryEntities<SpriteAnimatorComponent, SpriteComponent>();
-		for (ChunkView view : result.Chunks)
+		EntityQueryResult<SpriteAnimatorComponent, SpriteComponent> result = EntityManager::GetInstance().QueryEntities<SpriteAnimatorComponent, SpriteComponent>();
+		for (EntityView<SpriteAnimatorComponent, SpriteComponent>& view : result.EntityViews)
 		{
-			for (int i = 0; i < view.GetComponentArray<SpriteAnimatorComponent>().size(); ++i)
-			{
-				SpriteComponent& spriteComp = view.GetComponentArray<SpriteComponent>()[i];
-				SpriteAnimatorComponent& animationComp = view.GetComponentArray<SpriteAnimatorComponent>()[i];
-				if (animationComp.IsPlaying)
-				{
-					if (!animationComp.IsPaused)
-					{
-						animationComp.FrameTimeCounter += BloodTime::GetInstance().DeltaTime;
-						HandleAnimationEvents(animationComp);
-						const AnimationData& animData = animationComp.AnimationsData[animationComp.CurrentPlayingId];
-						if (animationComp.FrameTimeCounter >= animData.FrameTime)
-						{
-							animationComp.AdvanceToNextFrame();
+			SpriteComponent& spriteComp = view.GetComponent<SpriteComponent>();
+			SpriteAnimatorComponent& animationComp = view.GetComponent<SpriteAnimatorComponent>();
 
-							if (animationComp.CurrentFrame == 0)
-							{
-								ResetAllAnimationEvents(animationComp);
-							}
+			if (animationComp.IsPlaying)
+			{
+				if (!animationComp.IsPaused)
+				{
+					animationComp.FrameTimeCounter += BloodTime::GetInstance().DeltaTime;
+					HandleAnimationEvents(animationComp);
+					const AnimationData& animData = animationComp.AnimationsData[animationComp.CurrentPlayingId];
+					if (animationComp.FrameTimeCounter >= animData.FrameTime)
+					{
+						animationComp.AdvanceToNextFrame();
+
+						if (animationComp.CurrentFrame == 0)
+						{
+							ResetAllAnimationEvents(animationComp);
 						}
 					}
+				}
 
-					const AnimationData& animData = animationComp.AnimationsData[animationComp.CurrentPlayingId];
-					spriteComp.SetCustomSourceRect(animationComp.CurrentSourceRect);
-					spriteComp.SetTexture(animData.Texture);
-				}
-				else if (!animationComp.IsPlaying)
-				{
-					spriteComp.SetTexture(nullptr);
-				}
+				const AnimationData& animData = animationComp.AnimationsData[animationComp.CurrentPlayingId];
+				spriteComp.SetCustomSourceRect(animationComp.CurrentSourceRect);
+				spriteComp.SetTexture(animData.Texture);
+			}
+			else if (!animationComp.IsPlaying)
+			{
+				spriteComp.SetTexture(nullptr);
 			}
 		}
 	}

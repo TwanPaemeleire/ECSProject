@@ -11,16 +11,13 @@ namespace Bloodforge
 {
 	void SpriteSystem::OnRender()
 	{
-		EntityQueryResult result =  EntityManager::GetInstance().QueryEntities<TransformComponent, SpriteComponent>();
-		for (Bloodforge::ChunkView view : result.Chunks)
+		EntityQueryResult<TransformComponent, SpriteComponent> result = EntityManager::GetInstance().QueryEntities<TransformComponent, SpriteComponent>();
+		for (EntityView<TransformComponent, SpriteComponent>& view : result.EntityViews)
 		{
-			for (int i = 0; i < view.GetComponentArray<TransformComponent>().size(); ++i)
-			{
-				SpriteComponent& spriteComp = view.GetComponentArray<SpriteComponent>()[i];
-				TransformComponent& transform = view.GetComponentArray<TransformComponent>()[i];
-				if (spriteComp.GetTexture() == nullptr) continue;
-				BloodRenderer::GetInstance().RenderTexture(*spriteComp.GetTexture(), transform.GetWorldMatrix(), spriteComp.GetSourceRect(), spriteComp.Color, spriteComp.FlipHorizontal, spriteComp.FlipVertical);
-			}
+			TransformComponent& transform = view.GetComponent<TransformComponent>();
+			SpriteComponent& spriteComp = view.GetComponent<SpriteComponent>();
+			if (spriteComp.GetTexture() == nullptr) continue;
+			BloodRenderer::GetInstance().RenderTexture(*spriteComp.GetTexture(), transform.GetWorldMatrix(), spriteComp.GetSourceRect(), spriteComp.Color, spriteComp.FlipHorizontal, spriteComp.FlipVertical);
 		}
 	}
 }

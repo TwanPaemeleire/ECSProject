@@ -8,23 +8,19 @@ using namespace Bloodforge;
 
 void ProjectileSystem::OnUpdate()
 {
-	EntityQueryResult result = EntityManager::GetInstance().QueryEntities<Projectile, TransformComponent>();
-	for (ChunkView<Projectile, TransformComponent>& chunk : result.Chunks)
+	EntityQueryResult<Projectile, TransformComponent> result = EntityManager::GetInstance().QueryEntities<Projectile, TransformComponent>();
+
+	for (EntityView<Projectile, TransformComponent>& entityView : result.EntityViews)
 	{
-		std::span<Projectile> projectiles = chunk.GetComponentArray<Projectile>();
-		std::span<TransformComponent> transforms = chunk.GetComponentArray<TransformComponent>();
-		for (size_t i = 0; i < chunk.Entities.size(); i++)
+		Projectile& projectile = entityView.GetComponent<Projectile>();
+		if (!projectile.Registered)
 		{
-			Projectile& projectile = projectiles[i];
-			if (!projectile.Registered)
-			{
-				RegisterProjectile(EntityManager::GetInstance().GetEntity(chunk.Entities[i]));
-				projectile.Registered = true;
-			}
-			TransformComponent& transform = transforms[i];
-			Vector2 movement = projectile.Direction * projectile.Speed * BloodTime::GetInstance().DeltaTime;
-			transform.SetLocalPosition(transform.GetLocalPosition() + movement);
+			RegisterProjectile(EntityManager::GetInstance().GetEntity(entityView.EntityId));
+			projectile.Registered = true;
 		}
+		TransformComponent& transform = entityView.GetComponent<TransformComponent>();
+		Vector2 movement = projectile.Direction * projectile.Speed * BloodTime::GetInstance().DeltaTime;
+		transform.SetLocalPosition(transform.GetLocalPosition() + movement);
 	}
 }
 
