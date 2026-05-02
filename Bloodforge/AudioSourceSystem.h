@@ -48,7 +48,7 @@ namespace Bloodforge
 		int GetAvailableMixTrackIndex();
 		void RecalculateTrackVolume(int trackIndex);
 
-		MIX_Mixer* m_Mixer;
+		MIX_Mixer* m_Mixer = nullptr;
 		std::vector<TrackEntryData> m_AllMixTracks;
 		std::vector<int> m_FreeIndices;
 		std::unordered_map<AudioGroupId, AudioGroupData> m_AudioGroupData;

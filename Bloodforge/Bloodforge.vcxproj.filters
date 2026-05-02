@@ -85,6 +85,12 @@
     <ClCompile Include="FunctionInvokeSystem.cpp">
       <Filter>Source Files\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="SteamSupportSystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="SteamUtils.cpp">
+      <Filter>Header Files\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -210,6 +216,21 @@
     <ClInclude Include="FunctionInvokeSystem.h">
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="SteamResetUserDataRequest.h">
+      <Filter>Header Files\Components\Steam</Filter>
+    </ClInclude>
+    <ClInclude Include="SteamUnlockAchievementRequest.h">
+      <Filter>Header Files\Components\Steam</Filter>
+    </ClInclude>
+    <ClInclude Include="SteamSupportSystem.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="SteamUtils.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="SteamIndicateAchievementProgressRequest.h">
+      <Filter>Header Files\Components\Steam</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Generated">
@@ -241,6 +262,9 @@
     </Filter>
     <Filter Include="Header Files\Utils">
       <UniqueIdentifier>{c6ccee56-d185-47db-8734-5a17c8a2ccdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Components\Steam">
+      <UniqueIdentifier>{7da7860f-1a16-4f23-be2f-91982b10edfe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

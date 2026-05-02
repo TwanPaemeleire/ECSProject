@@ -143,12 +143,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AchievementMonitor.cpp" />
     <ClCompile Include="EnemySpawnSystem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlayerTowerSystem.cpp" />
     <ClCompile Include="ProjectileSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AchievementMonitor.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemySpawnSystem.h" />
     <ClInclude Include="Health.h" />

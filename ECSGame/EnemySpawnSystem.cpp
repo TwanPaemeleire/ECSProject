@@ -11,6 +11,7 @@
 #include <FunctionInvokeComponent.h>
 #include <RectColliderComponent.h>
 #include "Health.h"
+#include "AchievementMonitor.h"
 using namespace Bloodforge;
 
 void EnemySpawnSystem::OnStart()
@@ -33,7 +34,7 @@ void EnemySpawnSystem::OnUpdate()
 		transform.SetLocalPosition(transform.GetLocalPosition() + movement);
 	}
 
-	std::cout << "FPS: " << 1.0f / BloodTime::GetInstance().DeltaTime << " With enemy count: " << result.EntityViews.size() << std::endl;
+	// std::cout << "FPS: " << 1.0f / BloodTime::GetInstance().DeltaTime << " With enemy count: " << result.EntityViews.size() << std::endl;
 }
 
 void EnemySpawnSystem::SpawnLoop()
@@ -88,6 +89,7 @@ void EnemySpawnSystem::SpawnEnemy()
 	Health* health = entityManager.AddComponent<Health>(enemyEntity);
 	health->OnDeathEvent.AddListener([](int enemyEntityId)
 		{
+			AchievementMonitor::GetInstance().OnEnemyDeath();
 			EntityManager::GetInstance().DestroyEntity(enemyEntityId);
 		});
 	health->MaxHealth = 5.0f;

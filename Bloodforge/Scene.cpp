@@ -9,6 +9,7 @@
 #include "SpriteAnimatorSystem.h"
 #include "AudioSourceSystem.h"
 #include "FunctionInvokeSystem.h"
+#include "SteamSupportSystem.h"
 
 #include "EntityManager.h"
 
@@ -29,6 +30,7 @@ namespace Bloodforge
 		RegisterSystem<SpriteAnimatorSystem>();
 		RegisterSystem<AudioSourceSystem>();
 		RegisterSystem<FunctionInvokeSystem>();
+		RegisterSystem<SteamSupportSystem>();
 
 		m_LoadFunction();
 	}

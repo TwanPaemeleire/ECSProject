@@ -75,12 +75,12 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL3\include;$(SolutionDir)3rdParty\SDL3_image\include;$(SolutionDir)3rdParty\SDL3_ttf\include;$(SolutionDir)3rdParty\SDL3_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL3\include;$(SolutionDir)3rdParty\SDL3_image\include;$(SolutionDir)3rdParty\SDL3_ttf\include;$(SolutionDir)3rdParty\SDL3_mixer\include;$(SolutionDir)3rdParty\SteamSDK\steam;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -92,13 +92,14 @@
       <Command> xcopy "$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget)\SDL3.dll" "$(OutputPath)" /R /Y
  xcopy "$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget)\SDL3_image.dll" "$(OutputPath)" /R /Y
  xcopy "$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget)\SDL3_ttf.dll" "$(OutputPath)" /R /Y
- xcopy "$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget)\SDL3_mixer.dll" "$(OutputPath)" /R /Y</Command>
+ xcopy "$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget)\SDL3_mixer.dll" "$(OutputPath)" /R /Y
+ xcopy "$(SolutionDir)3rdParty\SteamSDK\lib\$(PlatformTarget)\steam_api.dll" "$(OutputPath)" /R /Y</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;SDL3_mixer.lib;</AdditionalDependencies>
+      <AdditionalDependencies>SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;SDL3_mixer.lib;steam_api.lib</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SteamSDK\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -107,12 +108,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL3\include;$(SolutionDir)3rdParty\SDL3_image\include;$(SolutionDir)3rdParty\SDL3_ttf\include;$(SolutionDir)3rdParty\SDL3_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL3\include;$(SolutionDir)3rdParty\SDL3_image\include;$(SolutionDir)3rdParty\SDL3_ttf\include;$(SolutionDir)3rdParty\SDL3_mixer\include;$(SolutionDir)3rdParty\SteamSDK\steam;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -124,25 +125,26 @@
       <Command> xcopy "$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget)\SDL3.dll" "$(OutputPath)" /R /Y
  xcopy "$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget)\SDL3_image.dll" "$(OutputPath)" /R /Y
  xcopy "$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget)\SDL3_ttf.dll" "$(OutputPath)" /R /Y
- xcopy "$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget)\SDL3_mixer.dll" "$(OutputPath)" /R /Y</Command>
+ xcopy "$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget)\SDL3_mixer.dll" "$(OutputPath)" /R /Y
+ xcopy "$(SolutionDir)3rdParty\SteamSDK\lib\$(PlatformTarget)\steam_api.dll" "$(OutputPath)" /R /Y</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;SDL3_mixer.lib;</AdditionalDependencies>
+      <AdditionalDependencies>SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;SDL3_mixer.lib;steam_api.lib</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SteamSDK\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL3\include;$(SolutionDir)3rdParty\SDL3_image\include;$(SolutionDir)3rdParty\SDL3_ttf\include;$(SolutionDir)3rdParty\SDL3_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL3\include;$(SolutionDir)3rdParty\SDL3_image\include;$(SolutionDir)3rdParty\SDL3_ttf\include;$(SolutionDir)3rdParty\SDL3_mixer\include;$(SolutionDir)3rdParty\SteamSDK\steam;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -154,13 +156,14 @@
       <Command> xcopy "$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget)\SDL3.dll" "$(OutputPath)" /R /Y
  xcopy "$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget)\SDL3_image.dll" "$(OutputPath)" /R /Y
  xcopy "$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget)\SDL3_ttf.dll" "$(OutputPath)" /R /Y
- xcopy "$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget)\SDL3_mixer.dll" "$(OutputPath)" /R /Y</Command>
+ xcopy "$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget)\SDL3_mixer.dll" "$(OutputPath)" /R /Y
+ xcopy "$(SolutionDir)3rdParty\SteamSDK\lib\$(PlatformTarget)\steam_api64.dll" "$(OutputPath)" /R /Y</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;SDL3_mixer.lib;</AdditionalDependencies>
+      <AdditionalDependencies>SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;SDL3_mixer.lib;steam_api64.lib</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SteamSDK\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -169,12 +172,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL3\include;$(SolutionDir)3rdParty\SDL3_image\include;$(SolutionDir)3rdParty\SDL3_ttf\include;$(SolutionDir)3rdParty\SDL3_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL3\include;$(SolutionDir)3rdParty\SDL3_image\include;$(SolutionDir)3rdParty\SDL3_ttf\include;$(SolutionDir)3rdParty\SDL3_mixer\include;$(SolutionDir)3rdParty\SteamSDK\steam;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -186,13 +189,14 @@
       <Command> xcopy "$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget)\SDL3.dll" "$(OutputPath)" /R /Y
  xcopy "$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget)\SDL3_image.dll" "$(OutputPath)" /R /Y
  xcopy "$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget)\SDL3_ttf.dll" "$(OutputPath)" /R /Y
- xcopy "$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget)\SDL3_mixer.dll" "$(OutputPath)" /R /Y</Command>
+ xcopy "$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget)\SDL3_mixer.dll" "$(OutputPath)" /R /Y
+ xcopy "$(SolutionDir)3rdParty\SteamSDK\lib\$(PlatformTarget)\steam_api64.dll" "$(OutputPath)" /R /Y</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;SDL3_mixer.lib;</AdditionalDependencies>
+      <AdditionalDependencies>SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;SDL3_mixer.lib;steam_api64.lib</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL3\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_image\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_ttf\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SDL3_mixer\lib\$(PlatformTarget);$(SolutionDir)3rdParty\SteamSDK\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -221,6 +225,8 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="RectColliderComponent.h" />
+    <ClInclude Include="SteamIndicateAchievementProgressRequest.h" />
+    <ClInclude Include="SteamResetUserDataRequest.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
@@ -230,11 +236,14 @@
     <ClInclude Include="SpriteAnimatorSystem.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="SpriteSystem.h" />
+    <ClInclude Include="SteamSupportSystem.h" />
+    <ClInclude Include="SteamUtils.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TextComponent.h" />
     <ClInclude Include="TextSystem.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="TransformComponent.h" />
+    <ClInclude Include="SteamUnlockAchievementRequest.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="WindowUtils.h" />
   </ItemGroup>
@@ -266,6 +275,8 @@
     <ClCompile Include="SpriteAnimatorSystem.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="SpriteSystem.cpp" />
+    <ClCompile Include="SteamSupportSystem.cpp" />
+    <ClCompile Include="SteamUtils.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="TextSystem.cpp" />
     <ClCompile Include="Texture2D.cpp" />
