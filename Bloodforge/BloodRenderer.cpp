@@ -13,7 +13,7 @@
 
 namespace Bloodforge
 {
-	void BloodRenderer::InitializeBeforeFirstUse()
+	BloodRenderer::BloodRenderer()
 	{
 		if (!SDL_Init(SDL_INIT_VIDEO))
 		{

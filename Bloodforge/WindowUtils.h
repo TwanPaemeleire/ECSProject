@@ -13,4 +13,5 @@ namespace Bloodforge::WindowUtils
 	void SetWindowFullScreen(bool fullscreen);
 	void SetCustomCursor(CustomCursor* customCursor);
 	void SetWindowIcon(const std::string& path);
+	void SetWindowTitle(const std::string& title);
 }

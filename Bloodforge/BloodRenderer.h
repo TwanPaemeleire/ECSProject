@@ -17,7 +17,7 @@ namespace Bloodforge
 	class BloodRenderer : public Singleton<BloodRenderer>
 	{
 	public:
-		virtual void InitializeBeforeFirstUse() override;
+		BloodRenderer();
 		void Render() const;
 		void Destroy();
 

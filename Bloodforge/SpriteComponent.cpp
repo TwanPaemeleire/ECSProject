@@ -7,7 +7,7 @@ namespace Bloodforge
 	void SpriteComponent::SetTexture(Texture2D* texture)
 	{
 		Texture = texture;
-		if (!HasCustomSourceRect)
+		if (texture && !HasCustomSourceRect)
 		{
 			SourceRect.X = 0;
 			SourceRect.Y = 0;

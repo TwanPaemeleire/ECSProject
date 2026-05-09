@@ -45,5 +45,10 @@ namespace Bloodforge::WindowUtils
 		SDL_SetWindowIcon(BloodRenderer::GetInstance().GetSDLWindow(), surface);
 		SDL_DestroySurface(surface);
 	}
+
+	void SetWindowTitle(const std::string& title)
+	{
+		SDL_SetWindowTitle(BloodRenderer::GetInstance().GetSDLWindow(), title.c_str());
+	}
 }
 
