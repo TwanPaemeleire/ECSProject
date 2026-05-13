@@ -12,11 +12,10 @@ namespace Bloodforge
 		virtual void OnStart() override;
 		virtual void OnUpdate() override;
 	private:
+		bool IsSteamInitialized();
 		void CheckUnlockAchievementRequests();
 		void CheckResetAllAchievementsRequests();
 		void CheckIndicateAchievementProgressRequests();
-
-		bool m_IsSteamInitialized = false;
 
 		STEAM_CALLBACK(SteamSupportSystem, OnAchievementStored, UserAchievementStored_t, m_CallbackAchievementStored);
 		STEAM_CALLBACK(SteamSupportSystem, OnUserStatsStored, UserStatsStored_t, m_CallbackUserStatsStored);

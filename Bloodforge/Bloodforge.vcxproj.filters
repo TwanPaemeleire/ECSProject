@@ -231,6 +231,9 @@
     <ClInclude Include="SteamIndicateAchievementProgressRequest.h">
       <Filter>Header Files\Components\Steam</Filter>
     </ClInclude>
+    <ClInclude Include="SteamStateComponent.h">
+      <Filter>Header Files\Components\Steam</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Generated">

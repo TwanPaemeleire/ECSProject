@@ -236,6 +236,7 @@
     <ClInclude Include="SpriteAnimatorSystem.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="SpriteSystem.h" />
+    <ClInclude Include="SteamStateComponent.h" />
     <ClInclude Include="SteamSupportSystem.h" />
     <ClInclude Include="SteamUtils.h" />
     <ClInclude Include="System.h" />

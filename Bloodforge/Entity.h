@@ -18,6 +18,7 @@ namespace Bloodforge
 		int CurrentChunkIndex = -1;
 		TagId Tag = 0;
 		std::string Name;
+		bool IsActive = true;
 		bool MarkedForDestruction = false;
 		bool IsAlive = true;
 	};

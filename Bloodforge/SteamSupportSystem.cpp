@@ -8,6 +8,7 @@
 #include "SteamResetUserDataRequest.h"
 #include "SteamIndicateAchievementProgressRequest.h"
 #include "FunctionInvokeComponent.h"
+#include "SteamStateComponent.h"
 
 #include "SteamUtils.h"
 
@@ -30,18 +31,29 @@ void SteamSupportSystem::OnStart()
 		std::cerr << "Failed to initialize Steam API: " << errMsg << std::endl;
 		return;
 	}
-	m_IsSteamInitialized = true;
+	EntityManager::GetInstance().GetFirstEntityWithComponents<SteamStateComponent>()->GetComponent<SteamStateComponent>().SteamIsInitialized = true;
 
-	Entity& resetUserDataEntity = EntityManager::GetInstance().CreateEntity();;
+	Entity& resetUserDataEntity = EntityManager::GetInstance().CreateEntity();
 	EntityManager::GetInstance().AddComponent<SteamResetUserDataRequest>(resetUserDataEntity);
 }
 
 void SteamSupportSystem::OnUpdate()
 {
+	if (!IsSteamInitialized()) return;
 	SteamAPI_RunCallbacks();
 	CheckUnlockAchievementRequests();
 	CheckResetAllAchievementsRequests();
 	CheckIndicateAchievementProgressRequests();
+}
+
+bool Bloodforge::SteamSupportSystem::IsSteamInitialized()
+{
+	std::optional<EntityView<SteamStateComponent>> view = EntityManager::GetInstance().GetFirstEntityWithComponents<SteamStateComponent>();
+	if (view)
+	{
+		return view->GetComponent<SteamStateComponent>().SteamIsInitialized;
+	}
+	return false;
 }
 
 void Bloodforge::SteamSupportSystem::CheckUnlockAchievementRequests()

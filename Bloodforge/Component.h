@@ -8,6 +8,7 @@ namespace Bloodforge
 	{
 		inline static int Index = -1;
 		int OwnerEntityId = -1;
+		bool IsEnabled = true;
 		Component() = default;
 	};
 }

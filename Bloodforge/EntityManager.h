@@ -12,6 +12,7 @@
 #include "ArchetypeIdentifierMask.h"
 #include "TransformComponent.h"
 #include "Singleton.h"
+#include <optional>
 
 using TagId = unsigned int;
 
@@ -53,7 +54,10 @@ namespace Bloodforge
 		ComponentRegistry* GetComponentRegistry() const { return m_ComponentRegistry.get(); }
 
 		template <typename... Components>
-		EntityQueryResult<Components...> QueryEntities();
+		EntityQueryResult<Components...> QueryEntities(bool includeNonActive = false, bool includeWhenComponentDisabled = false);
+
+		template <typename... Components>
+		std::optional<EntityView<Components...>> GetFirstEntityWithComponents(bool includeNonActive = false, bool includeWhenComponentDisabled = false);
 
 		template<typename ComponentType>
 		ComponentType* AddComponent(Entity& entity);
@@ -315,7 +319,7 @@ namespace Bloodforge
 	}
 
 	template<typename ...Components>
-	inline EntityQueryResult<Components...> EntityManager::QueryEntities()
+	inline EntityQueryResult<Components...> EntityManager::QueryEntities(bool includeNonActive, bool includeWhenComponentDisabled)
 	{
 		std::vector<EntityView<Components...>> entityViews;
 
@@ -328,12 +332,17 @@ namespace Bloodforge
 					for (int chunkEntityIndex = 0; chunkEntityIndex < chunk->GetEntityIndices().size(); ++chunkEntityIndex)
 					{
 						std::span<int> entityIds = chunk->GetEntityIndices();
+						if (!m_Entities[entityIds[chunkEntityIndex]].IsActive && !includeNonActive) continue;
 						int indexInChunk = chunk->GetEntityInChunkIndex(entityIds[chunkEntityIndex]);
 
+						auto components = std::tie(static_cast<Components*>(chunk->GetComponentArray(Component<Components>::Index))[indexInChunk]...);
+
+						if (!includeWhenComponentDisabled && !(std::get<Components&>(components).IsEnabled && ...)) continue;
+
 						entityViews.push_back(EntityView<Components...>
-						{ 
+						{
 							entityIds[chunkEntityIndex],
-							std::tie(static_cast<Components*>(chunk->GetComponentArray(Component<Components>::Index))[indexInChunk]...) 
+							components
 						});
 					}
 				}
@@ -341,6 +350,38 @@ namespace Bloodforge
 		}
 
 		return EntityQueryResult<Components...>{ entityViews };
+	}
+
+	template<typename ...Components>
+	inline std::optional<EntityView<Components...>> EntityManager::GetFirstEntityWithComponents(bool includeNonActive, bool includeWhenComponentDisabled)
+	{
+		for (const auto& pair : m_EntityChunks)
+		{
+			if ((pair.first.HasComponent(Component<Components>::Index) && ...))
+			{
+				for (const std::unique_ptr<EntityChunk>& chunk : pair.second)
+				{
+					for (int chunkEntityIndex = 0; chunkEntityIndex < chunk->GetEntityIndices().size(); ++chunkEntityIndex)
+					{
+						std::span<int> entityIds = chunk->GetEntityIndices();
+						if (!m_Entities[entityIds[chunkEntityIndex]].IsActive && !includeNonActive) continue;
+						int indexInChunk = chunk->GetEntityInChunkIndex(entityIds[chunkEntityIndex]);
+
+						auto components = std::tie(static_cast<Components*>(chunk->GetComponentArray(Component<Components>::Index))[indexInChunk]...);
+
+						if (!includeWhenComponentDisabled && !(std::get<Components&>(components).IsEnabled && ...)) continue;
+
+						return EntityView<Components...>
+						{
+							entityIds[chunkEntityIndex],
+							components
+						};
+					}
+				}
+			}
+		}
+
+		return std::nullopt;
 	}
 
 	template<typename T>
