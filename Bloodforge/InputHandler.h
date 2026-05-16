@@ -4,6 +4,8 @@
 #include <memory>
 #include <vector>
 #include <functional>
+#include "Vector2.h"
+#include "KeyDefs.h"
 
 namespace Bloodforge 
 {
@@ -17,6 +19,8 @@ namespace Bloodforge
 		bool started = false;
 		bool finished = false;
 		bool ongoing = false;
+		Vector2 InputActionVectorData; // Used for example for xy position of mouse
+		Vector2 InputActionVectorDeltaData; // Used for example for xy motion of mouse
 	};
 
 	struct InputAction

@@ -21,6 +21,7 @@
 #include "EnemySpawnSystem.h"
 #include "PlayerTowerSystem.h"
 #include "ProjectileSystem.h"
+#include "InputTesterSystem.h"
 #include "PlayerTower.h"
 #include "Health.h"
 
@@ -67,6 +68,7 @@ void LoadFunction()
 	scene.RegisterSystem<EnemySpawnSystem>();
 	scene.RegisterSystem<PlayerTowerSystem>();
 	scene.RegisterSystem<ProjectileSystem>();
+	scene.RegisterSystem<InputTesterSystem>();
 }
 
 int main(int, char* []) 

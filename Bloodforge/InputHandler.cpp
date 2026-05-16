@@ -13,17 +13,32 @@ void Bloodforge::InputHandler::ProcessInput()
 		{
 			Bloodforge::GetInstance().RequestStop();
 		}
-
-		if (e.type == SDL_EVENT_KEY_UP || e.type == SDL_EVENT_KEY_DOWN)
+		bool keyEvent = e.type == SDL_EVENT_KEY_UP || e.type == SDL_EVENT_KEY_DOWN;
+		bool mouseEvent = e.type == SDL_EVENT_MOUSE_BUTTON_UP || e.type == SDL_EVENT_MOUSE_BUTTON_DOWN;
+		bool mouseMotionEvent = e.type == SDL_EVENT_MOUSE_MOTION;
+		if (keyEvent || mouseEvent || mouseMotionEvent) // CURRENTLY MOUSE MOTION WILL INVOKE EVERY EVENT, THIS NEEDS TO BE FIXED ASAP
 		{
 			for (auto& [key, value] : m_InputActionMaps[m_CurrentMapId])
 			{
-				if (value->Button != e.key.key) continue;
+				if (keyEvent && value->Button != e.key.key) continue;
+				if (mouseEvent && value->Button != e.button.button) continue;
 				InputActionInfo info;
 				info.started = (e.type == SDL_EVENT_KEY_DOWN) && (!value->WasDownLastFrame);
 				value->WasDownLastFrame = e.type == SDL_EVENT_KEY_DOWN;
 				info.ongoing = e.type == SDL_EVENT_KEY_DOWN;
 				info.finished = e.type == SDL_EVENT_KEY_UP;
+				if (mouseEvent)
+				{
+					info.InputActionVectorData = { e.button.x, e.button.y };
+					info.started = e.type == SDL_EVENT_MOUSE_BUTTON_DOWN && (!value->WasDownLastFrame);
+					info.finished = e.type == SDL_EVENT_MOUSE_BUTTON_UP;
+				}
+				if (mouseMotionEvent)
+				{
+					info.InputActionVectorData = { e.motion.x, e.motion.y };
+					info.InputActionVectorDeltaData = { e.motion.xrel, e.motion.yrel };
+					info.ongoing = true;
+				}
 				for (const auto& listener : value->Listeners)
 				{
 					listener(info);

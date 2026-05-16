@@ -234,6 +234,9 @@
     <ClInclude Include="SteamStateComponent.h">
       <Filter>Header Files\Components\Steam</Filter>
     </ClInclude>
+    <ClInclude Include="KeyDefs.h">
+      <Filter>Header Files\Architecture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Generated">

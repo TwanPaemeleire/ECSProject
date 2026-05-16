@@ -15,7 +15,7 @@ void AchievementMonitor::OnEnemyDeath()
 	SteamUtils::GetStat("FeetTraveled", &kills);
 	++kills;
 	SteamUtils::SetStat("FeetTraveled", kills);
-	std::cout << "FeetTraveled : " << std::to_string(kills) << std::endl;
+	// std::cout << "FeetTraveled : " << std::to_string(kills) << std::endl;
 	EntityManager& entityManager = EntityManager::GetInstance();
 	if (kills >= 5280)
 	{

@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="AchievementMonitor.cpp" />
     <ClCompile Include="EnemySpawnSystem.cpp" />
+    <ClCompile Include="InputTesterSystem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlayerTowerSystem.cpp" />
     <ClCompile Include="ProjectileSystem.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemySpawnSystem.h" />
     <ClInclude Include="Health.h" />
+    <ClInclude Include="InputTesterSystem.h" />
     <ClInclude Include="PlayerTower.h" />
     <ClInclude Include="PlayerTowerSystem.h" />
     <ClInclude Include="Projectile.h" />
