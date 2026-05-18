@@ -12,5 +12,6 @@ public:
 	virtual void OnStart() override;
 
 private:
-	void OnMouseAction(const Bloodforge::InputActionInfo& info);
+	void OnLeftMouseAction(const Bloodforge::InputActionInfo& info);
+	void OnMouseMotionAction(const Bloodforge::InputActionInfo& info);
 };

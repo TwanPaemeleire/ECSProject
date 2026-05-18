@@ -7,10 +7,7 @@
 #include "SteamUnlockAchievementRequest.h"
 #include "SteamResetUserDataRequest.h"
 #include "SteamIndicateAchievementProgressRequest.h"
-#include "FunctionInvokeComponent.h"
 #include "SteamStateComponent.h"
-
-#include "SteamUtils.h"
 
 using namespace Bloodforge;
 
@@ -23,6 +20,9 @@ SteamSupportSystem::SteamSupportSystem()
 
 void SteamSupportSystem::OnStart()
 {
+	Entity& steamStateEntity = EntityManager::GetInstance().CreateEntity();
+	EntityManager::GetInstance().AddComponent<SteamStateComponent>(steamStateEntity);
+
 	SteamErrMsg errMsg = { 0 };
 	ESteamAPIInitResult result = SteamAPI_InitEx(&errMsg);
 	std::cout << "Steam API Init Result: " << result << std::endl;
@@ -31,6 +31,7 @@ void SteamSupportSystem::OnStart()
 		std::cerr << "Failed to initialize Steam API: " << errMsg << std::endl;
 		return;
 	}
+
 	EntityManager::GetInstance().GetFirstEntityWithComponents<SteamStateComponent>()->GetComponent<SteamStateComponent>().SteamIsInitialized = true;
 
 	Entity& resetUserDataEntity = EntityManager::GetInstance().CreateEntity();
