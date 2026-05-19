@@ -16,10 +16,15 @@ namespace Bloodforge
 		Vector2 Rotate(float angle) const;
 		Vector2 GetPerpendicular() const;
 
-		Vector2 operator+ (const Vector2 & obj) const;
-		Vector2 operator- (const Vector2 & obj) const;
-		Vector2 operator* (float scalar) const;
-		Vector2 operator/ (float scalar) const;
+		Vector2 operator+(const Vector2 & obj) const;
+		Vector2 operator-(const Vector2 & obj) const;
+		Vector2 operator*(float scalar) const;
+		Vector2 operator/(float scalar) const;
+
+		Vector2& operator+=(const Vector2& obj);
+		Vector2& operator-=(const Vector2& obj);
+		Vector2& operator*=(float scalar);
+		Vector2& operator/=(float scalar);
 
 		static float Cross(const Vector2& vec1, const Vector2& vec2);
 		static float Dot(const Vector2& vec1, const Vector2& vec2);
@@ -35,6 +40,8 @@ namespace Bloodforge
 		static Vector2 Lerp(const Vector2& start, const Vector2& end, float t);
 		// Interpolates between start and end by t, using smoothing at the start and end of the interpolation
 		static Vector2 SmoothLerp(const Vector2& start, const Vector2& end, float t);
+		// Interpolates between start and end by t, using smoothing at the end of the interpolation
+		static Vector2 SmoothEndLerp(const Vector2& start, const Vector2& end, float t);
 
 		static constexpr float RadiansToDegrees = 180.0f / std::numbers::pi_v<float>;
 		static constexpr float DegreesToRadians = std::numbers::pi_v<float> / 180.0f;

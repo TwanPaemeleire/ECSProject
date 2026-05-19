@@ -40,7 +40,7 @@ void Bloodforge::InputHandler::ProcessInput()
 				}
 				if (mouseMotionEvent)
 				{
-					if (value->Button != BLOODFORGE_KEYCODE_MOUSE_MOTION && value->Button != e.button.button) continue;
+					if (value->Button != BLOODFORGE_KEYCODE_MOUSE_MOTION && !(e.motion.state & SDL_BUTTON_MASK(value->Button))) continue;
 					info.InputActionVectorData = { e.motion.x, e.motion.y };
 					info.InputActionVectorDeltaData = { e.motion.xrel, e.motion.yrel };
 					info.ongoing = true;

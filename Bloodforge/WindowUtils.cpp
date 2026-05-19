@@ -14,6 +14,14 @@ namespace Bloodforge::WindowUtils
 		BloodRenderer::GetInstance().SetWindowSize(sizeX, sizeY);
 	}
 
+	Vector2 GetWindowSize()
+	{
+		int sizeX;
+		int sizeY;
+		SDL_GetWindowSize(BloodRenderer::GetInstance().GetSDLWindow(), &sizeX, &sizeY);
+		return Vector2(static_cast<float>(sizeX), static_cast<float>(sizeY));
+	}
+
 	void SetWindowAlwaysOnTop(bool alwaysOnTop)
 	{
 		SDL_SetWindowAlwaysOnTop(BloodRenderer::GetInstance().GetSDLWindow(), alwaysOnTop);
@@ -49,6 +57,20 @@ namespace Bloodforge::WindowUtils
 	void SetWindowTitle(const std::string& title)
 	{
 		SDL_SetWindowTitle(BloodRenderer::GetInstance().GetSDLWindow(), title.c_str());
+		SDL_GetWindowPosition(BloodRenderer::GetInstance().GetSDLWindow(), nullptr, nullptr);
+	}
+
+	Vector2 GetWindowPosition()
+	{
+		int x;
+		int y;
+		SDL_GetWindowPosition(BloodRenderer::GetInstance().GetSDLWindow(), &x, &y);
+		return Bloodforge::Vector2(static_cast<float>(x), static_cast<float>(y));
+	}
+
+	void SetWindowPosition(int posX, int posY)
+	{
+		SDL_SetWindowPosition(BloodRenderer::GetInstance().GetSDLWindow(), posX, posY);
 	}
 }
 

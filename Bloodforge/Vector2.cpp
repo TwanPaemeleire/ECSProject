@@ -89,6 +89,34 @@ namespace Bloodforge
         };
     }
 
+    Vector2& Vector2::operator+=(const Vector2& obj)
+    {
+        X += obj.X;
+        Y += obj.Y;
+        return *this;
+    }
+
+    Vector2& Vector2::operator-=(const Vector2& obj)
+    {
+        X -= obj.X;
+        Y -= obj.Y;
+        return *this;
+    }
+
+    Vector2& Vector2::operator*=(float scalar)
+    {
+        X *= scalar;
+        Y *= scalar;
+        return *this;
+    }
+
+    Vector2& Vector2::operator/=(float scalar)
+    {
+        X /= scalar;
+        Y /= scalar;
+        return *this;
+    }
+
     float Vector2::Cross(const Vector2& vec1, const Vector2& vec2)
     {
         return vec1.X * vec2.Y - vec1.Y * vec2.X;
@@ -146,6 +174,12 @@ namespace Bloodforge
     Vector2 Vector2::SmoothLerp(const Vector2& start, const Vector2& end, float t)
     {
         float smoothT = t * t * (3.0f - 2.0f * t);
+        return start + (end - start) * smoothT;
+    }
+
+    Vector2 Vector2::SmoothEndLerp(const Vector2& start, const Vector2& end, float t)
+    {
+        float smoothT = 1.0f - (1.0f - t) * (1.0f - t);
         return start + (end - start) * smoothT;
     }
 }
