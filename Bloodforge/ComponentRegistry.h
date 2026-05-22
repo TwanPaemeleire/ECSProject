@@ -52,6 +52,7 @@ namespace Bloodforge
 		info.MoveConstruct = [](void* dst, void* src)
 			{
 				new (dst) ComponentType(std::move(*static_cast<ComponentType*>(src)));
+				static_cast<ComponentType*>(src)->~ComponentType(); // Destroy old component after move
 			};
 
 		m_ComponentRegistry[Component<ComponentType>::Index] = info;

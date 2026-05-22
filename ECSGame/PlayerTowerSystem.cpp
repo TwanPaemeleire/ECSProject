@@ -2,7 +2,6 @@
 #include <EntityManager.h>
 #include "Health.h"
 #include "PlayerTower.h"
-#include <SceneManager.h>
 #include <BloodTime.h>
 #include "Projectile.h"
 #include <SpriteComponent.h>
@@ -46,7 +45,7 @@ void PlayerTowerSystem::OnUpdate()
 	{
 		PlayerTower& tower = entityView.GetComponent<PlayerTower>();
 		tower.TimeUntilNextShot -= BloodTime::GetInstance().DeltaTime;
-		if (tower.TimeUntilNextShot <= 0.0f && !m_EnemiesToShoot.empty())
+		if (tower.TimeUntilNextShot <= 0.0f && !tower.EnemiesToShoot.empty())
 		{
 			TransformComponent* towerTransform = entityManager.GetComponent<TransformComponent>(entityView.EntityId);
 			ShootProjectile(towerTransform);
@@ -71,8 +70,10 @@ void PlayerTowerSystem::ShootProjectile(TransformComponent* towerTransform)
 	projectileComp->Damage = 20.0f;
 	projectileComp->Speed = 200.0f;
 
-	int enemyToShoot = *m_EnemiesToShoot.begin();
-	m_EnemiesToShoot.erase(enemyToShoot);
+	EntityView<PlayerTower> towerEntityView = entityManager.GetFirstEntityWithComponents<PlayerTower>().value();
+	PlayerTower& towerComp = towerEntityView.GetComponent<PlayerTower>();
+	int enemyToShoot = *towerComp.EnemiesToShoot.begin();
+	towerComp.EnemiesToShoot.erase(enemyToShoot);
 	TransformComponent* enemyTransform = entityManager.GetComponent<TransformComponent>(enemyToShoot);
 	Vector2 enemyWorldPos = enemyTransform->GetWorldPosition();
 	Vector2 dir = enemyWorldPos - transformComp->GetWorldPosition();
@@ -100,13 +101,17 @@ void PlayerTowerSystem::OnEnemyEnterRange(int, int otherId)
 		{
 			OnEnemyDeath(entityId);
 		});
-	m_EnemiesToShoot.insert(otherId);
+	EntityView<PlayerTower> towerEntityView = EntityManager::GetInstance().GetFirstEntityWithComponents<PlayerTower>().value();
+	PlayerTower& towerComp = towerEntityView.GetComponent<PlayerTower>();
+	towerComp.EnemiesToShoot.insert(otherId);
 }
 
 void PlayerTowerSystem::OnEnemyDeath(int entityId)
 {
-	if (m_EnemiesToShoot.contains(entityId))
+	EntityView<PlayerTower> towerEntityView = EntityManager::GetInstance().GetFirstEntityWithComponents<PlayerTower>().value();
+	PlayerTower& towerComp = towerEntityView.GetComponent<PlayerTower>();
+	if (towerComp.EnemiesToShoot.contains(entityId))
 	{
-		m_EnemiesToShoot.erase(entityId);
+		towerComp.EnemiesToShoot.erase(entityId);
 	}
 }

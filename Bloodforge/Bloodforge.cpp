@@ -4,16 +4,15 @@
 #include <thread>
 #include "BloodTime.h"
 #include "BloodRenderer.h"
-#include "SceneManager.h"
 #include "InputHandler.h"
-#include <iostream>
 #include <filesystem>
+#include "SceneSystemManager.h"
 
 namespace Bloodforge
 {
 	void Bloodforge::Run()
 	{
-		auto& sceneManager = SceneManager::GetInstance();
+		auto& sceneSystemManager = SceneSystemManager::GetInstance();
 		auto& renderer = BloodRenderer::GetInstance();
 		auto& bloodTime = BloodTime::GetInstance();
 		auto& inputHandler = InputHandler::GetInstance();
@@ -33,11 +32,11 @@ namespace Bloodforge
 
 			while (lag >= m_FixedTimeStep)
 			{
-				sceneManager.FixedUpdate();
+				sceneSystemManager.FixedUpdate();
 				lag -= m_FixedTimeStep;
 			}
-			sceneManager.Update();
-			sceneManager.LateUpdate();
+			sceneSystemManager.Update();
+			sceneSystemManager.LateUpdate();
 			renderer.Render();
 
 			const auto sleepTime = std::chrono::milliseconds(m_MsPerFrame) - (std::chrono::high_resolution_clock::now() - currentTime);

@@ -27,7 +27,8 @@ namespace Bloodforge
 		int AddEntity(int entityId);
 		void RemoveEntityAndComponents(Entity& entity);
 
-		void SetChunkIndex(int index) { m_ChunkIndex = index; }
+		void SetChunkIndexSelf(int index) { m_ChunkIndex = index; }
+		void SetChunkIndexSelfAndInEntities(int index);
 		int GetChunkIndex() const { return m_ChunkIndex; }
 
 		bool ContainsComponent(int componentIndex) const;

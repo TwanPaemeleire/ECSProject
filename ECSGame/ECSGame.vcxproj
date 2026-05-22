@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="AchievementMonitor.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemySpawnData.h" />
     <ClInclude Include="EnemySpawnSystem.h" />
     <ClInclude Include="Health.h" />
     <ClInclude Include="InputTesterSystem.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="PlayerTowerSystem.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="ProjectileSystem.h" />
+    <ClInclude Include="SceneSwitchDataHolder.h" />
     <ClInclude Include="TestSaveFile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

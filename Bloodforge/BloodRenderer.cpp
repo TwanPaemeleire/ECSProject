@@ -3,7 +3,7 @@
 #include <SDL3/SDL_render.h>
 #include <stdexcept>
 #include "Texture2D.h"
-#include "SceneManager.h"
+#include "SceneSystemManager.h"
 #include "Vector2.h"
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_pixels.h>
@@ -34,6 +34,12 @@ namespace Bloodforge
 		SDL_GetWindowSizeInPixels(m_Window, &m_WindowWidth, &m_WindowHeight);
 	}
 
+	BloodRenderer::~BloodRenderer()
+	{
+		SDL_QuitSubSystem(SDL_INIT_VIDEO);
+		SDL_Quit();
+	}
+
 	void Bloodforge::BloodRenderer::Render() const
 	{
 	}
@@ -51,8 +57,8 @@ namespace Bloodforge
 		SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
 		SDL_RenderClear(m_Renderer);
 
-		SceneManager::GetInstance().Render();
-		SceneManager::GetInstance().RenderUI();
+		SceneSystemManager::GetInstance().Render();
+		SceneSystemManager::GetInstance().RenderUI();
 
 		SDL_RenderPresent(m_Renderer);
 	}

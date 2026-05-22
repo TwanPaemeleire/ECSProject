@@ -18,6 +18,4 @@ private:
 
 	void OnEnemyEnterRange(int selfId, int otherId);
 	void OnEnemyDeath(int entityId);
-
-	std::unordered_set<int> m_EnemiesToShoot;
 };

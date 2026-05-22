@@ -7,12 +7,14 @@ namespace Bloodforge
 
 	void System::Enable()
 	{
+		if (m_IsEnabled) return;
 		m_IsEnabled = true;
 		OnEnable();
 	}
 
 	void System::Disable()
 	{
+		if (!m_IsEnabled) return;
 		m_IsEnabled = false;
 		OnDisable();
 	}

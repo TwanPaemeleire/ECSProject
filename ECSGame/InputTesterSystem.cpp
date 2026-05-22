@@ -5,24 +5,19 @@
 
 using namespace Bloodforge;
 
-void InputTesterSystem::OnStart()
+InputTesterSystem::InputTesterSystem()
 {
 	InputHandler& inputHandler = InputHandler::GetInstance();
-	inputHandler.CreateMap(CreateId("TestMap"));
 
-	inputHandler.CreateAction(CreateId("TestAction"), CreateId("TestMap"), BLOODFORGE_KEYCODE_MOUSE_LEFT);
 	inputHandler.AddListenerToInputAction(CreateId("TestAction"), CreateId("TestMap"), [this](const Bloodforge::InputActionInfo& info)
 		{
 			OnLeftMouseAction(info);
 		});
 
-	inputHandler.CreateAction(CreateId("TestActionMotion"), CreateId("TestMap"), BLOODFORGE_KEYCODE_MOUSE_MOTION);
 	inputHandler.AddListenerToInputAction(CreateId("TestActionMotion"), CreateId("TestMap"), [this](const Bloodforge::InputActionInfo& info)
 		{
 			OnMouseMotionAction(info);
 		});
-
-	inputHandler.SetCurrentMap(CreateId("TestMap"));
 }
 
 void InputTesterSystem::OnLeftMouseAction(const Bloodforge::InputActionInfo& info)

@@ -14,6 +14,7 @@ namespace Bloodforge
 	ResourceManager::~ResourceManager()
 	{
 		MIX_Quit();
+		TTF_Quit();
 	}
 
 	Texture2D* Bloodforge::ResourceManager::LoadTexture(const std::string& file)

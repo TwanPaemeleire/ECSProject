@@ -18,6 +18,7 @@ namespace Bloodforge
 	{
 	public:
 		BloodRenderer();
+		~BloodRenderer();
 		void Render() const;
 		void Destroy();
 

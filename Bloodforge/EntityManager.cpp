@@ -39,9 +39,33 @@ namespace Bloodforge
 		m_FreeIndices.clear();
 	}
 
+	void EntityManager::DestroyEntitiesOnSceneSwitch()
+	{
+		// Should find a way to optimize this later down the line
+		for (const auto& pair : m_EntityChunks)
+		{
+			for (const std::unique_ptr<EntityChunk>& chunk : pair.second)
+			{
+				std::vector<int> entitiesToRemove;
+				std::span<int> entityIds = chunk->GetEntityIndices();
+				for (int chunkEntityIndex = 0; chunkEntityIndex < chunk->GetEntityIndices().size(); ++chunkEntityIndex)
+				{
+					if (!m_Entities[entityIds[chunkEntityIndex]].DontDestroyOnSceneSwitch) 
+					{
+						entitiesToRemove.emplace_back(m_Entities[entityIds[chunkEntityIndex]].Id);
+					}
+				}
+				for (int entityToDelete : entitiesToRemove)
+				{
+					DestroyEntity(entityToDelete);
+				}
+			}
+		}
+		DestroyMarkedForDestructionEntities();
+	}
+
 	void EntityManager::DestroyMarkedForDestructionEntities()
 	{
-
 		std::for_each(m_EntitiesToDestroy.begin(), m_EntitiesToDestroy.end(), [this](int entityId)
 		{
 				Entity& entity = GetEntity(entityId);
@@ -51,6 +75,28 @@ namespace Bloodforge
 				entityChunk->RemoveEntityAndComponents(entity);
 				m_FreeIndices.push_back(entityId);
 			});
+
+		for (auto& pair : m_EntityChunks)
+		{
+			auto& chunks = pair.second;
+
+			bool removedAny = false;
+			chunks.erase(std::remove_if(chunks.begin(), chunks.end(), [&removedAny](const std::unique_ptr<EntityChunk>& chunk)
+					{
+						bool isEmpty = chunk->GetEntityIndices().empty();
+						if (isEmpty) removedAny = true;
+						return isEmpty;
+					}), 
+					chunks.end());
+
+			if (removedAny && chunks.size() > 0) // We need to update chunk indices in both the chunk and the entity
+			{
+				for (int chunkIndex = 0; chunkIndex < chunks.size(); ++chunkIndex)
+				{
+					chunks[chunkIndex]->SetChunkIndexSelfAndInEntities(chunkIndex);
+				}
+			}
+		}
 
 		m_EntitiesToDestroy.clear();
 	}
@@ -86,7 +132,7 @@ namespace Bloodforge
 		std::unique_ptr<EntityChunk> newChunk = std::make_unique<EntityChunk>(id, capacity);
 		EntityChunk* chunkPtr = newChunk.get();
 		m_EntityChunks[id].push_back(std::move(newChunk));
-		chunkPtr->SetChunkIndex(static_cast<int>(m_EntityChunks[id].size()) - 1);
+		chunkPtr->SetChunkIndexSelf(static_cast<int>(m_EntityChunks[id].size()) - 1);
 		//std::cout << "Created new chunk for entity signature: " << id << std::endl;
 		return chunkPtr;
 	}

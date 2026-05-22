@@ -44,6 +44,7 @@ namespace Bloodforge
 		void CreateAction(ActionId actionId, MapId mapId, ButtonId buttonId);
 		void SetCurrentMap(MapId mapId);
 		void AddListenerToInputAction(ActionId actionId, MapId mapId, const ListenerSignature& listener);
+		void RemoveAllListeners();
 	private:
 		std::unordered_map<MapId, std::unordered_map<ActionId, std::unique_ptr<InputAction>>> m_InputActionMaps;
 		MapId m_CurrentMapId = 0;

@@ -21,5 +21,6 @@ namespace Bloodforge
 		bool IsActive = true;
 		bool MarkedForDestruction = false;
 		bool IsAlive = true;
+		bool DontDestroyOnSceneSwitch = false;
 	};
 }

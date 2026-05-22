@@ -56,7 +56,7 @@ void Bloodforge::InputHandler::ProcessInput()
 
 void Bloodforge::InputHandler::CreateMap(MapId mapId)
 {
-	if (m_InputActionMaps.contains(mapId)) throw std::runtime_error("Trying to create an input action map with an id that already exists.");
+	if (m_InputActionMaps.contains(mapId)) return;
 	m_InputActionMaps.emplace(mapId, std::unordered_map<ActionId, std::unique_ptr<InputAction>>{});
 }
 
@@ -81,4 +81,12 @@ void Bloodforge::InputHandler::AddListenerToInputAction(ActionId actionId, MapId
 	if (!m_InputActionMaps[mapId].contains(actionId)) throw std::runtime_error("Trying to access an action that doesn't exist in this input action map.");
 
 	m_InputActionMaps[mapId][actionId]->Listeners.emplace_back(listener);
+}
+
+void Bloodforge::InputHandler::RemoveAllListeners()
+{
+	for (auto& [key, value] : m_InputActionMaps[m_CurrentMapId])
+	{
+		value->Listeners.clear();
+	}
 }

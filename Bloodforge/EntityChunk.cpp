@@ -8,8 +8,6 @@ namespace Bloodforge
 	EntityChunk::EntityChunk(ArchetypeIdentifierMask& identifier, size_t capacity)
 		: m_Capacity{ capacity }, m_EntityIds{ std::make_unique<int[]>(capacity) }
 	{
-		// ((m_ComponentIdToArrayIndex[Components::Index] = index++), ...);
-		// ((ConstructComponentArray<Components>(capacity)), ...);
 		int index = 0;
 		for (int id : identifier.GetComponentIndices())
 		{
@@ -72,14 +70,20 @@ namespace Bloodforge
 			Entity& movedEntityRef = EntityManager::GetInstance().GetEntity(movedEntity);
 			movedEntityRef.CurrentChunkIndex = GetChunkIndex();
 		}
-		//	m_EntityIds[entityIndexInChunk] = m_EntityIds[lastIndex];
-		//	MoveComponents(entityIndexInChunk, lastIndex, m_ComponentIndices);
 
-		//	m_EntityIdToChunkIndex[m_EntityIds[entityIndexInChunk]] = entityIndexInChunk; // Update the moved entity's index in the map
-		//}
 		m_EntityIdToChunkIndex.erase(entity.Id);
 		--m_EntityCount;
 		m_IsFull = false;
+	}
+
+	void EntityChunk::SetChunkIndexSelfAndInEntities(int index)
+	{
+		m_ChunkIndex = index;
+		for (int entityId : GetEntityIndices())
+		{
+			Entity& entity = EntityManager::GetInstance().GetEntity(entityId);
+			entity.CurrentChunkIndex = index;
+		}
 	}
 
 	bool EntityChunk::ContainsComponent(int componentIndex) const

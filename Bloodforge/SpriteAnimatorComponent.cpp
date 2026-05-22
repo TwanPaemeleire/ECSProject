@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "SpriteAnimatorComponent.h"
 #include "Texture2D.h"
-#include "SceneManager.h"
 #include "SpriteAnimatorSystem.h"
+#include "SceneSystemManager.h"
 #include <utility>
 
 namespace Bloodforge
@@ -102,7 +102,7 @@ namespace Bloodforge
 
 	void SpriteAnimatorComponent::AddAnimationEvent(AnimationId id, std::function<void(SpriteAnimatorComponent&)> callback, int frameToTrigger, float offset)
 	{
-		SpriteAnimatorSystem* animSystem = SceneManager::GetInstance().GetActiveScene().GetSystem<SpriteAnimatorSystem>();
+		SpriteAnimatorSystem* animSystem = SceneSystemManager::GetInstance().GetSystem<SpriteAnimatorSystem>();
 		if (!AnimationsData.contains(id))
 		{
 			throw std::exception("Trying to add animation event to an animation with an id that doesn't exist");

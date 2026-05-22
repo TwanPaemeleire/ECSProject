@@ -9,7 +9,7 @@ namespace Bloodforge
 class InputTesterSystem final : public Bloodforge::System
 {
 public:
-	virtual void OnStart() override;
+	InputTesterSystem();
 
 private:
 	void OnLeftMouseAction(const Bloodforge::InputActionInfo& info);

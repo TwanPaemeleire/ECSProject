@@ -65,5 +65,11 @@
     <ClInclude Include="InputTesterSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SceneSwitchDataHolder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySpawnData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

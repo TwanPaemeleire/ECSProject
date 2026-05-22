@@ -15,9 +15,12 @@ namespace Bloodforge
 		virtual void OnRender() {};
 		virtual void OnRenderUI() {};
 
+		virtual void OnSceneSwitch() {};
+
 		virtual void OnEnable() {};
 		virtual void OnDisable() {};
 
+		bool IsEnabled() const { return m_IsEnabled; }
 		void Enable();
 		void Disable();
 	private:

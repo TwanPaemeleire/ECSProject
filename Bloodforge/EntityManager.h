@@ -85,6 +85,7 @@ namespace Bloodforge
 		bool HasComponent(Entity& entity);
 
 		void DestroyAllEntities();
+		void DestroyEntitiesOnSceneSwitch();
 		void DestroyMarkedForDestructionEntities();
 	private:
 
@@ -175,7 +176,9 @@ namespace Bloodforge
 			int oldIndex = oldChunk->GetEntityInChunkIndex(entity.Id);
 			auto& info = m_ComponentRegistry->GetComponentInfo(componentId);
 
-			std::memcpy(static_cast<char*>(dstArray) + newIndex * info.Size, static_cast<char*>(srcArray) + oldIndex * info.Size, info.Size);
+			void* srcPtr = static_cast<char*>(srcArray) + oldIndex * info.Size;
+			void* dstPtr = static_cast<char*>(dstArray) + newIndex * info.Size;
+			info.MoveConstruct(dstPtr, srcPtr);
 		}
 
 		// Construct new component
@@ -231,7 +234,9 @@ namespace Bloodforge
 			int oldIndex = oldChunk->GetEntityInChunkIndex(entity.Id);
 			auto& info = m_ComponentRegistry->GetComponentInfo(componentId);
 
-			std::memcpy(static_cast<char*>(dstArray) + newIndex * info.Size, static_cast<char*>(srcArray) + oldIndex * info.Size, info.Size);
+			void* srcPtr = static_cast<char*>(srcArray) + oldIndex * info.Size;
+			void* dstPtr = static_cast<char*>(dstArray) + newIndex * info.Size;
+			info.MoveConstruct(dstPtr, srcPtr);
 		}
 
 		// Destruct old component

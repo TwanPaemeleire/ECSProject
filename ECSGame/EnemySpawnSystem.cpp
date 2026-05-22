@@ -12,12 +12,17 @@
 #include <RectColliderComponent.h>
 #include "Health.h"
 #include "AchievementMonitor.h"
+#include "EnemySpawnData.h"
 using namespace Bloodforge;
 
 void EnemySpawnSystem::OnStart()
 {
-	SpawnEnemy();
-	SpawnLoop();
+	std::optional<EntityView<EnemySpawnData>> spawnDataEntity = EntityManager::GetInstance().GetFirstEntityWithComponents<EnemySpawnData>();
+	if (spawnDataEntity.has_value())
+	{
+		SpawnEnemy();
+		SpawnLoop();
+	}
 }
 
 void EnemySpawnSystem::OnUpdate()
