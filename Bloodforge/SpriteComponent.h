@@ -21,6 +21,7 @@ namespace Bloodforge
 		Color Color{};
 		bool FlipHorizontal = false;
 		bool FlipVertical = false;
+		int DrawOrder = 0; // Higher values are drawn on top of lower values
 	private:
 		Rect SourceRect{};
 		Texture2D* Texture = nullptr;

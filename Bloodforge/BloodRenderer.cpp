@@ -37,15 +37,6 @@ namespace Bloodforge
 	BloodRenderer::~BloodRenderer()
 	{
 		SDL_QuitSubSystem(SDL_INIT_VIDEO);
-		SDL_Quit();
-	}
-
-	void Bloodforge::BloodRenderer::Render() const
-	{
-	}
-
-	void Bloodforge::BloodRenderer::Destroy()
-	{
 		SDL_DestroyRenderer(m_Renderer);
 		SDL_DestroyWindow(m_Window);
 		SDL_Quit();

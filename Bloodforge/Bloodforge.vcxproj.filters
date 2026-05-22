@@ -28,16 +28,10 @@
     <ClCompile Include="Texture2D.cpp">
       <Filter>Source Files\Architecture</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteSystem.cpp">
-      <Filter>Source Files\Systems</Filter>
-    </ClCompile>
     <ClCompile Include="System.cpp">
       <Filter>Source Files\Architecture</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
-      <Filter>Source Files\Architecture</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
       <Filter>Source Files\Architecture</Filter>
     </ClCompile>
     <ClCompile Include="InputHandler.cpp">
@@ -91,6 +85,9 @@
     <ClCompile Include="SceneSystemManager.cpp">
       <Filter>Source Files\Architecture</Filter>
     </ClCompile>
+    <ClCompile Include="SpriteTextRendererSystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -135,13 +132,7 @@
     <ClInclude Include="Texture2D.h">
       <Filter>Header Files\Architecture</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteSystem.h">
-      <Filter>Header Files\Systems</Filter>
-    </ClInclude>
     <ClInclude Include="ResourceManager.h">
-      <Filter>Header Files\Architecture</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
       <Filter>Header Files\Architecture</Filter>
     </ClInclude>
     <ClInclude Include="IdCreator.h">
@@ -242,6 +233,9 @@
     </ClInclude>
     <ClInclude Include="SceneSystemManager.h">
       <Filter>Header Files\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteTextRendererSystem.h">
+      <Filter>Header Files\Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

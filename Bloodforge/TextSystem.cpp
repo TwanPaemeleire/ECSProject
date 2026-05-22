@@ -41,14 +41,4 @@ namespace Bloodforge
 			}
 		}
 	}
-	void TextSystem::OnRender()
-	{
-		EntityQueryResult<TextComponent, TransformComponent> result = EntityManager::GetInstance().QueryEntities<TextComponent, TransformComponent>();
-		for (EntityView<TextComponent, TransformComponent>& view : result.EntityViews)
-		{
-			TextComponent& textComp = view.GetComponent<TextComponent>();
-			TransformComponent& transform = view.GetComponent<TransformComponent>();
-			BloodRenderer::GetInstance().RenderTexture(*textComp.GetTexture(), transform.GetWorldMatrix(), textComp.GetColor(), textComp.FlipHorizontal, textComp.FlipVertical);
-		}
-	}
 }

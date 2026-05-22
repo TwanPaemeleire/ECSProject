@@ -19,9 +19,6 @@ namespace Bloodforge
 	public:
 		BloodRenderer();
 		~BloodRenderer();
-		void Render() const;
-		void Destroy();
-
 		void Render();
 
 		void DrawRectangle(const Vector2& pos, float width, float height, const Color& color) const;

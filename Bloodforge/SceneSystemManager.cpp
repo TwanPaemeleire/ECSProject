@@ -10,9 +10,9 @@
 #include "CollisionSystem.h"
 #include "FunctionInvokeSystem.h"
 #include "SpriteAnimatorSystem.h"
-#include "SpriteSystem.h"
 #include "SteamSupportSystem.h"
 #include "TextSystem.h"
+#include "SpriteTextRendererSystem.h"
 
 namespace Bloodforge
 {
@@ -22,9 +22,9 @@ namespace Bloodforge
 		TryRegisterSystem<CollisionSystem>();
 		TryRegisterSystem<FunctionInvokeSystem>();
 		TryRegisterSystem<SpriteAnimatorSystem>();
-		TryRegisterSystem<SpriteSystem>();
 		TryRegisterSystem<SteamSupportSystem>();
 		TryRegisterSystem<TextSystem>();
+		TryRegisterSystem<SpriteTextRendererSystem>();
 	}
 
 	void SceneSystemManager::Start()

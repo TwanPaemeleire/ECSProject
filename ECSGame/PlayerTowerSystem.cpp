@@ -81,7 +81,7 @@ void PlayerTowerSystem::ShootProjectile(TransformComponent* towerTransform)
 
 	SpriteComponent* spriteComp = entityManager.AddComponent<SpriteComponent>(projectileEntity);
 	spriteComp->SetTexture(ResourceManager::GetInstance().LoadTexture("Tower/TestProjectile.png"));
-
+	spriteComp->DrawOrder = 1;
 
 	RectColliderComponent* rectCollider = entityManager.AddComponent<RectColliderComponent>(projectileEntity);
 	rectCollider->SetSize({ 10.0f, 10.0f });

@@ -229,16 +229,15 @@
     <ClInclude Include="SceneDataComponent.h" />
     <ClInclude Include="SceneManagingDataComponent.h" />
     <ClInclude Include="SceneSystemManager.h" />
+    <ClInclude Include="SpriteTextRendererSystem.h" />
     <ClInclude Include="SteamIndicateAchievementProgressRequest.h" />
     <ClInclude Include="SteamResetUserDataRequest.h" />
     <ClInclude Include="ResourceManager.h" />
-    <ClInclude Include="Scene.h" />
     <ClInclude Include="IdCreator.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SpriteAnimatorComponent.h" />
     <ClInclude Include="SpriteAnimatorSystem.h" />
     <ClInclude Include="SpriteComponent.h" />
-    <ClInclude Include="SpriteSystem.h" />
     <ClInclude Include="SteamStateComponent.h" />
     <ClInclude Include="SteamSupportSystem.h" />
     <ClInclude Include="SteamUtils.h" />
@@ -273,12 +272,11 @@
     </ClCompile>
     <ClCompile Include="RectColliderComponent.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
-    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneSystemManager.cpp" />
     <ClCompile Include="SpriteAnimatorComponent.cpp" />
     <ClCompile Include="SpriteAnimatorSystem.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
-    <ClCompile Include="SpriteSystem.cpp" />
+    <ClCompile Include="SpriteTextRendererSystem.cpp" />
     <ClCompile Include="SteamSupportSystem.cpp" />
     <ClCompile Include="SteamUtils.cpp" />
     <ClCompile Include="System.cpp" />

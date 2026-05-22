@@ -7,6 +7,5 @@ namespace Bloodforge
 	{
 	public:
 		virtual void OnUpdate() override;
-		virtual void OnRender() override;
 	};
 }
