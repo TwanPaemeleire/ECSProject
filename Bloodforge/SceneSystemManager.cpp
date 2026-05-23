@@ -13,6 +13,7 @@
 #include "SteamSupportSystem.h"
 #include "TextSystem.h"
 #include "SpriteTextRendererSystem.h"
+#include "ButtonSystem.h"
 
 namespace Bloodforge
 {
@@ -25,6 +26,7 @@ namespace Bloodforge
 		TryRegisterSystem<SteamSupportSystem>();
 		TryRegisterSystem<TextSystem>();
 		TryRegisterSystem<SpriteTextRendererSystem>();
+		TryRegisterSystem<ButtonSystem>();
 	}
 
 	void SceneSystemManager::Start()

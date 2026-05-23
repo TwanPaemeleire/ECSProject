@@ -117,6 +117,11 @@ namespace Bloodforge
         return *this;
     }
 
+    bool Vector2::operator==(const Vector2& obj) const
+    {
+        return X == obj.X && Y == obj.Y;
+    }
+
     float Vector2::Cross(const Vector2& vec1, const Vector2& vec2)
     {
         return vec1.X * vec2.Y - vec1.Y * vec2.X;

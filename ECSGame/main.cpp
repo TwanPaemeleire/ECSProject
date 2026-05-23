@@ -27,8 +27,9 @@
 #include "Health.h"
 #include <SceneDataComponent.h>
 #include <SceneManagingDataComponent.h>
-#include "SceneSwitchDataHolder.h"
 #include "EnemySpawnData.h"
+#include <TextComponent.h>
+#include "ButtonComponent.h"
 
 void InitializeRectColliderComponent(Bloodforge::Entity& entity, const Bloodforge::Vector2& size, const Bloodforge::Vector2& offset = { 0.0f, 0.0f })
 {
@@ -86,6 +87,73 @@ void SecondLoadFunction()
 	renderer.SetBackgroundColor({ 127, 127, 127, 0 });
 }
 
+void MainMenuLoadFunction()
+{
+	auto& renderer = Bloodforge::BloodRenderer::GetInstance();
+	auto& entityManager = Bloodforge::EntityManager::GetInstance();
+	auto& resourceManager = Bloodforge::ResourceManager::GetInstance();
+	Bloodforge::Font* font = resourceManager.LoadFont("Font.otf", 64.0f);
+
+	// Background
+	{
+		Bloodforge::Entity& backgroundEntity = entityManager.CreateEntity();
+		backgroundEntity.Name = "MainMenuBackground";
+		Bloodforge::SpriteComponent* spriteComp = entityManager.AddComponent<Bloodforge::SpriteComponent>(backgroundEntity);
+		spriteComp->DrawOrder = -1;
+		Bloodforge::SpriteAnimatorComponent* spriteAnimComp = entityManager.AddComponent<Bloodforge::SpriteAnimatorComponent>(backgroundEntity);
+		Bloodforge::AnimationData backgroundAnimData;
+		backgroundAnimData.FrameTime = 0.1f;
+		backgroundAnimData.ShouldLoop = true;
+		backgroundAnimData.NumberOfFrames = 50;
+		backgroundAnimData.Texture = resourceManager.LoadTexture("MainMenuBackground.png");
+		spriteAnimComp->AddAnimation(CreateId("MainMenuBackgroundAnimation"), backgroundAnimData);
+		spriteAnimComp->PlayAnimation(CreateId("MainMenuBackgroundAnimation"));
+		Bloodforge::TransformComponent* transformComp = entityManager.GetComponent<Bloodforge::TransformComponent>(backgroundEntity);
+		transformComp->SetLocalScale({ 3.0f, 3.0f });
+		transformComp->SetLocalPosition(renderer.GetWindowWidth() / 2.0f, renderer.GetWindowHeight() / 2.0f);
+	}
+
+	//Background behind
+	{
+		Bloodforge::Entity& backgroundBehindEntity = entityManager.CreateEntity();
+		backgroundBehindEntity.Name = "MainMenuBackgroundBehind";
+		Bloodforge::SpriteComponent* spriteComp = entityManager.AddComponent<Bloodforge::SpriteComponent>(backgroundBehindEntity);
+		spriteComp->DrawOrder = -2;
+		spriteComp->SetTexture(resourceManager.LoadTexture("MainMenuBackgroundBehind.png"));
+		Bloodforge::TransformComponent* transformComp = entityManager.GetComponent<Bloodforge::TransformComponent>(backgroundBehindEntity);
+		transformComp->SetLocalScale({ 3.0f, 3.0f });
+		transformComp->SetLocalPosition(renderer.GetWindowWidth() / 2.0f, renderer.GetWindowHeight() / 2.0f);
+	}
+
+	// Title
+	{
+		Bloodforge::Entity& titleEntity = entityManager.CreateEntity();
+		titleEntity.Name = "MainMenuTitle";
+		Bloodforge::TextComponent* textComp = entityManager.AddComponent<Bloodforge::TextComponent>(titleEntity);
+		textComp->SetText("GameTitle");
+		textComp->SetFont(font);
+		Bloodforge::TransformComponent* transformComp = entityManager.GetComponent<Bloodforge::TransformComponent>(titleEntity);
+		transformComp->SetLocalPosition(renderer.GetWindowWidth() / 2.0f, renderer.GetWindowHeight() / 4.0f);
+	}
+
+	// Start button
+	{
+		Bloodforge::Entity& startButtonEntity = entityManager.CreateEntity();
+		startButtonEntity.Name = "StartButton";
+		Bloodforge::ButtonComponent* buttonComp = entityManager.AddComponent<Bloodforge::ButtonComponent>(startButtonEntity);
+		buttonComp->NormalTexture = resourceManager.LoadTexture("StartButtonNormal.png");
+		buttonComp->HoverTexture = resourceManager.LoadTexture("StartButtonHover.png");
+		buttonComp->PressedTexture = resourceManager.LoadTexture("StartButtonPressed.png");
+		buttonComp->NormalScale = { 1.0f, 1.0f };
+		buttonComp->HoverScale = { 1.1f, 1.1f };
+
+		Bloodforge::SpriteComponent* spriteComp = entityManager.AddComponent<Bloodforge::SpriteComponent>(startButtonEntity);
+		spriteComp->SetTexture(buttonComp->NormalTexture);
+		Bloodforge::TransformComponent* transformComp = entityManager.GetComponent<Bloodforge::TransformComponent>(startButtonEntity);
+		transformComp->SetLocalPosition(renderer.GetWindowWidth() / 2.0f, renderer.GetWindowHeight() / 2.0f);
+	}
+}
+
 int main(int, char* []) 
 {
 	Bloodforge::Bloodforge& engine = Bloodforge::Bloodforge::GetInstance();
@@ -110,38 +178,36 @@ int main(int, char* [])
 	sceneManagingEntity.DontDestroyOnSceneSwitch = true;
 	Bloodforge::SceneManagingDataComponent* sceneManagingData = entityManager.AddComponent<Bloodforge::SceneManagingDataComponent>(sceneManagingEntity);
 
-	Bloodforge::Entity& sceneDataEntity = Bloodforge::EntityManager::GetInstance().CreateEntity();
-	int sceneDataEntityId = sceneDataEntity.Id;
-	sceneDataEntity.DontDestroyOnSceneSwitch = true;
-	Bloodforge::SceneDataComponent* sceneData = entityManager.AddComponent<Bloodforge::SceneDataComponent>(sceneDataEntity);
-	sceneData->LoadFunction = LoadFunction;
-	sceneData->SceneName = "TestScene";
+	// Bloodforge::Entity& sceneDataEntity = Bloodforge::EntityManager::GetInstance().CreateEntity();
+	// int sceneDataEntityId = sceneDataEntity.Id;
+	// sceneDataEntity.DontDestroyOnSceneSwitch = true;
+	// Bloodforge::SceneDataComponent* sceneData = entityManager.AddComponent<Bloodforge::SceneDataComponent>(sceneDataEntity);
+	// sceneData->LoadFunction = LoadFunction;
+	// sceneData->SceneName = "TestScene";
+	// 
+	// Bloodforge::Entity& sceneDataEntity2 = Bloodforge::EntityManager::GetInstance().CreateEntity();
+	// int sceneDataEntity2Id = sceneDataEntity2.Id;
+	// sceneDataEntity2.DontDestroyOnSceneSwitch = true;
+	// Bloodforge::SceneDataComponent* sceneData2 = entityManager.AddComponent<Bloodforge::SceneDataComponent>(sceneDataEntity2);
+	// sceneData2->LoadFunction = SecondLoadFunction;
+	// sceneData2->SceneName = "TestScene2";
 
-	Bloodforge::Entity& sceneDataEntity2 = Bloodforge::EntityManager::GetInstance().CreateEntity();
-	int sceneDataEntity2Id = sceneDataEntity2.Id;
-	sceneDataEntity2.DontDestroyOnSceneSwitch = true;
-	Bloodforge::SceneDataComponent* sceneData2 = entityManager.AddComponent<Bloodforge::SceneDataComponent>(sceneDataEntity2);
-	sceneData2->LoadFunction = SecondLoadFunction;
-	sceneData2->SceneName = "TestScene2";
+	// Main menu scene data
+	int mainMenuSceneDataEntityId = -1;
+	{
+		Bloodforge::Entity& mainMenuSceneDataEntity = Bloodforge::EntityManager::GetInstance().CreateEntity();
+		mainMenuSceneDataEntityId = mainMenuSceneDataEntity.Id;
+		mainMenuSceneDataEntity.DontDestroyOnSceneSwitch = true;
+		Bloodforge::SceneDataComponent* mainMenuSceneData = entityManager.AddComponent<Bloodforge::SceneDataComponent>(mainMenuSceneDataEntity);
+		mainMenuSceneData->LoadFunction = MainMenuLoadFunction;
+		mainMenuSceneData->SceneName = "MainMenu";
+	}
 	sceneManagingData->ShouldLoadScene = true;
-	sceneManagingData->SceneToLoadDataEntityId = sceneDataEntity2.Id;
-
-	Bloodforge::Entity& sceneSwitchDataHolderEntity = Bloodforge::EntityManager::GetInstance().CreateEntity();
-	sceneSwitchDataHolderEntity.DontDestroyOnSceneSwitch = true;
-	SceneSwitchDataHolder* sceneSwitchDataHolder = entityManager.AddComponent<SceneSwitchDataHolder>(sceneSwitchDataHolderEntity);
-	sceneSwitchDataHolder->NextSceneId = sceneDataEntityId;
-	sceneSwitchDataHolder->PreviousSceneId = sceneDataEntity2Id;
+	sceneManagingData->SceneToLoadDataEntityId = mainMenuSceneDataEntityId;
 
 	Bloodforge::InputHandler& inputHandler = Bloodforge::InputHandler::GetInstance();
 	inputHandler.CreateMap(CreateId("TestMap"));
 	inputHandler.CreateAction(CreateId("SwitchScene"), CreateId("TestMap"),BLOODFORGE_KEYCODE_SPACE);
-	inputHandler.AddListenerToInputAction(CreateId("SwitchScene"), CreateId("TestMap"), [&sceneManagingData, &sceneSwitchDataHolder](const Bloodforge::InputActionInfo& info)
-		{
-			if (!info.finished) return;
-			sceneManagingData->ShouldLoadScene = true;
-			sceneManagingData->SceneToLoadDataEntityId = sceneSwitchDataHolder->NextSceneId;
-			std::swap(sceneSwitchDataHolder->PreviousSceneId, sceneSwitchDataHolder->NextSceneId);
-		});
 	inputHandler.SetCurrentMap(CreateId("TestMap"));
 
 	inputHandler.CreateAction(CreateId("TestAction"), CreateId("TestMap"), BLOODFORGE_KEYCODE_MOUSE_LEFT);

@@ -161,7 +161,6 @@
     <ClInclude Include="PlayerTowerSystem.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="ProjectileSystem.h" />
-    <ClInclude Include="SceneSwitchDataHolder.h" />
     <ClInclude Include="TestSaveFile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

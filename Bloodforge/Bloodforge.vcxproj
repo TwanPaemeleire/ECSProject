@@ -206,6 +206,8 @@
     <ClInclude Include="Bloodforge.h" />
     <ClInclude Include="BloodRenderer.h" />
     <ClInclude Include="BloodTime.h" />
+    <ClInclude Include="ButtonComponent.h" />
+    <ClInclude Include="ButtonSystem.h" />
     <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
@@ -255,6 +257,7 @@
     <ClCompile Include="AudioSourceSystem.cpp" />
     <ClCompile Include="Bloodforge.cpp" />
     <ClCompile Include="BloodRenderer.cpp" />
+    <ClCompile Include="ButtonSystem.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="ComponentRegistry.cpp" />
     <ClCompile Include="CustomCursor.cpp" />

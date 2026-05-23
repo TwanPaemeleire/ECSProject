@@ -13,6 +13,9 @@ namespace Bloodforge
 {
 	ResourceManager::~ResourceManager()
 	{
+		m_LoadedFonts.clear();
+		m_LoadedCustomCursors.clear();
+		m_LoadedTextures.clear();
 		MIX_Quit();
 		TTF_Quit();
 	}

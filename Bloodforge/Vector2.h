@@ -26,6 +26,8 @@ namespace Bloodforge
 		Vector2& operator*=(float scalar);
 		Vector2& operator/=(float scalar);
 
+		bool operator==(const Vector2& obj) const;
+
 		static float Cross(const Vector2& vec1, const Vector2& vec2);
 		static float Dot(const Vector2& vec1, const Vector2& vec2);
 		static Vector2 Multiply(const Vector2& vec1, const Vector2& vec2);
