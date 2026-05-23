@@ -39,7 +39,7 @@ void InitializeRectColliderComponent(Bloodforge::Entity& entity, const Bloodforg
 	collider->SetOffset(offset);
 }
 
-void LoadFunction()
+void GameLoadFunction()
 {
 	auto& entityManager = Bloodforge::EntityManager::GetInstance();
 	auto& renderer = Bloodforge::BloodRenderer::GetInstance();
@@ -79,12 +79,6 @@ void LoadFunction()
 	Bloodforge::SceneSystemManager::GetInstance().TryRegisterSystem<PlayerTowerSystem>();
 	Bloodforge::SceneSystemManager::GetInstance().TryRegisterSystem<ProjectileSystem>();
 	Bloodforge::SceneSystemManager::GetInstance().TryRegisterSystem<InputTesterSystem>();
-}
-
-void SecondLoadFunction()
-{
-	auto& renderer = Bloodforge::BloodRenderer::GetInstance();
-	renderer.SetBackgroundColor({ 127, 127, 127, 0 });
 }
 
 void MainMenuLoadFunction()
@@ -146,6 +140,12 @@ void MainMenuLoadFunction()
 		buttonComp->PressedTexture = resourceManager.LoadTexture("StartButtonPressed.png");
 		buttonComp->NormalScale = { 1.0f, 1.0f };
 		buttonComp->HoverScale = { 1.1f, 1.1f };
+		buttonComp->OnClick.AddListener([](Bloodforge::ButtonComponent&)
+			{
+				auto& sceneManagingData = Bloodforge::EntityManager::GetInstance().GetFirstEntityWithComponents<Bloodforge::SceneManagingDataComponent>()->GetComponent<Bloodforge::SceneManagingDataComponent>();
+				sceneManagingData.ShouldLoadScene = true;
+				sceneManagingData.SceneToLoadDataEntityId = 2;
+			});
 
 		Bloodforge::SpriteComponent* spriteComp = entityManager.AddComponent<Bloodforge::SpriteComponent>(startButtonEntity);
 		spriteComp->SetTexture(buttonComp->NormalTexture);
@@ -178,19 +178,6 @@ int main(int, char* [])
 	sceneManagingEntity.DontDestroyOnSceneSwitch = true;
 	Bloodforge::SceneManagingDataComponent* sceneManagingData = entityManager.AddComponent<Bloodforge::SceneManagingDataComponent>(sceneManagingEntity);
 
-	// Bloodforge::Entity& sceneDataEntity = Bloodforge::EntityManager::GetInstance().CreateEntity();
-	// int sceneDataEntityId = sceneDataEntity.Id;
-	// sceneDataEntity.DontDestroyOnSceneSwitch = true;
-	// Bloodforge::SceneDataComponent* sceneData = entityManager.AddComponent<Bloodforge::SceneDataComponent>(sceneDataEntity);
-	// sceneData->LoadFunction = LoadFunction;
-	// sceneData->SceneName = "TestScene";
-	// 
-	// Bloodforge::Entity& sceneDataEntity2 = Bloodforge::EntityManager::GetInstance().CreateEntity();
-	// int sceneDataEntity2Id = sceneDataEntity2.Id;
-	// sceneDataEntity2.DontDestroyOnSceneSwitch = true;
-	// Bloodforge::SceneDataComponent* sceneData2 = entityManager.AddComponent<Bloodforge::SceneDataComponent>(sceneDataEntity2);
-	// sceneData2->LoadFunction = SecondLoadFunction;
-	// sceneData2->SceneName = "TestScene2";
 
 	// Main menu scene data
 	int mainMenuSceneDataEntityId = -1;
@@ -202,6 +189,17 @@ int main(int, char* [])
 		mainMenuSceneData->LoadFunction = MainMenuLoadFunction;
 		mainMenuSceneData->SceneName = "MainMenu";
 	}
+
+	// Game scene data
+	{
+		Bloodforge::Entity& sceneDataEntity = Bloodforge::EntityManager::GetInstance().CreateEntity();
+		sceneDataEntity.DontDestroyOnSceneSwitch = true;
+		Bloodforge::SceneDataComponent* sceneData = entityManager.AddComponent<Bloodforge::SceneDataComponent>(sceneDataEntity);
+		sceneData->LoadFunction = GameLoadFunction;
+		sceneData->SceneName = "GameScene";
+	}
+
+
 	sceneManagingData->ShouldLoadScene = true;
 	sceneManagingData->SceneToLoadDataEntityId = mainMenuSceneDataEntityId;
 

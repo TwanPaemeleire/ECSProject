@@ -65,9 +65,27 @@ namespace Bloodforge
 		}
 	}
 
-	void ButtonSystem::OnLeftMouseButtonDown(const InputActionInfo&)
+	void ButtonSystem::OnLeftMouseButtonDown(const InputActionInfo& actionInfo)
 	{
 		// Check if over button or not 
+		if (actionInfo.ongoing) return;
+		EntityQueryResult<ButtonComponent, TransformComponent, SpriteComponent> result = EntityManager::GetInstance().QueryEntities<ButtonComponent, TransformComponent, SpriteComponent>();
+		for (EntityView<ButtonComponent, TransformComponent, SpriteComponent> entityView : result.EntityViews)
+		{
+			ButtonComponent& buttonComp = entityView.GetComponent<ButtonComponent>();
+			TransformComponent& transformComp = entityView.GetComponent<TransformComponent>();
+			bool mouseIsOverButton = MouseIsOverButton(buttonComp, transformComp, actionInfo.InputActionVectorData);
+			if (!mouseIsOverButton) continue;
+			if (actionInfo.started)
+			{
+				buttonComp.MouseIsPressed = true;
+			}
+			else if (actionInfo.finished && buttonComp.MouseIsPressed)
+			{
+				buttonComp.MouseIsPressed = false;
+				buttonComp.OnClick.Invoke(buttonComp);
+			}
+		}
 	}
 
 	void ButtonSystem::OnMouseMove(const InputActionInfo& actionInfo)
@@ -88,6 +106,7 @@ namespace Bloodforge
 			}
 			else if(!mouseIsOverButton && buttonComp.MouseIsOver) // Just stopped hovering
 			{
+				buttonComp.MouseIsPressed = false;
 				buttonComp.MouseIsOver = false;
 				buttonComp.HoverTransitionTime = 0.0f;
 				buttonComp.ScalingStartScale = transformComp.GetLocalScale();
