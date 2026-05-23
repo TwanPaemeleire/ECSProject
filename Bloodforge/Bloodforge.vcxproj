@@ -200,6 +200,8 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ActionQueueComponent.h" />
+    <ClInclude Include="ActionQueueSystem.h" />
     <ClInclude Include="ArchetypeIdentifierMask.h" />
     <ClInclude Include="AudioSourceComponent.h" />
     <ClInclude Include="AudioSourceSystem.h" />
@@ -253,6 +255,7 @@
     <ClInclude Include="WindowUtils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ActionQueueSystem.cpp" />
     <ClCompile Include="AudioSourceComponent.cpp" />
     <ClCompile Include="AudioSourceSystem.cpp" />
     <ClCompile Include="Bloodforge.cpp" />

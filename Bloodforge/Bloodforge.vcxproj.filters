@@ -88,7 +88,10 @@
     <ClCompile Include="SpriteTextRendererSystem.cpp">
       <Filter>Source Files\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="ButtonSystem.cpp" />
+    <ClCompile Include="ButtonSystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionQueueSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -241,7 +244,11 @@
     <ClInclude Include="ButtonComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="ButtonSystem.h" />
+    <ClInclude Include="ActionQueueComponent.h" />
+    <ClInclude Include="ButtonSystem.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionQueueSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Generated">
