@@ -59,6 +59,9 @@ namespace Bloodforge
 		template <typename... Components>
 		std::optional<EntityView<Components...>> GetFirstEntityWithComponents(bool includeNonActive = false, bool includeWhenComponentDisabled = false);
 
+		template <typename... Components>
+		EntityView<Components...> GetOrCreateFirstEntityWithComponents(bool includeNonActive = false, bool includeWhenComponentDisabled = false);
+
 		template<typename ComponentType>
 		ComponentType* AddComponent(Entity& entity);
 		template<typename ComponentType>
@@ -387,6 +390,18 @@ namespace Bloodforge
 		}
 
 		return std::nullopt;
+	}
+
+	template<typename ...Components>
+	inline EntityView<Components...> EntityManager::GetOrCreateFirstEntityWithComponents(bool includeNonActive, bool includeWhenComponentDisabled)
+	{
+		std::optional<EntityView<Components...>> view = GetFirstEntityWithComponents<Components...>(includeNonActive, includeWhenComponentDisabled);
+		if (view.has_value()) return view.value();
+		Entity& entity = CreateEntity();
+		int entityId = entity.Id;
+		((AddComponent<Components>(entityId)), ...);
+		view = GetFirstEntityWithComponents<Components...>(includeNonActive, includeWhenComponentDisabled);
+		return view.value();
 	}
 
 	template<typename T>

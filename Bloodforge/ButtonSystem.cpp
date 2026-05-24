@@ -7,6 +7,7 @@
 #include "BloodTime.h"
 #include "SpriteComponent.h"
 #include "Texture2D.h"
+#include "CustomCoroutine.h"
 
 namespace Bloodforge
 {
@@ -31,24 +32,7 @@ namespace Bloodforge
 		for (EntityView<ButtonComponent, TransformComponent, SpriteComponent> entityView : result.EntityViews)
 		{
 			ButtonComponent& buttonComp = entityView.GetComponent<ButtonComponent>();
-			TransformComponent& transformComp = entityView.GetComponent<TransformComponent>();
 			SpriteComponent& spriteComp = entityView.GetComponent<SpriteComponent>();
-
-			Vector2 currentScale = transformComp.GetLocalScale();
-			Vector2 targetScale = buttonComp.MouseIsOver ? buttonComp.HoverScale : buttonComp.NormalScale;
-
-			if (currentScale != targetScale) // Not at target scale yet
-			{
-				buttonComp.HoverTransitionTime += BloodTime::GetInstance().DeltaTime;
-				float timeToReachTargetScale = buttonComp.MouseIsOver ? buttonComp.TimeToReachHoverScale : buttonComp.TimeToReachNormalScale;
-				currentScale = Vector2::SmoothLerp(buttonComp.ScalingStartScale, targetScale, buttonComp.HoverTransitionTime / timeToReachTargetScale);
-				if (buttonComp.HoverTransitionTime >= timeToReachTargetScale)
-				{
-					currentScale = targetScale;
-					buttonComp.HoverTransitionTime = 0.0f;
-				}
-				transformComp.SetLocalScale(currentScale);
-			}
 
 			if (buttonComp.MouseIsOver && buttonComp.MouseIsPressed)
 			{
@@ -65,9 +49,25 @@ namespace Bloodforge
 		}
 	}
 
+	Coroutine ButtonSystem::ScalingCoroutine(int entityId, float timeToReach, Vector2 startScale, Vector2 targetScale)
+	{
+		EntityManager& entityManager = EntityManager::GetInstance();
+		float timeCounter = 0.0f;
+		while (timeCounter < timeToReach)
+		{
+			timeCounter += BloodTime::GetInstance().DeltaTime;
+			TransformComponent* transformComp = entityManager.GetComponent<TransformComponent>(entityId);
+			Vector2 newScale = Vector2::SmoothLerp(startScale, targetScale, timeCounter / timeToReach);
+			transformComp->SetLocalScale(newScale);
+			co_await WaitUntilNextFrame();
+		}
+		TransformComponent* transformComp = entityManager.GetComponent<TransformComponent>(entityId);
+		transformComp->SetLocalScale(targetScale);
+		entityManager.GetComponent<ButtonComponent>(entityId)->CurrentCoroutineId = -1;
+	}
+
 	void ButtonSystem::OnLeftMouseButtonDown(const InputActionInfo& actionInfo)
 	{
-		// Check if over button or not 
 		if (actionInfo.ongoing) return;
 		EntityQueryResult<ButtonComponent, TransformComponent, SpriteComponent> result = EntityManager::GetInstance().QueryEntities<ButtonComponent, TransformComponent, SpriteComponent>();
 		for (EntityView<ButtonComponent, TransformComponent, SpriteComponent> entityView : result.EntityViews)
@@ -90,8 +90,6 @@ namespace Bloodforge
 
 	void ButtonSystem::OnMouseMove(const InputActionInfo& actionInfo)
 	{
-		// Check if over button or not 
-		// Store the current scale in the component, so we can have support for hovering again when anim is still going on
 		EntityQueryResult<ButtonComponent, TransformComponent, SpriteComponent> result = EntityManager::GetInstance().QueryEntities<ButtonComponent, TransformComponent, SpriteComponent>();
 		for (EntityView<ButtonComponent, TransformComponent, SpriteComponent> entityView : result.EntityViews)
 		{
@@ -101,15 +99,21 @@ namespace Bloodforge
 			if (mouseIsOverButton && !buttonComp.MouseIsOver) // Just started hovering
 			{
 				buttonComp.MouseIsOver = true;
-				buttonComp.HoverTransitionTime = 0.0f;
-				buttonComp.ScalingStartScale = transformComp.GetLocalScale();
+				if (buttonComp.CurrentCoroutineId != -1)
+				{
+					StopCoroutine(buttonComp.CurrentCoroutineId);
+				}
+				buttonComp.CurrentCoroutineId = StartCoroutine(ScalingCoroutine(entityView.EntityId, buttonComp.TimeToReachHoverScale, transformComp.GetLocalScale(), buttonComp.HoverScale));
 			}
 			else if(!mouseIsOverButton && buttonComp.MouseIsOver) // Just stopped hovering
 			{
 				buttonComp.MouseIsPressed = false;
 				buttonComp.MouseIsOver = false;
-				buttonComp.HoverTransitionTime = 0.0f;
-				buttonComp.ScalingStartScale = transformComp.GetLocalScale();
+				if (buttonComp.CurrentCoroutineId != -1)
+				{
+					StopCoroutine(buttonComp.CurrentCoroutineId);
+				}
+				buttonComp.CurrentCoroutineId = StartCoroutine(ScalingCoroutine(entityView.EntityId, buttonComp.TimeToReachNormalScale, transformComp.GetLocalScale(), buttonComp.NormalScale));
 			}
 		}
 	}

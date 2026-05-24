@@ -91,7 +91,15 @@
     <ClCompile Include="ButtonSystem.cpp">
       <Filter>Source Files\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="ActionQueueSystem.cpp" />
+    <ClCompile Include="ActionQueueSystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomCoroutine.cpp">
+      <Filter>Source Files\Architecture</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomCoroutineSystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -244,11 +252,27 @@
     <ClInclude Include="ButtonComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="ActionQueueComponent.h" />
     <ClInclude Include="ButtonSystem.h">
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="ActionQueueSystem.h" />
+    <ClInclude Include="ActionQueueSystem.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionQueueComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomCoroutine.h">
+      <Filter>Header Files\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomCoroutineSystem.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomCoroutineDataComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomCoroutinesMapHolderComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Generated">

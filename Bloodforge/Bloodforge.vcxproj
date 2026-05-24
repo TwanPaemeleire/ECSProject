@@ -214,6 +214,10 @@
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentRegistry.h" />
+    <ClInclude Include="CustomCoroutine.h" />
+    <ClInclude Include="CustomCoroutineDataComponent.h" />
+    <ClInclude Include="CustomCoroutinesMapHolderComponent.h" />
+    <ClInclude Include="CustomCoroutineSystem.h" />
     <ClInclude Include="CustomCursor.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityChunk.h" />
@@ -263,6 +267,8 @@
     <ClCompile Include="ButtonSystem.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="ComponentRegistry.cpp" />
+    <ClCompile Include="CustomCoroutine.cpp" />
+    <ClCompile Include="CustomCoroutineSystem.cpp" />
     <ClCompile Include="CustomCursor.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityChunk.cpp" />

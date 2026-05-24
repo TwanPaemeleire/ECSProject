@@ -7,6 +7,8 @@ namespace Bloodforge
 	struct InputActionInfo;
 	struct ButtonComponent;
 	struct TransformComponent;
+	struct Coroutine;
+
 	class ButtonSystem final : public System
 	{
 	public:
@@ -14,6 +16,8 @@ namespace Bloodforge
 		virtual void OnUpdate() override;
 
 	private:
+		Coroutine ScalingCoroutine(int entityId, float timeToReach, Vector2 startScale, Vector2 targetScale);
+
 		void OnLeftMouseButtonDown(const InputActionInfo& actionInfo);
 		void OnMouseMove(const InputActionInfo& actionInfo);
 

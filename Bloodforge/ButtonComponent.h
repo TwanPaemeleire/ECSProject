@@ -1,6 +1,5 @@
 #pragma once
 #include "Component.h"
-#include <string>
 #include "Vector2.h"
 #include "Event.h"
 
@@ -22,10 +21,8 @@ namespace Bloodforge
 		float TimeToReachHoverScale = 0.1f;
 		float TimeToReachNormalScale = 0.1f;
 
-		// Internal state usage
-		float HoverTransitionTime = 0.0f;
-		Vector2 ScalingStartScale;
-
 		Event<ButtonComponent&> OnClick;
+
+		int CurrentCoroutineId = -1;
 	};
 }
