@@ -42,3 +42,14 @@ void Bloodforge::WaitNextFrameAwaiter::await_suspend(std::coroutine_handle<> han
     CustomCoroutineDataComponent* dataComp = entityManager.GetComponent<CustomCoroutineDataComponent>(id);
     dataComp->IsWaitingForNextFrame = true;
 }
+
+void Bloodforge::WaitForSecondsAwaiter::await_suspend(std::coroutine_handle<> handle) const noexcept
+{
+    EntityManager& entityManager = EntityManager::GetInstance();
+
+    CustomCoroutinesMapHolderComponent& mapHolderComp = entityManager.GetOrCreateFirstEntityWithComponents<CustomCoroutinesMapHolderComponent>().GetComponent<CustomCoroutinesMapHolderComponent>();
+    int id = mapHolderComp.AddressToEntityId[handle.address()];
+
+    CustomCoroutineDataComponent* dataComp = entityManager.GetComponent<CustomCoroutineDataComponent>(id);
+    dataComp->WaitTimeCounter = SecondsToWait;
+}

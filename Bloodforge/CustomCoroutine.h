@@ -48,8 +48,30 @@ namespace Bloodforge
         void await_resume() const noexcept {}
     };
 
+    struct WaitForSecondsAwaiter
+    {
+        bool await_ready() const noexcept
+        {
+            return false;
+        }
+
+        void await_suspend(std::coroutine_handle<> handle) const noexcept;
+
+        void await_resume() const noexcept {}
+
+        float SecondsToWait = 0.0f;
+    };
+
     inline WaitNextFrameAwaiter WaitUntilNextFrame()
     {
         return {};
+    }
+
+    inline WaitForSecondsAwaiter WaitForSeconds(float seconds)
+    {
+        return
+        {
+            seconds
+        };
     }
 }
