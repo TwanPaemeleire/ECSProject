@@ -30,6 +30,7 @@
 #include "EnemySpawnData.h"
 #include <TextComponent.h>
 #include "ButtonComponent.h"
+#include <CameraComponent.h>
 
 void InitializeRectColliderComponent(Bloodforge::Entity& entity, const Bloodforge::Vector2& size, const Bloodforge::Vector2& offset = { 0.0f, 0.0f })
 {
@@ -68,6 +69,12 @@ void GameLoadFunction()
 		Bloodforge::RectColliderComponent* rectCollider = entityManager.AddComponent<Bloodforge::RectColliderComponent>(towerEntityId);
 		rectCollider->SetSize({ 350.0f, 350.0f });
 	}
+	//////////
+
+	//////////
+	Bloodforge::EntityView<Bloodforge::CameraComponent> cameraView = entityManager.GetOrCreateFirstEntityWithComponents<Bloodforge::CameraComponent>();
+	Bloodforge::CameraComponent& camComp = cameraView.GetComponent<Bloodforge::CameraComponent>();
+	camComp.EntityIdToFollow = towerEntityId;
 	//////////
 
 	//////////
