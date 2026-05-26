@@ -8,6 +8,7 @@
 #include "SpriteComponent.h"
 #include "Texture2D.h"
 #include "CustomCoroutine.h"
+#include "BloodRenderer.h"
 
 namespace Bloodforge
 {
@@ -49,7 +50,7 @@ namespace Bloodforge
 		}
 	}
 
-	Coroutine ButtonSystem::ScalingCoroutine(int entityId, float timeToReach, Vector2 startScale, Vector2 targetScale)
+	Coroutine ButtonSystem::ScalingCoroutine(int entityId, float timeToReach, const Vector2& startScale, const Vector2& targetScale)
 	{
 		EntityManager& entityManager = EntityManager::GetInstance();
 		float timeCounter = 0.0f;
@@ -117,8 +118,9 @@ namespace Bloodforge
 			}
 		}
 	}
-	bool ButtonSystem::MouseIsOverButton(const ButtonComponent& buttonComp, TransformComponent& transformComp, Vector2 mousePos)
+	bool ButtonSystem::MouseIsOverButton(const ButtonComponent& buttonComp, TransformComponent& transformComp, const Vector2& mousePos)
 	{
+		Vector2 mouseButtonWorldPos = BloodRenderer::GetInstance().ScreenToWorldPoint(mousePos);
 		Vector2 buttonWorldPos = transformComp.GetWorldPosition();
 		Vector2 buttonWorldScale = transformComp.GetWorldScale();
 		Vector2 textureSize = (buttonComp.MouseIsOver) ? buttonComp.HoverTexture->GetSize() : buttonComp.NormalTexture->GetSize();
@@ -128,7 +130,7 @@ namespace Bloodforge
 		Vector2 topLeft = buttonWorldPos - halfSize;
 		Vector2 bottomRight = buttonWorldPos + halfSize;
 
-		return (mousePos.X >= topLeft.X && mousePos.X <= bottomRight.X &&
-				mousePos.Y >= topLeft.Y && mousePos.Y <= bottomRight.Y);
+		return (mouseButtonWorldPos.X >= topLeft.X && mouseButtonWorldPos.X <= bottomRight.X &&
+			mouseButtonWorldPos.Y >= topLeft.Y && mouseButtonWorldPos.Y <= bottomRight.Y);
 	}
 }

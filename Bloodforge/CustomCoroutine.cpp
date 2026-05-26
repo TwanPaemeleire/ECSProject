@@ -30,6 +30,8 @@ void Bloodforge::StopCoroutine(int id)
     CustomCoroutinesMapHolderComponent& mapHolderComp = entityManager.GetOrCreateFirstEntityWithComponents<CustomCoroutinesMapHolderComponent>().GetComponent<CustomCoroutinesMapHolderComponent>();
     mapHolderComp.AddressToEntityId.erase(dataComp->CoroutineHandle.handle.address());
     dataComp->CoroutineHandle.handle.destroy();
+    dataComp->IsWaitingForNextFrame = false;
+    dataComp->WaitTimeCounter = 0.0f;
 }
 
 void Bloodforge::WaitNextFrameAwaiter::await_suspend(std::coroutine_handle<> handle) const noexcept

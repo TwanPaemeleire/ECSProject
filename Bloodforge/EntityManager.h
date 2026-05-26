@@ -153,52 +153,50 @@ namespace Bloodforge
 	template<typename ComponentType>
 	inline ComponentType* EntityManager::AddComponent(Entity& entity)
 	{
-		if (entity.CurrentArchetypeId.HasComponent(Component<ComponentType>::Index))
+		if (!entity.CurrentArchetypeId.HasComponent(Component<ComponentType>::Index))
 		{
-			throw std::exception("Trying to add a component to an entity that already has it.");
+			m_ComponentRegistry->TryRegisterComponent<ComponentType>();
+
+			// Get old chunk and archetype
+			auto* oldChunk = m_EntityChunks[entity.CurrentArchetypeId][entity.CurrentChunkIndex].get();
+			ArchetypeIdentifierMask oldArchetypeMask = entity.CurrentArchetypeId;
+
+			// Create new archetype and chunk
+			ArchetypeIdentifierMask newArchetypeMask = oldArchetypeMask;
+			newArchetypeMask.AddComponent(Component<ComponentType>::Index);
+			EntityChunk* newChunk = GetFirstAvailableChunk(newArchetypeMask, 20);
+
+			// Add entity to new chunk
+			int newIndex = newChunk->AddEntity(entity.Id);
+
+			// Copy old components
+			for (int componentId : oldArchetypeMask.GetComponentIndices())
+			{
+				void* srcArray = oldChunk->GetComponentArray(componentId);
+				void* dstArray = newChunk->GetComponentArray(componentId);
+				int oldIndex = oldChunk->GetEntityInChunkIndex(entity.Id);
+				auto& info = m_ComponentRegistry->GetComponentInfo(componentId);
+
+				void* srcPtr = static_cast<char*>(srcArray) + oldIndex * info.Size;
+				void* dstPtr = static_cast<char*>(dstArray) + newIndex * info.Size;
+				info.MoveConstruct(dstPtr, srcPtr);
+			}
+
+			// Construct new component
+			int compId = Component<ComponentType>::Index;
+			void* array = newChunk->GetComponentArray(compId);
+			auto& info = m_ComponentRegistry->GetComponentInfo(compId);
+
+			void* elementPtr = static_cast<char*>(array) + newIndex * info.Size;
+			info.Construct(elementPtr, entity.Id);
+
+			// Remove from old chunk
+			oldChunk->RemoveEntityAndComponents(entity);
+
+			// Update entity data
+			entity.CurrentArchetypeId = newArchetypeMask;
+			entity.CurrentChunkIndex = newChunk->GetChunkIndex();
 		}
-		m_ComponentRegistry->TryRegisterComponent<ComponentType>();
-
-		// Get old chunk and archetype
-		auto* oldChunk = m_EntityChunks[entity.CurrentArchetypeId][entity.CurrentChunkIndex].get();
-		ArchetypeIdentifierMask oldArchetypeMask = entity.CurrentArchetypeId;
-
-		// Create new archetype and chunk
-		ArchetypeIdentifierMask newArchetypeMask = oldArchetypeMask;
-		newArchetypeMask.AddComponent(Component<ComponentType>::Index);
-		EntityChunk* newChunk = GetFirstAvailableChunk(newArchetypeMask, 20);
-
-		// Add entity to new chunk
-		int newIndex = newChunk->AddEntity(entity.Id);
-
-		// Copy old components
-		for (int componentId : oldArchetypeMask.GetComponentIndices())
-		{
-			void* srcArray = oldChunk->GetComponentArray(componentId);
-			void* dstArray = newChunk->GetComponentArray(componentId);
-			int oldIndex = oldChunk->GetEntityInChunkIndex(entity.Id);
-			auto& info = m_ComponentRegistry->GetComponentInfo(componentId);
-
-			void* srcPtr = static_cast<char*>(srcArray) + oldIndex * info.Size;
-			void* dstPtr = static_cast<char*>(dstArray) + newIndex * info.Size;
-			info.MoveConstruct(dstPtr, srcPtr);
-		}
-
-		// Construct new component
-		int compId = Component<ComponentType>::Index;
-		void* array = newChunk->GetComponentArray(compId);
-		auto& info = m_ComponentRegistry->GetComponentInfo(compId);
-
-		void* elementPtr = static_cast<char*>(array) + newIndex * info.Size;
-		info.Construct(elementPtr, entity.Id);
-
-		// Remove from old chunk
-		oldChunk->RemoveEntityAndComponents(entity);
-
-		// Update entity data
-		entity.CurrentArchetypeId = newArchetypeMask;
-		entity.CurrentChunkIndex = newChunk->GetChunkIndex();
-
 		return GetComponent<ComponentType>(entity);
 	}
 

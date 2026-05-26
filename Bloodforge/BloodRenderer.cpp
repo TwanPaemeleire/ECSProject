@@ -10,6 +10,8 @@
 #include "glm/glm.hpp"
 #include "RectColliderComponent.h"
 #include "Rect.h"
+#include "EntityManager.h"
+#include "CameraComponent.h"
 
 namespace Bloodforge
 {
@@ -57,7 +59,7 @@ namespace Bloodforge
 	void BloodRenderer::DrawRectangle(const Vector2& pos, float width, float height, const Color& color) const
 	{
 		SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
-		Vector2 screenPos = pos;
+		Vector2 screenPos = pos - GetCameraPosition();
 		SDL_FRect rect{};
 		rect.x = screenPos.X;
 		rect.y = screenPos.Y;
@@ -69,13 +71,19 @@ namespace Bloodforge
 
 	void BloodRenderer::DrawRectangle(const ColliderRect& rect, const Color& color) const
 	{
+		Vector2 camPos = GetCameraPosition();
+		Vector2 topLeft = rect.TopLeft - camPos;
+		Vector2 topRight = rect.TopRight - camPos;
+		Vector2 bottomLeft = rect.BottomLeft - camPos;
+		Vector2 bottomRight = rect.BottomRight - camPos;
+
 		SDL_FPoint linePoints[5] = 
 		{
-			{ rect.TopLeft.X, rect.TopLeft.Y },
-			{ rect.TopRight.X, rect.TopRight.Y },
-			{ rect.BottomRight.X, rect.BottomRight.Y },
-			{ rect.BottomLeft.X, rect.BottomLeft.Y },
-			{ rect.TopLeft.X, rect.TopLeft.Y }
+			{ topLeft.X,topLeft.Y },
+			{ topRight.X, topRight.Y },
+			{ bottomRight.X, bottomRight.Y },
+			{ bottomLeft.X, bottomLeft.Y },
+			{ topLeft.X, topLeft.Y }
 		};
 
 		SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
@@ -84,7 +92,7 @@ namespace Bloodforge
 
 	void BloodRenderer::RenderTexture(const Texture2D& texture, const Vector2& pos, const Color& color) const
 	{
-		Vector2 screenPos = pos;
+		Vector2 screenPos = pos - GetCameraPosition();
 		SDL_FRect dstRect{};
 		dstRect.x = screenPos.X;
 		dstRect.y = screenPos.Y;
@@ -196,9 +204,27 @@ namespace Bloodforge
 		SDL_SetWindowSize(BloodRenderer::GetInstance().GetSDLWindow(), width, height);
 	}
 
+	Vector2 BloodRenderer::ScreenToWorldPoint(Vector2 screen) const
+	{
+		Vector2 cameraPos = GetCameraPosition();
+		return Vector2
+		{
+			screen.X + cameraPos.X,
+			screen.Y + cameraPos.Y
+		};
+	}
+
 	SDL_FPoint BloodRenderer::TransformPoint(const glm::mat4& worldMatrix, float x, float y) const
 	{
 		glm::vec4 point = worldMatrix * glm::vec4(x, y, 0.0f, 1.0f);
-		return SDL_FPoint{ point.x, point.y };
+		Vector2 cameraPos = GetCameraPosition();
+		return SDL_FPoint{ point.x - cameraPos.X, point.y - cameraPos.Y };
+	}
+
+	Vector2 BloodRenderer::GetCameraPosition() const
+	{
+		EntityView<CameraComponent, TransformComponent> view = EntityManager::GetInstance().GetOrCreateFirstEntityWithComponents<CameraComponent, TransformComponent>();
+		TransformComponent& transformComp = view.GetComponent<TransformComponent>();
+		return transformComp.GetWorldPosition();
 	}
 }

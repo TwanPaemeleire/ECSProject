@@ -15,6 +15,7 @@
 #include "SpriteTextRendererSystem.h"
 #include "ButtonSystem.h"
 #include "CustomCoroutineSystem.h"
+#include "CameraSystem.h"
 
 namespace Bloodforge
 {
@@ -29,6 +30,7 @@ namespace Bloodforge
 		TryRegisterSystem<SpriteTextRendererSystem>();
 		TryRegisterSystem<ButtonSystem>();
 		TryRegisterSystem<CustomCoroutineSystem>();
+		TryRegisterSystem<CameraSystem>();
 	}
 
 	void SceneSystemManager::Start()

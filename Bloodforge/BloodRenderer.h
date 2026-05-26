@@ -35,8 +35,11 @@ namespace Bloodforge
 		int GetWindowWidth() const { return m_WindowWidth; }
 		int GetWindowHeight() const { return m_WindowHeight; }
 		void SetWindowSize(int width, int height);
+
+		Vector2 ScreenToWorldPoint(Vector2 screen) const;
 	private:
 		SDL_FPoint TransformPoint(const glm::mat4& worldMatrix, float x, float y) const;
+		Vector2 GetCameraPosition() const;
 
 		SDL_Renderer* m_Renderer{};
 		SDL_Window* m_Window{};

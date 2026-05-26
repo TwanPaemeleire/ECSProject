@@ -210,6 +210,8 @@
     <ClInclude Include="BloodTime.h" />
     <ClInclude Include="ButtonComponent.h" />
     <ClInclude Include="ButtonSystem.h" />
+    <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
@@ -265,6 +267,7 @@
     <ClCompile Include="Bloodforge.cpp" />
     <ClCompile Include="BloodRenderer.cpp" />
     <ClCompile Include="ButtonSystem.cpp" />
+    <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="ComponentRegistry.cpp" />
     <ClCompile Include="CustomCoroutine.cpp" />
