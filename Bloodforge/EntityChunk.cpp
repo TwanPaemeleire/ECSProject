@@ -27,6 +27,12 @@ namespace Bloodforge
 	{
 		for (auto& [id, array] : m_ComponentArrays)
 		{
+			const ComponentInfo& info = EntityManager::GetInstance().GetComponentRegistry()->GetComponentInfo(id);
+			for (int i = 0; i < m_EntityCount; ++i)
+			{
+				void* ptr = static_cast<char*>(array.Data) + i * info.Size;
+				info.Destruct(ptr);
+			}
 			std::free(array.Data);
 		}
 	}
@@ -125,8 +131,16 @@ namespace Bloodforge
 		for (int id : componentIndices)
 		{
 			auto& array = m_ComponentArrays[id];
+
 			char* data = static_cast<char*>(array.Data);
-			std::memcpy(data + target * array.ElementSize, data + source * array.ElementSize, array.ElementSize);
+
+			void* srcPtr = data + source * array.ElementSize;
+			void* dstPtr = data + target * array.ElementSize;
+
+			const ComponentInfo& info = EntityManager::GetInstance().GetComponentRegistry()->GetComponentInfo(id);
+
+			info.MoveConstruct(dstPtr, srcPtr);
+			info.Destruct(srcPtr);
 		}
 	}
 }

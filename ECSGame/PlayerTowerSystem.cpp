@@ -52,6 +52,9 @@ void PlayerTowerSystem::OnUpdate()
 			tower.TimeUntilNextShot = tower.FireRateDelay;
 		}
 	}
+
+	float deltaTime = BloodTime::GetInstance().DeltaTime;
+	std::cout << "FPS: " << 1.0f / deltaTime << std::endl;
 }
 
 void PlayerTowerSystem::ShootProjectile(TransformComponent* towerTransform)

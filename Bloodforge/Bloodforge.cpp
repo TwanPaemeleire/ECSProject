@@ -7,6 +7,10 @@
 #include "InputHandler.h"
 #include <filesystem>
 #include "SceneSystemManager.h"
+#include "EntityManager.h"
+#include "ResourceManager.h"
+#include "GlobalEventHandler.h"
+#include <steam_api.h>
 
 namespace Bloodforge
 {
@@ -42,6 +46,14 @@ namespace Bloodforge
 			const auto sleepTime = std::chrono::milliseconds(m_MsPerFrame) - (std::chrono::high_resolution_clock::now() - currentTime);
 			std::this_thread::sleep_for(sleepTime);
 		}
+
+		EntityManager::GetInstance().DestroyAllEntities();
+		GlobalEventHandler::GetInstance().Cleanup();
+		inputHandler.Cleanup();
+		ResourceManager::GetInstance().Cleanup();
+		sceneSystemManager.Cleanup();
+		SteamAPI_Shutdown();
+		renderer.Cleanup();
 	}
 	void Bloodforge::RequestStop()
 	{

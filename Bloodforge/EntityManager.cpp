@@ -72,6 +72,17 @@ namespace Bloodforge
 				entity.IsAlive = false;
 				const ArchetypeIdentifierMask& chunkId = entity.CurrentArchetypeId;
 				EntityChunk* entityChunk = m_EntityChunks[chunkId][entity.CurrentChunkIndex].get();
+				// Destroy components
+				for (int componentId : entity.CurrentArchetypeId.GetComponentIndices())
+				{
+					void* srcArray = entityChunk->GetComponentArray(componentId);
+					int indexInArray = entityChunk->GetEntityInChunkIndex(entityId);
+					auto& info = m_ComponentRegistry->GetComponentInfo(componentId);
+
+					void* srcPtr = static_cast<char*>(srcArray) + indexInArray * info.Size;
+					info.Destruct(srcPtr);
+				}
+
 				entityChunk->RemoveEntityAndComponents(entity);
 				m_FreeIndices.push_back(entityId);
 			});

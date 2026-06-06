@@ -38,6 +38,7 @@ namespace Bloodforge
 	class InputHandler final :public Singleton<InputHandler>
 	{
 	public:
+		void Cleanup();
 		void ProcessInput();
 
 		void CreateMap(MapId mapId);

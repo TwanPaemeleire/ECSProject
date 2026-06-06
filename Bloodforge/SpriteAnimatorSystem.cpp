@@ -5,6 +5,7 @@
 #include "SpriteAnimatorComponent.h"
 #include "BloodTime.h"
 #include <utility>
+#include "SpriteAnimatorData.h"
 
 namespace Bloodforge
 {
@@ -56,19 +57,16 @@ namespace Bloodforge
 		}
 	}
 
-	int SpriteAnimatorSystem::AddAnimationEvent(std::function<void(SpriteAnimatorComponent&)> callback)
-	{
-		m_AnimationEventsCallbacks.insert({ m_NextAnimationEventCallbackID, std::move(callback) });
-		return m_NextAnimationEventCallbackID++;
-	}
-
 	void SpriteAnimatorSystem::HandleAnimationEvents(SpriteAnimatorComponent& spriteAnimComp)
 	{
+		EntityView<SpriteAnimatorData> dataView = EntityManager::GetInstance().GetOrCreateFirstEntityWithComponents<SpriteAnimatorData>();
+		SpriteAnimatorData& data = dataView.GetComponent<SpriteAnimatorData>();
+
 		for (AnimationEventData& animEventData : spriteAnimComp.AnimationsData[spriteAnimComp.CurrentPlayingId].AnimationEvents)
 		{
 			if (!animEventData.HasBeenTriggered && spriteAnimComp.CurrentFrame == animEventData.FrameToTrigger && spriteAnimComp.FrameTimeCounter >= animEventData.Offset)
 			{
-				m_AnimationEventsCallbacks[animEventData.CallbackIndex](spriteAnimComp);
+				data.AnimationEventsCallbacks[animEventData.CallbackIndex](spriteAnimComp);
 				animEventData.HasBeenTriggered = true;
 			}
 		}

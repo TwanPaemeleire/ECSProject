@@ -20,6 +20,8 @@ namespace Bloodforge
 		virtual void OnEnable() {};
 		virtual void OnDisable() {};
 
+		virtual void OnCleanup() {};
+
 		bool IsEnabled() const { return m_IsEnabled; }
 		void Enable();
 		void Disable();

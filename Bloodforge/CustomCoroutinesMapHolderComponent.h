@@ -4,7 +4,7 @@
 
 namespace Bloodforge
 {
-	struct CustomCoroutinesMapHolderComponent final : public Component< CustomCoroutinesMapHolderComponent>
+	struct CustomCoroutinesMapHolderComponent final : public Component<CustomCoroutinesMapHolderComponent>
 	{
 		std::unordered_map<void*, int> AddressToEntityId;
 	};

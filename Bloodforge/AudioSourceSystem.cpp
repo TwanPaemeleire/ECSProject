@@ -12,6 +12,14 @@ namespace Bloodforge
 		m_Mixer = ResourceManager::GetInstance().GetMixer();
 	}
 
+	void AudioSourceSystem::OnCleanup()
+	{
+		for (TrackEntryData& data : m_AllMixTracks)
+		{
+			MIX_DestroyTrack(data.Track);
+		}
+	}
+
 	void AudioSourceSystem::SetAudioOfTrack(AudioSourceComponent& audioSource, SoundId id)
 	{
 		MIX_Audio* audio = ResourceManager::GetInstance().GetAudio(id);

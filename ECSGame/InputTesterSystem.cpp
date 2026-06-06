@@ -24,15 +24,15 @@ void InputTesterSystem::OnLeftMouseAction(const Bloodforge::InputActionInfo& inf
 {
 	if (info.started)
 	{
-		std::cout << "Mouse started at: " << info.InputActionVectorData.X << " , " << info.InputActionVectorData.Y << std::endl;
+		//std::cout << "Mouse started at: " << info.InputActionVectorData.X << " , " << info.InputActionVectorData.Y << std::endl;
 	}
 	if (info.ongoing)
 	{
-		std::cout << "Mouse ongoing at: " << info.InputActionVectorData.X << " , " << info.InputActionVectorData.Y << " Motion: " << info.InputActionVectorDeltaData.X << " , " << info.InputActionVectorDeltaData.Y << std::endl;
+		//std::cout << "Mouse ongoing at: " << info.InputActionVectorData.X << " , " << info.InputActionVectorData.Y << " Motion: " << info.InputActionVectorDeltaData.X << " , " << info.InputActionVectorDeltaData.Y << std::endl;
 	}
 	if (info.finished)
 	{
-		std::cout << "Mouse stopped at: " << info.InputActionVectorData.X << " , " << info.InputActionVectorData.Y << std::endl;
+		//std::cout << "Mouse stopped at: " << info.InputActionVectorData.X << " , " << info.InputActionVectorData.Y << std::endl;
 	}
 }
 
@@ -40,14 +40,14 @@ void InputTesterSystem::OnMouseMotionAction(const Bloodforge::InputActionInfo& i
 {
 	if (info.started)
 	{
-		std::cout << "Mouse motion started at: " << info.InputActionVectorData.X << " , " << info.InputActionVectorData.Y << std::endl;
+		//std::cout << "Mouse motion started at: " << info.InputActionVectorData.X << " , " << info.InputActionVectorData.Y << std::endl;
 	}
 	if (info.ongoing)
 	{
-		std::cout << "Mouse motion ongoing at: " << info.InputActionVectorData.X << " , " << info.InputActionVectorData.Y << " Motion: " << info.InputActionVectorDeltaData.X << " , " << info.InputActionVectorDeltaData.Y << std::endl;
+		//std::cout << "Mouse motion ongoing at: " << info.InputActionVectorData.X << " , " << info.InputActionVectorData.Y << " Motion: " << info.InputActionVectorDeltaData.X << " , " << info.InputActionVectorDeltaData.Y << std::endl;
 	}
 	if (info.finished)
 	{
-		std::cout << "Mouse motion stopped at: " << info.InputActionVectorData.X << " , " << info.InputActionVectorData.Y << std::endl;
+		//std::cout << "Mouse motion stopped at: " << info.InputActionVectorData.X << " , " << info.InputActionVectorData.Y << std::endl;
 	}
 }

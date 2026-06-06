@@ -29,6 +29,8 @@ namespace Bloodforge
 		float GetWorldRotation();
 		Vector2 GetWorldScale();
 
+		Vector2 GetForwardVector();
+
 		void SetParent(int parentEntityId, bool keepWorldTransform = true);
 		int GetParentEntityId() const { return m_ParentEntityId; }
 		const std::vector<int>& GetChildEntityIds() const { return m_ChildEntityIds; }

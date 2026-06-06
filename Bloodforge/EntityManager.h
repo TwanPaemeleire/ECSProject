@@ -42,7 +42,7 @@ namespace Bloodforge
 	class EntityManager : public Singleton<EntityManager>
 	{
 	public:
-		~EntityManager() = default;
+		~EntityManager();
 
 		Entity& CreateEntity(int newChunkCapacity = 20);
 
@@ -66,10 +66,10 @@ namespace Bloodforge
 		ComponentType* AddComponent(Entity& entity);
 		template<typename ComponentType>
 		ComponentType* AddComponent(int entityId);
-		template<typename ComponentType>
-		void RemoveComponent(Entity& entity);
-		template<typename ComponentType>
-		void RemoveComponent(int entityId);
+		//template<typename ComponentType>
+		//void RemoveComponent(Entity& entity);
+		//template<typename ComponentType>
+		//void RemoveComponent(int entityId);
 		template <typename ComponentType>
 		ComponentType* GetComponent(Entity& entity);
 		template <typename ComponentType>
@@ -112,6 +112,11 @@ namespace Bloodforge
 		friend class Singleton<EntityManager>;
 		EntityManager();
 	};
+
+	inline EntityManager::~EntityManager()
+	{
+		m_EntityChunks.clear();
+	}
 
 	inline Entity& EntityManager::CreateEntity(int newChunkCapacity)
 	{
@@ -180,6 +185,7 @@ namespace Bloodforge
 				void* srcPtr = static_cast<char*>(srcArray) + oldIndex * info.Size;
 				void* dstPtr = static_cast<char*>(dstArray) + newIndex * info.Size;
 				info.MoveConstruct(dstPtr, srcPtr);
+				info.Destruct(srcPtr);
 			}
 
 			// Construct new component
@@ -206,62 +212,62 @@ namespace Bloodforge
 		return AddComponent<ComponentType>(GetEntity(entityId));
 	}
 
-	template<typename ComponentType>
-	inline void EntityManager::RemoveComponent(Entity& entity)
-	{
-		if (!entity.CurrentArchetypeId.HasComponent(Component<ComponentType>::Index))
-		{
-			throw std::exception("Trying to remove a component from an entity that doesn't have it.");
-		}
-		m_ComponentRegistry->TryRegisterComponent<ComponentType>();
-
-		// Get old chunk and archetype
-		auto* oldChunk = m_EntityChunks[entity.CurrentArchetypeId][entity.CurrentChunkIndex].get();
-		ArchetypeIdentifierMask oldArchetypeMask = entity.CurrentArchetypeId;
-
-		// Create new archetype and chunk
-		ArchetypeIdentifierMask newArchetypeMask = oldArchetypeMask;
-		newArchetypeMask.RemoveComponent(Component<ComponentType>::Index);
-		EntityChunk* newChunk = GetFirstAvailableChunk(newArchetypeMask, 20);
-
-		// Add entity to new chunk
-		int newIndex = newChunk->AddEntity(entity.Id);
-
-		// Copy old components
-		for (int componentId : newArchetypeMask.GetComponentIndices())
-		{
-			void* srcArray = oldChunk->GetComponentArray(componentId);
-			void* dstArray = newChunk->GetComponentArray(componentId);
-			int oldIndex = oldChunk->GetEntityInChunkIndex(entity.Id);
-			auto& info = m_ComponentRegistry->GetComponentInfo(componentId);
-
-			void* srcPtr = static_cast<char*>(srcArray) + oldIndex * info.Size;
-			void* dstPtr = static_cast<char*>(dstArray) + newIndex * info.Size;
-			info.MoveConstruct(dstPtr, srcPtr);
-		}
-
-		// Destruct old component
-		int compId = Component<ComponentType>::Index;
-		void* array = oldChunk->GetComponentArray(compId);
-		auto& info = m_ComponentRegistry->GetComponentInfo(compId);
-
-		int oldIndex = oldChunk->GetEntityInChunkIndex(entity.Id);
-		void* elementPtr = static_cast<char*>(array) + oldIndex * info.Size;
-		info.Destruct(elementPtr);
-
-		// Remove from old chunk
-		oldChunk->RemoveEntityAndComponents(entity);
-
-		// Update entity data
-		entity.CurrentArchetypeId = newArchetypeMask;
-		entity.CurrentChunkIndex = newChunk->GetChunkIndex();
-	}
-
-	template<typename ComponentType>
-	inline void EntityManager::RemoveComponent(int entityId)
-	{
-		RemoveComponent(GetEntity(entityId));
-	}
+	//template<typename ComponentType>
+	//inline void EntityManager::RemoveComponent(Entity& entity)
+	//{
+	//	if (!entity.CurrentArchetypeId.HasComponent(Component<ComponentType>::Index))
+	//	{
+	//		throw std::exception("Trying to remove a component from an entity that doesn't have it.");
+	//	}
+	//	m_ComponentRegistry->TryRegisterComponent<ComponentType>();
+	//
+	//	// Get old chunk and archetype
+	//	auto* oldChunk = m_EntityChunks[entity.CurrentArchetypeId][entity.CurrentChunkIndex].get();
+	//	ArchetypeIdentifierMask oldArchetypeMask = entity.CurrentArchetypeId;
+	//
+	//	// Create new archetype and chunk
+	//	ArchetypeIdentifierMask newArchetypeMask = oldArchetypeMask;
+	//	newArchetypeMask.RemoveComponent(Component<ComponentType>::Index);
+	//	EntityChunk* newChunk = GetFirstAvailableChunk(newArchetypeMask, 20);
+	//
+	//	// Add entity to new chunk
+	//	int newIndex = newChunk->AddEntity(entity.Id);
+	//
+	//	// Copy old components
+	//	for (int componentId : newArchetypeMask.GetComponentIndices())
+	//	{
+	//		void* srcArray = oldChunk->GetComponentArray(componentId);
+	//		void* dstArray = newChunk->GetComponentArray(componentId);
+	//		int oldIndex = oldChunk->GetEntityInChunkIndex(entity.Id);
+	//		auto& info = m_ComponentRegistry->GetComponentInfo(componentId);
+	//
+	//		void* srcPtr = static_cast<char*>(srcArray) + oldIndex * info.Size;
+	//		void* dstPtr = static_cast<char*>(dstArray) + newIndex * info.Size;
+	//		info.MoveConstruct(dstPtr, srcPtr);
+	//	}
+	//
+	//	// Destruct old component
+	//	int compId = Component<ComponentType>::Index;
+	//	void* array = oldChunk->GetComponentArray(compId);
+	//	auto& info = m_ComponentRegistry->GetComponentInfo(compId);
+	//
+	//	int oldIndex = oldChunk->GetEntityInChunkIndex(entity.Id);
+	//	void* elementPtr = static_cast<char*>(array) + oldIndex * info.Size;
+	//	info.Destruct(elementPtr);
+	//
+	//	// Remove from old chunk
+	//	oldChunk->RemoveEntityAndComponents(entity);
+	//
+	//	// Update entity data
+	//	entity.CurrentArchetypeId = newArchetypeMask;
+	//	entity.CurrentChunkIndex = newChunk->GetChunkIndex();
+	//}
+	//
+	//template<typename ComponentType>
+	//inline void EntityManager::RemoveComponent(int entityId)
+	//{
+	//	RemoveComponent(GetEntity(entityId));
+	//}
 
 	template<typename ComponentType>
 	inline ComponentType* EntityManager::GetComponent(Entity& entity)

@@ -15,6 +15,8 @@ namespace Bloodforge
 	{
 	public:
 
+		void Cleanup();
+
 		template <RegisterableSystem SystemType>
 		bool TryRegisterSystem();
 		template <RegisterableSystem SystemType>

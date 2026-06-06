@@ -80,6 +80,17 @@ namespace Bloodforge
 		return { scale.x, scale.y };
 	}
 
+	Vector2 TransformComponent::GetForwardVector()
+	{
+		float radians = GetWorldRotation() * Vector2::DegreesToRadians;
+
+		return
+		{
+			std::cos(radians),
+			std::sin(radians)
+		};
+	}
+
 	void TransformComponent::SetParent(int parentEntityId, bool keepWorldTransform)
 	{
 		if (IsChild(parentEntityId) || parentEntityId == OwnerEntityId || m_ParentEntityId == parentEntityId) return;

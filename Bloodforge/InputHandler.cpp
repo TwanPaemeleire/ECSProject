@@ -5,6 +5,11 @@
 #include <stdexcept>
 #include <iostream>
 
+void Bloodforge::InputHandler::Cleanup()
+{
+	m_InputActionMaps.clear();
+}
+
 void Bloodforge::InputHandler::ProcessInput()
 {
 	SDL_Event e;
@@ -62,7 +67,7 @@ void Bloodforge::InputHandler::CreateMap(MapId mapId)
 
 void Bloodforge::InputHandler::CreateAction(ActionId actionId, MapId mapId, ButtonId buttonId)
 {
-	if (!m_InputActionMaps.contains(mapId)) throw std::runtime_error("Trying to create an action in an input action map that doesn't exist.");
+	if (!m_InputActionMaps.contains(mapId)) CreateMap(mapId);
 	if (m_InputActionMaps[mapId].contains(actionId)) throw std::runtime_error("Trying to create an action in an input action map that already has an action with this id.");
 	std::unique_ptr<InputAction> inputAction = std::make_unique<InputAction>();
 	inputAction->Button = buttonId;

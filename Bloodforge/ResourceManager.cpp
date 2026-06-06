@@ -11,11 +11,16 @@
 
 namespace Bloodforge
 {
-	ResourceManager::~ResourceManager()
+	void ResourceManager::Cleanup()
 	{
 		m_LoadedFonts.clear();
 		m_LoadedCustomCursors.clear();
 		m_LoadedTextures.clear();
+		MIX_DestroyMixer(m_Mixer);
+		for (auto& [id, audio] : m_LoadedAudio)
+		{
+			MIX_DestroyAudio(audio);
+		}
 		MIX_Quit();
 		TTF_Quit();
 	}

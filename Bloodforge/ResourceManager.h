@@ -32,7 +32,7 @@ namespace Bloodforge
 	class ResourceManager final : public Singleton<ResourceManager>
 	{
 	public:
-		~ResourceManager();
+		void Cleanup();
 
 		Texture2D* LoadTexture(const std::string& file);
 		Font* LoadFont(const std::string& file, float size);

@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "SpriteAnimatorComponent.h"
 #include "Texture2D.h"
-#include "SpriteAnimatorSystem.h"
-#include "SceneSystemManager.h"
+#include "EntityManager.h"
+#include "SpriteAnimatorData.h"
 #include <utility>
 
 namespace Bloodforge
@@ -102,11 +102,14 @@ namespace Bloodforge
 
 	void SpriteAnimatorComponent::AddAnimationEvent(AnimationId id, std::function<void(SpriteAnimatorComponent&)> callback, int frameToTrigger, float offset)
 	{
-		SpriteAnimatorSystem* animSystem = SceneSystemManager::GetInstance().GetSystem<SpriteAnimatorSystem>();
 		if (!AnimationsData.contains(id))
 		{
 			throw std::exception("Trying to add animation event to an animation with an id that doesn't exist");
 		}
-		AnimationsData[id].AnimationEvents.push_back({frameToTrigger, offset, false, animSystem->AddAnimationEvent(std::move(callback))});
+		EntityView<SpriteAnimatorData> dataView = EntityManager::GetInstance().GetOrCreateFirstEntityWithComponents<SpriteAnimatorData>();
+		SpriteAnimatorData& data = dataView.GetComponent<SpriteAnimatorData>();
+		AnimationsData[id].AnimationEvents.push_back({ frameToTrigger, offset, false, data.NextAnimationEventCallbackID });
+		data.AnimationEventsCallbacks.insert({ data.NextAnimationEventCallbackID, std::move(callback) });
+		data.NextAnimationEventCallbackID++;
 	}
 }

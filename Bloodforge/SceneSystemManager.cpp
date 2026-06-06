@@ -33,6 +33,12 @@ namespace Bloodforge
 		TryRegisterSystem<CameraSystem>();
 	}
 
+	void SceneSystemManager::Cleanup()
+	{
+		m_RegisteredSystems.clear();
+		m_SystemMap.clear();
+	}
+
 	void SceneSystemManager::Start()
 	{
 		for (const std::unique_ptr<System>& system : m_RegisteredSystems)
@@ -122,6 +128,7 @@ namespace Bloodforge
 		sceneManagingDataComp.ShouldLoadScene = false;
 		sceneManagingDataComp.SceneToLoadDataEntityId = -1;
 		sceneDataComp->LoadFunction();
+		sceneManagingDataComp = entityManager.GetFirstEntityWithComponents<SceneManagingDataComponent>()->GetComponent<SceneManagingDataComponent>(); // Need to get again, because reference might be invalid after scene load function
 		sceneManagingDataComp.OnSceneSwitch.Invoke(previousSceneDataEntityId, sceneManagingDataComp.CurrentSceneDataEntityId);
 		for (const std::unique_ptr<System>& system : m_RegisteredSystems)
 		{
@@ -132,8 +139,8 @@ namespace Bloodforge
 
 	bool SceneSystemManager::ShouldSwitchScenes()
 	{
-		EntityView<SceneManagingDataComponent> sceneManagingDataview = EntityManager::GetInstance().GetFirstEntityWithComponents<SceneManagingDataComponent>().value();
-		SceneManagingDataComponent& sceneManagingData = sceneManagingDataview.GetComponent<SceneManagingDataComponent>();
-		return sceneManagingData.ShouldLoadScene;
+		std::optional<EntityView<SceneManagingDataComponent>> view =EntityManager::GetInstance().GetFirstEntityWithComponents<SceneManagingDataComponent>();
+		if (!view.has_value()) return false;
+		return view->GetComponent<SceneManagingDataComponent>().ShouldLoadScene;
 	}
 }

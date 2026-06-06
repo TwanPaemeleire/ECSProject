@@ -36,7 +36,7 @@ namespace Bloodforge
 		SDL_GetWindowSizeInPixels(m_Window, &m_WindowWidth, &m_WindowHeight);
 	}
 
-	BloodRenderer::~BloodRenderer()
+	void BloodRenderer::Cleanup()
 	{
 		SDL_QuitSubSystem(SDL_INIT_VIDEO);
 		SDL_DestroyRenderer(m_Renderer);

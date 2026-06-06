@@ -28,6 +28,7 @@ namespace Bloodforge
 	{
 	public:
 		virtual void OnStart() override;
+		virtual void OnCleanup() override;
 
 		void SetAudioOfTrack(AudioSourceComponent& audioSource, SoundId id);
 		void AddAudioToAudioGroup(AudioSourceComponent& audioSource, AudioGroupId id);

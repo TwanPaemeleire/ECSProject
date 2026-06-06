@@ -239,6 +239,7 @@
     <ClInclude Include="SceneDataComponent.h" />
     <ClInclude Include="SceneManagingDataComponent.h" />
     <ClInclude Include="SceneSystemManager.h" />
+    <ClInclude Include="SpriteAnimatorData.h" />
     <ClInclude Include="SpriteTextRendererSystem.h" />
     <ClInclude Include="SteamIndicateAchievementProgressRequest.h" />
     <ClInclude Include="SteamResetUserDataRequest.h" />
@@ -278,6 +279,7 @@
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FunctionInvokeSystem.cpp" />
+    <ClCompile Include="GlobalEventHandler.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

@@ -34,6 +34,7 @@ namespace Bloodforge
 	class GlobalEventHandler final : public Singleton<GlobalEventHandler>
 	{
 	public:
+		void Cleanup();
 		template <typename EventType>
 		int AddListener(std::function<void(const EventType&)> listener);
 		template <typename EventType>
