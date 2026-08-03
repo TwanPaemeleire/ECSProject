@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Entity.h"
+#include "EntityManager.h"
 
 namespace Bloodforge
 {
@@ -12,5 +13,14 @@ namespace Bloodforge
 	{
 		CurrentArchetypeId = chunkId;
 		CurrentChunkIndex = chunkIndex;
+	}
+
+	void Entity::SetActive(bool isActive)
+	{
+		IsActive = isActive;
+		for (int entityId : EntityManager::GetInstance().GetComponent<TransformComponent>(Id)->GetChildEntityIds())
+		{
+			EntityManager::GetInstance().GetEntity(entityId).SetActive(isActive);
+		}
 	}
 }

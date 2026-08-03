@@ -35,6 +35,10 @@ namespace Bloodforge
 
 	void SceneSystemManager::Cleanup()
 	{
+		for (const std::unique_ptr<System>& system : m_RegisteredSystems)
+		{
+			system->OnCleanup();
+		}
 		m_RegisteredSystems.clear();
 		m_SystemMap.clear();
 	}

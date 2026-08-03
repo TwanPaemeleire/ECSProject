@@ -212,6 +212,7 @@
     <ClInclude Include="ButtonSystem.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="CircleColliderComponent.h" />
     <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
@@ -233,6 +234,7 @@
     <ClInclude Include="GlobalEventHandler.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="KeyDefs.h" />
+    <ClInclude Include="MathUtils.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="RectColliderComponent.h" />

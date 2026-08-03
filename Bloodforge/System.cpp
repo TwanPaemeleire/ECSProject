@@ -3,10 +3,7 @@
 
 namespace Bloodforge
 {
-	System::~System()
-	{
-		OnCleanup();
-	}
+	System::~System() = default;
 
 	void System::Enable()
 	{

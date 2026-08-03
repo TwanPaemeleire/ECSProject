@@ -46,6 +46,7 @@ namespace Bloodforge
 
 	void BloodRenderer::Render()
 	{
+		CheckCameraValidity();
 		const Color& color = GetBackgroundColor();
 		SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
 		SDL_RenderClear(m_Renderer);
@@ -88,6 +89,54 @@ namespace Bloodforge
 
 		SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
 		SDL_RenderLines(GetSDLRenderer(), linePoints, 5);
+	}
+
+	void BloodRenderer::DrawCircle(const Vector2& center, float radius, const Color& color) const
+	{
+		Vector2 screenPos = center - GetCameraPosition();
+		SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
+
+		float offsetx = 0;
+		float offsety = radius;
+		float d = radius - 1.0f;
+		int status = 0;
+		float x = screenPos.X;
+		float y = screenPos.Y;
+
+		while (offsety >= offsetx)
+		{
+			status += SDL_RenderPoint(m_Renderer, x + offsetx, y + offsety);
+			status += SDL_RenderPoint(m_Renderer, x + offsety, y + offsetx);
+			status += SDL_RenderPoint(m_Renderer, x - offsetx, y + offsety);
+			status += SDL_RenderPoint(m_Renderer, x - offsety, y + offsetx);
+			status += SDL_RenderPoint(m_Renderer, x + offsetx, y - offsety);
+			status += SDL_RenderPoint(m_Renderer, x + offsety, y - offsetx);
+			status += SDL_RenderPoint(m_Renderer, x - offsetx, y - offsety);
+			status += SDL_RenderPoint(m_Renderer, x - offsety, y - offsetx);
+
+			if (status < 0)
+			{
+				status = -1;
+				break;
+			}
+
+			if (d >= 2 * offsetx)
+			{
+				d -= 2 * offsetx + 1;
+				offsetx += 1;
+			}
+			else if (d < 2 * (radius - offsety))
+			{
+				d += 2 * offsety - 1;
+				offsety -= 1;
+			}
+			else
+			{
+				d += 2 * (offsety - offsetx - 1);
+				offsety -= 1;
+				offsetx += 1;
+			}
+		}
 	}
 
 	void BloodRenderer::RenderTexture(const Texture2D& texture, const Vector2& pos, const Color& color) const
@@ -221,10 +270,25 @@ namespace Bloodforge
 		return SDL_FPoint{ point.x - cameraPos.X, point.y - cameraPos.Y };
 	}
 
+	void BloodRenderer::CheckCameraValidity()
+	{
+		if (m_CameraEntityId == -1)
+		{
+			EntityView<CameraComponent, TransformComponent> view = EntityManager::GetInstance().GetOrCreateFirstEntityWithComponents<CameraComponent, TransformComponent>();
+			m_CameraEntityId = view.EntityId;
+		}
+		if (m_CameraEntityId != -1)
+		{
+			EntityManager& entityManager = EntityManager::GetInstance();
+			if (entityManager.GetEntity(m_CameraEntityId).MarkedForDestruction || !entityManager.HasComponent<CameraComponent>(m_CameraEntityId))
+			{
+				m_CameraEntityId = -1;
+			}
+		}
+	}
+
 	Vector2 BloodRenderer::GetCameraPosition() const
 	{
-		EntityView<CameraComponent, TransformComponent> view = EntityManager::GetInstance().GetOrCreateFirstEntityWithComponents<CameraComponent, TransformComponent>();
-		TransformComponent& transformComp = view.GetComponent<TransformComponent>();
-		return transformComp.GetWorldPosition();
+		return EntityManager::GetInstance().GetComponent<TransformComponent>(m_CameraEntityId)->GetWorldPosition();
 	}
 }

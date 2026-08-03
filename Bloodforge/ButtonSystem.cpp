@@ -15,13 +15,13 @@ namespace Bloodforge
 	ButtonSystem::ButtonSystem()
 	{
 		InputHandler& inputHandler = InputHandler::GetInstance();
-		inputHandler.CreateAction(CreateId("LeftMouseButtonDown"), CreateId("TestMap"), BLOODFORGE_KEYCODE_MOUSE_LEFT);
-		inputHandler.AddListenerToInputAction(CreateId("LeftMouseButtonDown"), CreateId("TestMap"), [this](const InputActionInfo& actionInfo)
+		inputHandler.CreateAction(CreateId("LeftMouseButtonDown"), CreateId("MainMap"), BLOODFORGE_KEYCODE_MOUSE_LEFT);
+		inputHandler.AddListenerToInputAction(CreateId("LeftMouseButtonDown"), CreateId("MainMap"), [this](const InputActionInfo& actionInfo)
 			{ 
 				OnLeftMouseButtonDown(actionInfo); 
 			});
-		inputHandler.CreateAction(CreateId("MouseMove"), CreateId("TestMap"), BLOODFORGE_KEYCODE_MOUSE_MOTION);
-		inputHandler.AddListenerToInputAction(CreateId("MouseMove"), CreateId("TestMap"), [this](const InputActionInfo& actionInfo)
+		inputHandler.CreateAction(CreateId("MouseMove"), CreateId("MainMap"), BLOODFORGE_KEYCODE_MOUSE_MOTION);
+		inputHandler.AddListenerToInputAction(CreateId("MouseMove"), CreateId("MainMap"), [this](const InputActionInfo& actionInfo)
 			{
 				OnMouseMove(actionInfo);
 			});

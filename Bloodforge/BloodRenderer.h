@@ -23,6 +23,7 @@ namespace Bloodforge
 
 		void DrawRectangle(const Vector2& pos, float width, float height, const Color& color) const;
 		void DrawRectangle(const ColliderRect& rect, const Color& color) const;
+		void DrawCircle(const Vector2& center, float radius, const Color& color) const;
 		void RenderTexture(const Texture2D& texture, const Vector2& pos, const Color& color) const;
 		void RenderTexture(const Texture2D& texture, const glm::mat4& worldMatrix, const Color& color, bool flippedHorizontal, bool flippedVertical) const;
 		void RenderTexture(const Texture2D& texture, const glm::mat4& worldMatrix, const Rect& srcRect, const Color& color, bool flippedHorizontal, bool flippedVertical) const;
@@ -39,6 +40,7 @@ namespace Bloodforge
 		Vector2 ScreenToWorldPoint(Vector2 screen) const;
 	private:
 		SDL_FPoint TransformPoint(const glm::mat4& worldMatrix, float x, float y) const;
+		void CheckCameraValidity();
 		Vector2 GetCameraPosition() const;
 
 		SDL_Renderer* m_Renderer{};
@@ -47,5 +49,6 @@ namespace Bloodforge
 
 		int m_WindowWidth{};
 		int m_WindowHeight{};
+		int m_CameraEntityId{ -1 };
 	};
 }

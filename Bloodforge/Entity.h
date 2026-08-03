@@ -12,6 +12,7 @@ namespace Bloodforge
 		~Entity() = default;
 
 		void SetCurrentChunk(const ArchetypeIdentifierMask& archetypeIds, int chunkIndex);
+		void SetActive(bool isActive);
 
 		int Id = -1;
 		ArchetypeIdentifierMask CurrentArchetypeId;
